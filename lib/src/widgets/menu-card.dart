@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class CardMenuPicture extends StatelessWidget {
-  CardMenuPicture({
+class MenuCard extends StatelessWidget {
+  MenuCard({
     this.title,
     this.description,
     this.img,
