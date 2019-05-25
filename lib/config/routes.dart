@@ -4,14 +4,20 @@ import './route_handlers.dart';
 
 class Routes {
   static String root = "/";
+  static String page_events = "/events";
+  static String page_services = "/services";
+  static String page_food = "/food";
 
   static void configureRoutes(Router router) {
     router.notFoundHandler = new Handler(
       handlerFunc: (BuildContext context, Map<String, List<String>> params) {
-        print("Route was not found.");
+        print("Route not found.");
       }
     );
     router.define(root, handler: rootHandler);
+    router.define(page_events, handler: pageEventsHandler);
+    router.define(page_services, handler: pageServicesHandler);
+    router.define(page_food, handler: pageFoodHandler);
   }
 }
 
