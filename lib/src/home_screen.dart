@@ -1,5 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'widgets/card_menu_picture.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -9,7 +10,10 @@ class HomeScreen extends StatelessWidget {
         title: Text('Jacks Hub'),
       ),
       body: Center(
-        child: Text('Hello World!'),
+        child: CardMenuPicture(
+          title: 'biiiitch',
+          description: 'what a biiitch',
+        ),
       ),
       bottomNavigationBar: BottomAppBar(
         child: Container(height: 50.0),
