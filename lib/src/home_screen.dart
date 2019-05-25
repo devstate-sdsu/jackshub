@@ -10,10 +10,7 @@ class HomeScreen extends StatelessWidget {
         title: Text('Jacks Hub'),
       ),
       body: Center(
-        child: CardMenuPicture(
-          title: 'biiiitch',
-          description: 'what a biiitch',
-        ),
+        child: Text('cards will go here')
       ),
       bottomNavigationBar: BottomAppBar(
         child: Container(height: 50.0),
@@ -21,4 +18,13 @@ class HomeScreen extends StatelessWidget {
     );
   }
 }
+
+// CardMenuPicture(
+//           title: Text('biiiitch'),
+//           description: Text('what a biiitch'),
+//           img: Image.network(
+//             'https://scontent.ffsd1-1.fna.fbcdn.net/v/t1.0-9/21463316_1926088534320469_5351309309476864102_n.jpg?_nc_cat=103&_nc_ht=scontent.ffsd1-1.fna&oh=1541f36b0814eb09a5a8e59c935473e4&oe=5D65FF3E',
+//             fit: BoxFit.fill
+//           ),
+//         ),
 
