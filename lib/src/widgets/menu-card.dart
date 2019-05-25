@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class MenuCard extends StatelessWidget {
   MenuCard({
@@ -38,10 +39,11 @@ class MenuCard extends StatelessWidget {
                 topLeft: Radius.circular(15),
                 topRight: Radius.circular(15)
               ),
-              child: Container(
+              child: Image(
+                image: this.img.image,
+                fit: BoxFit.fill,
                 height: this.height *.8,
                 width: double.infinity,
-                child: this.img,
               ),
             ),
             ListTile(
