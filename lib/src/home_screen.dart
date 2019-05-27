@@ -8,6 +8,134 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return new DefaultTabController(
       length: 3,
+      child: new Scaffold(
+        body: new NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              new SliverAppBar(
+                title: Text("Application"),
+                floating: true,
+                pinned: true,
+                snap: false,
+                bottom: new TabBar(
+                  tabs: <Widget>[
+                    Tab(icon: new Icon(Icons.event)),
+                    Tab(icon: new Icon(Icons.room_service)),
+                    Tab(icon: new Icon(Icons.fastfood)),
+                  ]
+                )
+              )
+            ];
+          },
+          body: new TabBarView(
+            children: <Widget>[
+              new ListView(
+                children: <Widget>[
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
+                    fit: BoxFit.fill)
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
+                    fit: BoxFit.fill)
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                ],
+              ),
+              new ListView(
+                children: <Widget>[
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
+                    fit: BoxFit.fill)
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
+                    fit: BoxFit.fill)
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                ],
+              ),
+              new ListView(
+                children: <Widget>[
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
+                    fit: BoxFit.fill)
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
+                    fit: BoxFit.fill)
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                ],
+              )
+            ],
+          )
+        )
+      )
+    );
+  }
+}
+
+
+
+
+/*
+    return new DefaultTabController(
+      length: 3,
       child: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
@@ -18,7 +146,8 @@ class HomeScreen extends StatelessWidget {
                 centerTitle: true,
                 pinned: false,
                 floating: true,
-                expandedHeight: 150.0,
+                snap: true,
+                expandedHeight: 200.0,
                 forceElevated: innerBoxIsScrolled,
                 bottom: TabBar(
                   tabs: <Widget>[
@@ -33,8 +162,39 @@ class HomeScreen extends StatelessWidget {
         },
         body: TabBarView(
           children: <Widget>[
-            new Container(
-              color: Colors.white,
+              new Material(
+              //color: Colors.white,
+              child: ListView(
+                children: <Widget>[
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
+                    fit: BoxFit.fill)
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
+                    fit: BoxFit.fill)
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                  MenuCard(
+                    title: Text('HELLO'),
+                    description: Text('bitch'),
+                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+                  ),
+                ],
+              )
             ),
             new Container(
               color: Colors.grey,
@@ -48,6 +208,7 @@ class HomeScreen extends StatelessWidget {
       )
     );
   }
+  */
 
   // Widget build(BuildContext context) {
   //   return new DefaultTabController(
@@ -95,4 +256,4 @@ class HomeScreen extends StatelessWidget {
 
 
   
-}
+
