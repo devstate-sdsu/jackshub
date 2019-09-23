@@ -9,11 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  cloud_firestore:
   cupertino_icons: ^0.1.2
   fluro: "^1.4.0"
-  #firebase_core: ^0.4.0
-  #firebase_analytics: ^1.0.4
-  #cloud_firestore: ^0.11.0+2
 
 dev_dependencies:
   flutter_test:
