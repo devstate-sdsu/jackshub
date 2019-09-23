@@ -1,35 +1,37 @@
 {
   "project_info": {
-    "project_number": "170049063667",
-    "firebase_url": "https://devstate-bb084.firebaseio.com",
-    "project_id": "devstate-bb084",
-    "storage_bucket": "devstate-bb084.appspot.com"
+    "project_number": "1032554019582",
+    "firebase_url": "https://rabbitbums.firebaseio.com",
+    "project_id": "rabbitbums",
+    "storage_bucket": "rabbitbums.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:170049063667:android:aa8a9e2967f970d5",
+        "mobilesdk_app_id": "1:1032554019582:android:aa8a9e2967f970d5",
         "android_client_info": {
           "package_name": "com.example.jackshub"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "170049063667-i79200dopjf3pu89i6cec9ngi2h6d6lr.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDIxNv-Ti9DNDic7j8avTaSQo51fitghCs"
+          "current_key": "AIzaSyC5e5nzXFUVOa6OBoNIl7XLwUJCEkBJYBU"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "170049063667-i79200dopjf3pu89i6cec9ngi2h6d6lr.apps.googleusercontent.com",
+              "client_id": "1032554019582-1tj2celqaqnd7htssbq0hmefuunvl634.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1032554019582-1gl03ipadqnvqk63noqsbvbk8o4rhb7t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.jackshub"
+              }
             }
           ]
         }
