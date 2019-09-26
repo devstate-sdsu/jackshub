@@ -6,7 +6,7 @@ class MenuCard extends StatelessWidget {
     this.title,
     this.description,
     this.img,
-    this.height = 400
+    this.height = 401
   });
 
   final Text title;
@@ -32,6 +32,7 @@ class MenuCard extends StatelessWidget {
           ]
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             ClipRRect(
