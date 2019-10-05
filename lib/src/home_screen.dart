@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'widgets/menu-card.dart';
+import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -17,131 +18,15 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-//  Widget _buildListItem2(BuildContext context, DocumentSnapshot doc) {
-//    body: new TabBarView(
-//            children: <Widget>[
-//              new ListView(
-//                children: <Widget>[
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-//                    fit: BoxFit.fill)
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-//                    fit: BoxFit.fill)
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-//                  ),
-//                ],
-//              ),
-//              new ListView(
-//                children: <Widget>[
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-//                    fit: BoxFit.fill)
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-//                    fit: BoxFit.fill)
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-//                  ),
-//                ],
-//              ),
-//              new ListView(
-//                children: <Widget>[
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-//                    fit: BoxFit.fill)
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-//                    fit: BoxFit.fill)
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-//                  ),
-//                  MenuCard(
-//                    title: Text('HELLO'),
-//                    description: Text('bitch'),
-//                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-//                  ),
-//                ],
-//              )
-//            ],
-//          )
-//    return ListTile(
-//      title: Row(
-//        children: [
-//          Expanded(
-//            child: Text(
-//              doc['carrotType'],
-//              style: Theme.of(context).textTheme.headline,
-//            ),
-//          ),
-//          Container(
-//            decoration: const BoxDecoration(
-//              color: Color(0xddffddff),
-//            ),
-//            padding: const EdgeInsets.all(10.0),
-//            child: Text(
-//              doc['carrotType'],
-//              style: Theme.of(context).textTheme.display1,
-//            ),
-//          ),
-//        ],
-//      ),
-//      onTap: () {
-//        print("HAHA THIS IS THE CARROT TYPE.");
-//      },
-//    );
-//  }
-
+  Widget _buildEventsListItem(BuildContext context, DocumentSnapshot doc) {
+    return Container(
+      child: new EventsMenuCard(
+          title: doc['carrotType'],
+          description: doc['carrotType'],
+          img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -168,36 +53,16 @@ class HomeScreen extends StatelessWidget {
           },
           body: new TabBarView(
             children: <Widget>[
-              new ListView(
-                children: <Widget>[
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-                    fit: BoxFit.fill)
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-                    fit: BoxFit.fill)
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-                  ),
-                ],
+              new StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.instance.collection('newCol').snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) return const Text('Loading...');
+                    return ListView.builder(
+                        itemCount: snapshot.data.documents.length,
+                        itemBuilder: (context, index) =>
+                            _buildEventsListItem(context, snapshot.data.documents[index])
+                    );
+                  }
               ),
               new StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance.collection('newCol').snapshots(),
