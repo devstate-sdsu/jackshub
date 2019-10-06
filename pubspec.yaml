@@ -25,3 +25,5 @@ flutter:
     - family: Hobo
       fonts:
         - asset: assets/fonts/HoboBT.ttf
+  assets:
+    - assets/images/

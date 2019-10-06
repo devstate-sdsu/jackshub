@@ -62,16 +62,24 @@ class HomeScreen extends StatelessWidget {
           },
           body: TabBarView(
             children: <Widget>[
-              StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance.collection('eventsCol').snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData) return const Text('Loading...');
-                    return ListView.builder(
-                        itemCount: snapshot.data.documents.length,
-                        itemBuilder: (context, index) =>
-                            _buildEventsListItem(context, snapshot.data.documents[index])
-                    );
-                  }
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/rainbow-tiles.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: Firestore.instance.collection('eventsCol').snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (!snapshot.hasData) return const Text('Loading...');
+                      return ListView.builder(
+                          itemCount: snapshot.data.documents.length,
+                          itemBuilder: (context, index) =>
+                              _buildEventsListItem(context, snapshot.data.documents[index])
+                      );
+                    }
+                ),
               ),
               StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance.collection('newCol').snapshots(),
