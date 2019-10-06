@@ -20,10 +20,14 @@ class HomeScreen extends StatelessWidget {
 
   Widget _buildEventsListItem(BuildContext context, DocumentSnapshot doc) {
     return Container(
-      child: new EventsMenuCard(
-          title: doc['carrotType'],
-          description: doc['carrotType'],
-          img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
+      child: EventsMenuCard(
+          name: doc['name'],
+          summary: doc['summary'],
+          time: doc['time'],
+          timeUpdated: doc['time_updated'],
+          img: doc['image'],
+          location: doc['location'],
+          coords: doc['coords'],
       ),
     );
   }
@@ -32,29 +36,34 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return new DefaultTabController(
       length: 3,
-      child: new Scaffold(
-        body: new NestedScrollView(
+      child: Scaffold(
+        body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
-              new SliverAppBar(
-                title: Text("Application"),
+              SliverAppBar(
+                title: Text(
+                  "hoboHUB",
+                  style: TextStyle(
+                    fontFamily: 'Hobo',
+                  )
+                ),
                 floating: true,
                 pinned: true,
                 snap: false,
-                bottom: new TabBar(
+                bottom: TabBar(
                   tabs: <Widget>[
-                    Tab(icon: new Icon(Icons.event)),
-                    Tab(icon: new Icon(Icons.room_service)),
-                    Tab(icon: new Icon(Icons.fastfood)),
+                    Tab(icon: Icon(Icons.event)),
+                    Tab(icon: Icon(Icons.room_service)),
+                    Tab(icon: Icon(Icons.fastfood)),
                   ]
                 )
               )
             ];
           },
-          body: new TabBarView(
+          body: TabBarView(
             children: <Widget>[
-              new StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance.collection('newCol').snapshots(),
+              StreamBuilder<QuerySnapshot>(
+                  stream: Firestore.instance.collection('eventsCol').snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) return const Text('Loading...');
                     return ListView.builder(
@@ -64,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                     );
                   }
               ),
-              new StreamBuilder<QuerySnapshot>(
+              StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance.collection('newCol').snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) return const Text('Loading...');
@@ -75,7 +84,7 @@ class HomeScreen extends StatelessWidget {
                     );
                   }
               ),
-              new ListView(
+              ListView(
                 children: <Widget>[
                   MenuCard(
                     title: Text('HELLO'),
@@ -88,21 +97,6 @@ class HomeScreen extends StatelessWidget {
                     description: Text('bitch'),
                     img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
                     fit: BoxFit.fill)
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
                   ),
                 ],
               )
@@ -114,130 +108,4 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-
-
-
-/*
-    return new DefaultTabController(
-      length: 3,
-      child: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              child: SliverAppBar(
-                title: const Text('Jacks Hub'),
-                centerTitle: true,
-                pinned: false,
-                floating: true,
-                snap: true,
-                expandedHeight: 200.0,
-                forceElevated: innerBoxIsScrolled,
-                bottom: TabBar(
-                  tabs: <Widget>[
-                    Tab(icon: new Icon(Icons.event)),
-                    Tab(icon: new Icon(Icons.room_service)),
-                    Tab(icon: new Icon(Icons.fastfood)),
-                  ]
-                ),
-              ),
-            ),
-          ];
-        },
-        body: TabBarView(
-          children: <Widget>[
-              new Material(
-              //color: Colors.white,
-              child: ListView(
-                children: <Widget>[
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-                    fit: BoxFit.fill)
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-                    fit: BoxFit.fill)
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-                  ),
-                ],
-              )
-            ),
-            new Container(
-              color: Colors.grey,
-            ),
-            new Container(
-              color: Colors.white,
-            )
-          ]
-        )
-
-      )
-    );
-  }
-  */
-
-  // Widget build(BuildContext context) {
-  //   return new DefaultTabController(
-  //     length: 3,
-  //     child: new Scaffold(
-  //       appBar: AppBar(
-  //         backgroundColor: Colors.white,
-  //         title: Text('Jacks Hub'),
-  //       ),
-  //       body: TabBarView(
-  //         children: <Widget>[
-  //           new Container(
-  //             color: Colors.white30,
-  //           ),
-  //           new Container(
-  //             color: Colors.white70,
-  //           ),
-  //           new Container(
-  //             color: Colors.grey,
-  //             child: Image.network(
-  //               'https://picsum.photos/250?image=9',
-  //             )
-  //           ),
-  //         ]
-  //       ),
-  //       bottomNavigationBar: new BottomAppBar(
-  //         color: Colors.white,
-  //         child: new TabBar(
-            
-  //           tabs: <Widget>[
-  //             Tab(icon: new Icon(Icons.event)),
-  //             Tab(icon: new Icon(Icons.room_service)),
-  //             Tab(icon: new Icon(Icons.fastfood)),
-  //           ],
-  //           labelColor: Colors.black,
-  //           unselectedLabelColor: Colors.grey,
-  //           indicatorSize: TabBarIndicatorSize.label,
-  //           indicatorPadding: EdgeInsets.all(0.0),
-  //           indicatorColor: Colors.red,
-  //         )
-  //       ),
-  //     )
-  //   );
-  // }
-
-
-  
 
