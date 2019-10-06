@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'favorite-widget.dart';
 
 
 class EventsMenuCard extends StatelessWidget {
@@ -14,6 +15,7 @@ class EventsMenuCard extends StatelessWidget {
     this.coords,
     this.time,
     this.timeUpdated,
+    this.favorite = false,
   });
 
   final String name;
@@ -25,7 +27,7 @@ class EventsMenuCard extends StatelessWidget {
   final List<dynamic> time;
   final dynamic coords;
   final double height;
-
+  bool favorite;
 
   @override
   Widget build(BuildContext context) {
@@ -99,12 +101,7 @@ class EventsMenuCard extends StatelessWidget {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.all(5.0),
-                                      child: Icon(
-                                        Icons.favorite,
-                                        color: Colors.pink,
-                                        size: 24.0,
-                                        semanticLabel: 'We love hobos',
-                                      ),
+                                      child: FavoriteWidget(),
                                     ),
                                   ],
                                 ),
