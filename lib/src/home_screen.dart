@@ -28,6 +28,7 @@ class HomeScreen extends StatelessWidget {
           img: doc['image'],
           location: doc['location'],
           coords: doc['coords'],
+          docId: doc.documentID,
       ),
     );
   }

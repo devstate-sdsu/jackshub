@@ -16,6 +16,7 @@ class EventsMenuCard extends StatelessWidget {
     this.time,
     this.timeUpdated,
     this.favorite = false,
+    this.docId
   });
 
   final String name;
@@ -23,6 +24,7 @@ class EventsMenuCard extends StatelessWidget {
   final String summary;
   final String location;
   final String img;
+  final String docId;
   final dynamic timeUpdated;
   final List<dynamic> time;
   final dynamic coords;
@@ -101,7 +103,9 @@ class EventsMenuCard extends StatelessWidget {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.all(5.0),
-                                      child: FavoriteWidget(),
+                                      child: FavoriteWidget(
+                                        docId: docId,
+                                      ),
                                     ),
                                   ],
                                 ),
