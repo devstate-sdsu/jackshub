@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'widgets/menu-card.dart';
 import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'events_screen.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -63,25 +64,7 @@ class HomeScreen extends StatelessWidget {
           },
           body: TabBarView(
             children: <Widget>[
-              Container(
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage('assets/images/rainbow-tiles.jpg'),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance.collection('eventsCol').snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                      if (!snapshot.hasData) return const Text('Loading...');
-                      return ListView.builder(
-                          itemCount: snapshot.data.documents.length,
-                          itemBuilder: (context, index) =>
-                              _buildEventsListItem(context, snapshot.data.documents[index])
-                      );
-                    }
-                ),
-              ),
+              EventsScreen(),
               StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance.collection('newCol').snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
