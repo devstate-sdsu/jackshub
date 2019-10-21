@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'widgets/saved-event-card.dart';
 
 
 class EventsScreen extends StatelessWidget {
@@ -19,6 +20,16 @@ class EventsScreen extends StatelessWidget {
     );
   }
 
+    Widget _buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
+    return Container(
+      child: SavedEventCard(
+          name: doc['name'],
+          img: doc['image'],
+          docId: doc.documentID,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,17 +39,39 @@ class EventsScreen extends StatelessWidget {
           fit: BoxFit.cover,
         ),
       ),
-      child: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance.collection('eventsCol').snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (!snapshot.hasData) return const Text('Loading...');
-            return ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) =>
-                    _buildEventsListItem(context, snapshot.data.documents[index])
-            );
-          }
-      ),
+      child: Column(
+        children: <Widget>[
+          Expanded(
+            flex: 1,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance.collection('eventsCol').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) return const Text('Loading...');
+                return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) =>
+                        _buildSavedEventsListItem(context, snapshot.data.documents[index])
+                );
+              }
+            ),
+          ),
+          Expanded(
+            flex: 3,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance.collection('eventsCol').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) return const Text('Loading...');
+                return ListView.builder(
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) =>
+                        _buildEventsListItem(context, snapshot.data.documents[index])
+                );
+              }
+            ),
+          ),
+        ],
+      )
     );
   }
 }
