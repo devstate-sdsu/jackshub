@@ -28,6 +28,14 @@ class SavedEvent {
   }
 }
 
+List<SavedEvent> _toList(List<Map> maps) {
+  List<SavedEvent> newList = new List<SavedEvent>();
+
+  maps.forEach((map) => newList.add(SavedEvent.fromMap(map)));
+
+  return newList;
+}
+
 // singleton class to manage the database
 class DatabaseHelper {
 
@@ -94,6 +102,18 @@ class DatabaseHelper {
     if (maps.length > 0) {
       print(maps);
       return SavedEvent.fromMap(maps.first);
+    }
+    return null;
+  }
+
+  Future<List<SavedEvent>> listSavedEvents() async {
+    Database db = await database;
+    List<Map> maps = await db.query(
+      savedEventsTable,
+      columns: [docId]
+    );
+    if (maps.length > 0) {
+      return _toList(maps);
     }
     return null;
   }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'widgets/saved-event-card.dart';
-
+import 'widgets/saved-events.dart';
 
 class EventsScreen extends StatelessWidget {
   Widget _buildEventsListItem(BuildContext context, DocumentSnapshot doc) {
@@ -20,7 +20,7 @@ class EventsScreen extends StatelessWidget {
     );
   }
 
-    Widget _buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
+  Widget _buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
     return Container(
       child: SavedEventCard(
           name: doc['name'],
@@ -41,21 +41,8 @@ class EventsScreen extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('eventsCol').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) return const Text('Loading...');
-                return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) =>
-                        _buildSavedEventsListItem(context, snapshot.data.documents[index])
-                );
-              }
-            ),
-          ),
+          SavedEvents(),
+        
           Expanded(
             flex: 3,
             child: StreamBuilder<QuerySnapshot>(
