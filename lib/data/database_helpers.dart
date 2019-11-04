@@ -2,31 +2,14 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
+import 'models/saved_event_model.dart';
+
 
 // database table and column names
 final String savedEventsTable = 'saved_events';
 final String docId = 'doc_id';
 
-// Saved Events Datamodel
-class SavedEvent {
-  String documentId;
 
-  SavedEvent();
-
-    // convenience constructor to create a Word object
-  SavedEvent.fromMap(Map<String, dynamic> map) {
-    print(map[docId]);
-    documentId = map[docId];
-  }
-
-  // convenience method to create a Map from this Word object
-  Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{
-      docId: documentId
-    };
-    return map;
-  }
-}
 
 List<SavedEvent> _toList(List<Map> maps) {
   List<SavedEvent> newList = new List<SavedEvent>();
@@ -115,7 +98,7 @@ class DatabaseHelper {
     if (maps.length > 0) {
       return _toList(maps);
     }
-    return null;
+    return [];
   }
 
   // TODO: queryAllWords()

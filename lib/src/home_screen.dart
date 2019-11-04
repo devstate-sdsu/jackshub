@@ -4,6 +4,8 @@ import 'widgets/menu-card.dart';
 import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'events_screen.dart';
+import 'package:jackshub/data/blocs/bloc_provider.dart';
+import 'package:jackshub/data/blocs/saved_events_bloc.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -66,7 +68,10 @@ class HomeScreen extends StatelessWidget {
           },
           body: TabBarView(
             children: <Widget>[
-              EventsScreen(),
+              BlocProvider(
+                bloc: SavedEventBloc(),
+                child: EventsScreen(),
+              ),
               StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance.collection('newCol').snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
