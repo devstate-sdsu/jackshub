@@ -14,7 +14,6 @@ class SavedEventsInitial extends SavedEventsState {
 
 
 class SavedEventsLoading extends SavedEventsState {
-
   const SavedEventsLoading();
   @override
   List<Object> get props => [];

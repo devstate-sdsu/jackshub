@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jackshub/src/bloc/saved_events_bloc.dart';
 import 'package:jackshub/src/bloc/saved_events_event.dart';
+import 'package:jackshub/src/bloc/saved_events_state.dart';
 import '../../database_helpers.dart';
 
 _read() async {
@@ -24,7 +25,7 @@ Future<void> _save(String documentId) async {
   print('inserted row: $id');
 }
 
-_delete(String documentId) async {
+Future<void> _delete(String documentId) async {
   DatabaseHelper helper = DatabaseHelper.instance;
   await helper.delete(documentId);
 }
@@ -39,33 +40,58 @@ class FavoriteWidget extends StatefulWidget {
 }
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool _isFavorited = true;
-  int _favoriteCount = 41;
-
-  void _toggleFavorite() {
+  bool isFav;
+  Map docIdSet;
+  void _favorite() {
     final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
-    setState(() {
-      if (_isFavorited) {
-        this._favoriteCount -= 1;
-        this._isFavorited = false;
-        _read();
-        _delete(widget.docId);
-      } else {
-        this._favoriteCount += 1;
-        this._isFavorited = true;
-        _save(widget.docId).then((voidFuture) {
-          savedEventsBloc.add(GetSavedEvents());
-        });
-      }
+    _save(widget.docId).then((_) {
+      savedEventsBloc.add(GetSavedEvents());
+    });
+  }
+
+  void _unfavorite() {
+    final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
+    _delete(widget.docId).then((_) {
+      savedEventsBloc.add(GetSavedEvents());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-          icon: (_isFavorited ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
-          color: Colors.red,
-          onPressed: _toggleFavorite,
-        );
+    // return IconButton(
+    //       icon: (_isFavorited ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
+    //       color: Colors.red,
+    //       onPressed: _toggleFavorite,
+    //     );
+    return BlocListener<SavedEventsBloc, SavedEventsState>(
+      listener: (context, state) {
+        if (state is SavedEventsLoaded) {
+          docIdSet = Map.fromIterable(state.savedEvents, key: (savedEvent) => savedEvent.documentID, value: (savedEvent) => true);
+          if (docIdSet.containsKey(widget.docId)) {
+            this.isFav = true;
+          } else {
+            this.isFav = false;
+          }
+        } 
+      },
+      child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
+        builder: (context, state) {
+          if (state is SavedEventsLoaded) {
+            if (docIdSet.containsKey(widget.docId)) {
+              return IconButton(
+                icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+                color: Colors.red,
+                onPressed: this.isFav ? _unfavorite : _favorite,
+              ); 
+            } 
+          }
+          return IconButton(
+            icon: Icon(Icons.favorite_border),
+            color: Colors.red,
+            onPressed: _favorite,
+          ); 
+        },
+      ),
+    );
   }
 }

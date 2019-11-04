@@ -10,3 +10,11 @@ class GetSavedEvents extends SavedEventsEvent {
   @override
   List<Object> get props => [];
 }
+
+
+class LoadEvents extends SavedEventsEvent {
+  const LoadEvents();
+
+  @override
+  List<Object> get props => [];
+}

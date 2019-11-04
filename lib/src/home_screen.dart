@@ -1,6 +1,7 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jackshub/src/bloc/saved_events_event.dart';
 import 'package:jackshub/src/repos/saved_events_repository.dart';
 import 'bloc/saved_events_bloc.dart';
 import 'widgets/menu-card.dart';
@@ -70,7 +71,7 @@ class HomeScreen extends StatelessWidget {
           body: TabBarView(
             children: <Widget>[
               BlocProvider(
-                builder: (context) => SavedEventsBloc(SavedEventsRepo()),
+                builder: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEvents()),
                 child: EventsScreen(),
               ),
               StreamBuilder<QuerySnapshot>(

@@ -18,6 +18,8 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
   ) async* {
     yield SavedEventsLoading();
     if (event is GetSavedEvents) {
+      yield* _mapSavedEventsToState();
+    } else if (event is LoadEvents) {
       try {
         final savedEvents = await savedEventsRepo.fetchSavedEvents();
         yield SavedEventsLoaded(savedEvents);
@@ -25,5 +27,14 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
         yield SavedEventsError("No events sorry sis");
       }
     }
+  }
+
+  Stream<SavedEventsState> _mapSavedEventsToState()  async* {
+      try {
+        final savedEvents = await savedEventsRepo.fetchSavedEvents();
+        yield SavedEventsLoaded(savedEvents);
+      } on Error {
+        yield SavedEventsError("No events sorry sis");
+      }
   }
 }
