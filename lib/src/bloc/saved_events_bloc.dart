@@ -16,7 +16,6 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
   Stream<SavedEventsState> mapEventToState(
     SavedEventsEvent event,
   ) async* {
-    yield SavedEventsLoading();
     if (event is GetSavedEvents) {
       yield* _mapSavedEventsToState();
     } else if (event is LoadEvents) {
@@ -33,7 +32,9 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
       try {
         final savedEvents = await savedEventsRepo.fetchSavedEvents();
         yield SavedEventsLoaded(savedEvents);
-      } on Error {
+      } on Error catch (e) {
+        print("FRIGGIN ERROR: ");
+        print(e);
         yield SavedEventsError("No events sorry sis");
       }
   }

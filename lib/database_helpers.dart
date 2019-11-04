@@ -115,7 +115,7 @@ class DatabaseHelper {
     if (maps.length > 0) {
       return _toList(maps);
     }
-    return null;
+    return [];
   }
 
   // TODO: queryAllWords()

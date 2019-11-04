@@ -40,7 +40,7 @@ class FavoriteWidget extends StatefulWidget {
 }
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool isFav;
+  bool isFav = false;
   Map docIdSet;
   void _favorite() {
     final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
@@ -77,13 +77,11 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
       child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
         builder: (context, state) {
           if (state is SavedEventsLoaded) {
-            if (docIdSet.containsKey(widget.docId)) {
               return IconButton(
                 icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
                 color: Colors.red,
                 onPressed: this.isFav ? _unfavorite : _favorite,
               ); 
-            } 
           }
           return IconButton(
             icon: Icon(Icons.favorite_border),

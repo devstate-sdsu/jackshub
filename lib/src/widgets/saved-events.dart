@@ -49,6 +49,10 @@ Widget buildLoadingSavedEvents() {
 
 
 class SavedEvents extends StatefulWidget {
+  final List<DocumentSnapshot> savedEvents;
+
+  const SavedEvents({Key key, this.savedEvents}): super(key: key);
+
   @override
   _SavedEventsState createState() => _SavedEventsState();
 }
@@ -88,22 +92,12 @@ class _SavedEventsState extends State<SavedEvents> {
   
   List<SavedEvent> eventsList = new List<SavedEvent>();
 
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
         builder: (context, state) {
-          if (state is SavedEventsInitial) {
-            return buildInitialSavedEvents();
-          } else if (state is SavedEventsLoading) {
-            return buildLoadingSavedEvents();
-          } else if (state is SavedEventsLoaded) {
-            return _buildWithSnapshotList(state.savedEvents);
-          } else if (state is SavedEventsError) {
-            return buildInitialSavedEvents();
-          }
-          return Container();
+          return _buildWithSnapshotList(widget.savedEvents);
         },
       ),
     );

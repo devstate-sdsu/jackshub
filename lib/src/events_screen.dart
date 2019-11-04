@@ -54,28 +54,28 @@ class EventsScreen extends StatelessWidget {
       ),
       child: Column(
         children: <Widget>[
-          // BlocListener<SavedEventsBloc, SavedEventsState>(
-          //   listener: (context, state) {
-          //     if (state is SavedEventsError) {
-          //       Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-          //     }
-          //   },
-          //   child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
-          //     builder: (context, state) {
-          //       if (state is SavedEventsInitial) {
-          //         return buildInitialSavedEvents();
-          //       } else if (state is SavedEventsLoading) {
-          //         return buildLoadingSavedEvents();
-          //       } else if (state is SavedEventsLoaded) {
-          //         return SavedEvents();
-          //       } else if (state is SavedEventsError) {
-          //         return buildInitialSavedEvents();
-          //       }
-          //       return Container();
-          //     },
-          //   ),
-          // ),
-          SavedEvents(),
+          BlocListener<SavedEventsBloc, SavedEventsState>(
+            listener: (context, state) {
+              if (state is SavedEventsError) {
+                Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+              }
+            },
+            child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
+              builder: (context, state) {
+                if (state is SavedEventsInitial) {
+                  return buildInitialSavedEvents();
+                } else if (state is SavedEventsLoading) {
+                  return buildLoadingSavedEvents();
+                } else if (state is SavedEventsLoaded) {
+                  return SavedEvents(savedEvents: state.savedEvents);
+                } else if (state is SavedEventsError) {
+                  return buildInitialSavedEvents();
+                }
+                return Container();
+              },
+            ),
+          ),
+          // SavedEvents(),
           Expanded(
             flex: 3,
             child: StreamBuilder<QuerySnapshot>(
