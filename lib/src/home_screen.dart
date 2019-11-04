@@ -1,5 +1,8 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jackshub/src/repos/saved_events_repository.dart';
+import 'bloc/saved_events_bloc.dart';
 import 'widgets/menu-card.dart';
 import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,7 +69,10 @@ class HomeScreen extends StatelessWidget {
           },
           body: TabBarView(
             children: <Widget>[
-              EventsScreen(),
+              BlocProvider(
+                builder: (context) => SavedEventsBloc(SavedEventsRepo()),
+                child: EventsScreen(),
+              ),
               StreamBuilder<QuerySnapshot>(
                   stream: Firestore.instance.collection('newCol').snapshots(),
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

@@ -15,6 +15,9 @@ dependencies:
   auto_size_text: ^2.1.0
   sqflite:
   path_provider:
+  flutter_bloc:
+  equatable:
+
 
 dev_dependencies:
   flutter_test:

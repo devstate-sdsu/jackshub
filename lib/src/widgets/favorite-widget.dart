@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jackshub/src/bloc/saved_events_bloc.dart';
+import 'package:jackshub/src/bloc/saved_events_event.dart';
 import '../../database_helpers.dart';
 
 _read() async {
@@ -13,7 +16,7 @@ _read() async {
   }
 }
 
-_save(String documentId) async {
+Future<void> _save(String documentId) async {
   SavedEvent newSavedEvent = SavedEvent();
   newSavedEvent.documentId = documentId;
   DatabaseHelper helper = DatabaseHelper.instance;
@@ -40,16 +43,19 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
   int _favoriteCount = 41;
 
   void _toggleFavorite() {
+    final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
     setState(() {
       if (_isFavorited) {
-        _favoriteCount -= 1;
-        _isFavorited = false;
+        this._favoriteCount -= 1;
+        this._isFavorited = false;
         _read();
         _delete(widget.docId);
       } else {
-        _favoriteCount += 1;
-        _isFavorited = true;
-        _save(widget.docId);
+        this._favoriteCount += 1;
+        this._isFavorited = true;
+        _save(widget.docId).then((voidFuture) {
+          savedEventsBloc.add(GetSavedEvents());
+        });
       }
     });
   }
