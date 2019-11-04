@@ -1,29 +1,11 @@
 import 'package:flutter/material.dart';
+import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:jackshub/data/blocs/bloc_provider.dart';
-import 'package:jackshub/data/blocs/saved_events_bloc.dart';
-import 'package:jackshub/src/widgets/saved-events.dart';
-import 'package:jackshub/src/widgets/events-menu-card.dart';
-import 'package:jackshub/src/widgets/saved-event-card.dart';
-import 'package:flutter/widgets.dart';
+import 'widgets/saved-event-card.dart';
+import 'widgets/saved-events.dart';
 
-
-
-class EventsScreen extends StatefulWidget {
-  @override
-  _EventsScreenState createState() => _EventsScreenState();
-}
-
-class _EventsScreenState extends State<EventsScreen> {
-  SavedEventBloc _savedEventBloc;
-
-  @override
-  void initState() {
-    super.initState();
-    _savedEventBloc = BlocProvider.of<SavedEventBloc>(context);
-  }
-
-  Widget _buildEventsListItem(BuildContext context, DocumentSnapshot doc, SavedEventBloc bloc) {
+class EventsScreen extends StatelessWidget {
+  Widget _buildEventsListItem(BuildContext context, DocumentSnapshot doc) {
     return Container(
       child: EventsMenuCard(
           name: doc['name'],
@@ -34,7 +16,6 @@ class _EventsScreenState extends State<EventsScreen> {
           location: doc['location'],
           coords: doc['coords'],
           docId: doc.documentID,
-          savedEventBloc: bloc,
       ),
     );
   }
@@ -60,7 +41,8 @@ class _EventsScreenState extends State<EventsScreen> {
       ),
       child: Column(
         children: <Widget>[
-          SavedEvents(_savedEventBloc),
+          SavedEvents(),
+        
           Expanded(
             flex: 3,
             child: StreamBuilder<QuerySnapshot>(
@@ -70,7 +52,7 @@ class _EventsScreenState extends State<EventsScreen> {
                 return ListView.builder(
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) =>
-                        _buildEventsListItem(context, snapshot.data.documents[index], _savedEventBloc)
+                        _buildEventsListItem(context, snapshot.data.documents[index])
                 );
               }
             ),

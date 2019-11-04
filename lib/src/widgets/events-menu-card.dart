@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:jackshub/data/blocs/bloc_provider.dart';
-import 'package:jackshub/data/blocs/saved_events_bloc.dart';
 import 'favorite-widget.dart';
 
 
@@ -18,8 +16,7 @@ class EventsMenuCard extends StatelessWidget {
     this.time,
     this.timeUpdated,
     this.favorite = false,
-    this.docId,
-    this.savedEventBloc
+    this.docId
   });
 
   final String name;
@@ -33,7 +30,6 @@ class EventsMenuCard extends StatelessWidget {
   final dynamic coords;
   final double height;
   bool favorite;
-  final SavedEventBloc savedEventBloc;
 
   @override
   Widget build(BuildContext context) {
@@ -107,13 +103,9 @@ class EventsMenuCard extends StatelessWidget {
                                     ),
                                     Padding(
                                       padding: EdgeInsets.all(5.0),
-                                      child: BlocProvider(
-                                        bloc: SavedEventBloc(),
-                                        child: FavoriteWidget(
-                                          docId: docId,
-                                          savedEventBloc: savedEventBloc,
-                                        ),
-                                      ),                                  
+                                      child: FavoriteWidget(
+                                        docId: docId,
+                                      ),
                                     ),
                                   ],
                                 ),
