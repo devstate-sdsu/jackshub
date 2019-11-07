@@ -48,7 +48,7 @@ class EventsScreen extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         image: DecorationImage(
-          image: AssetImage('assets/images/rainbow-tiles.jpg'),
+          image: AssetImage('assets/images/autumn-studio-unsplash.jpg'),
           fit: BoxFit.cover,
         ),
       ),
@@ -67,7 +67,7 @@ class EventsScreen extends StatelessWidget {
                 } else if (state is SavedEventsLoading) {
                   return buildLoadingSavedEvents();
                 } else if (state is SavedEventsLoaded) {
-                  return SavedEvents(savedEvents: state.savedEvents);
+                  return state.savedEvents.length == 0 ? Container() : SavedEvents(savedEvents: state.savedEvents);
                 } else if (state is SavedEventsError) {
                   return buildInitialSavedEvents();
                 }
