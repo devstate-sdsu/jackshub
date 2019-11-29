@@ -85,7 +85,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
           }
           return IconButton(
             icon: Icon(Icons.favorite_border),
-            color: Colors.red,
+            color: Colors.grey,
             onPressed: _favorite,
           ); 
         },
