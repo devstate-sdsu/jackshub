@@ -1,4 +1,3 @@
-import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jackshub/src/bloc/saved_events_event.dart';
@@ -7,7 +6,9 @@ import 'bloc/saved_events_bloc.dart';
 import 'widgets/menu-card.dart';
 import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'events_screen.dart';
+import 'package:jackshub/src/events_screen.dart';
+import 'package:jackshub/src/services/auth.dart';
+
 
 
 class HomeScreen extends StatelessWidget {
@@ -42,6 +43,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AuthService _auth = AuthService();
+
     return new DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -58,6 +61,14 @@ class HomeScreen extends StatelessWidget {
                 floating: true,
                 pinned: true,
                 snap: false,
+                actions: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.exit_to_app),
+                    onPressed: () async {
+                      await _auth.signOut();
+                    },
+                  ),
+                ],
                 bottom: TabBar(
                   tabs: <Widget>[
                     Tab(icon: Icon(Icons.event)),

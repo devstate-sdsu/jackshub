@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   cloud_firestore:
+  firebase_auth: ^0.15.0+1
   cupertino_icons: ^0.1.2
   fluro: "^1.4.0"
   auto_size_text: ^2.1.0
@@ -17,6 +18,8 @@ dependencies:
   path_provider:
   flutter_bloc:
   equatable:
+  provider: ^3.2.0
+  flutter_spinkit: "^4.1.0"
 
 
 dev_dependencies:
