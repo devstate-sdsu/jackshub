@@ -1,9 +1,10 @@
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:fluro/fluro.dart';
 import 'package:jackshub/src/models/user.dart';
 import 'package:jackshub/src/services/auth.dart';
-import '../config/application.dart';
-import '../config/routes.dart';
+import 'package:jackshub/config/application.dart';
+import 'package:jackshub/config/routes.dart';
 import 'package:provider/provider.dart';
 
 class AppComponent extends StatefulWidget {
@@ -14,6 +15,38 @@ class AppComponent extends StatefulWidget {
 }
 
 class _AppComponent extends State<AppComponent> {
+
+  @override
+  void initState() {
+    super.initState();
+    this.initDynamicLinks();
+  }
+
+  void initDynamicLinks() async {
+    final PendingDynamicLinkData data = await FirebaseDynamicLinks.instance.getInitialLink();
+    final Uri deepLink = data?.link;
+
+    if (deepLink != null) {
+      print('>>> DEEP LINK PATH: ');
+      print(deepLink.path);
+      Navigator.pushNamed(context, Routes.sign_in);
+    }
+
+    FirebaseDynamicLinks.instance.onLink(
+      onSuccess: (PendingDynamicLinkData dynamicLink) async {
+        final Uri deepLink = dynamicLink?.link;
+
+        if (deepLink != null) {
+          Navigator.pushNamed(context, deepLink.path);
+        }
+      },
+      onError: (OnLinkErrorException e) async {
+        print('onLinkError');
+        print(e.message);
+      }
+    );
+  }
+  
   _AppComponent() {
     final router = new Router();
     Routes.configureRoutes(router);

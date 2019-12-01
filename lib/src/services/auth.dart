@@ -51,6 +51,22 @@ class AuthService {
     }
   }
 
+  // register with email link
+  Future registerWithEmailLink(String email) async {    
+    try {
+      return await _auth.sendSignInWithEmailLink(
+        email: email,
+        url: 'https://devstate.page.link/sign-in-after-confirmation',
+        handleCodeInApp: true,
+        iOSBundleID: 'com.example.jackshub',
+        androidPackageName: 'com.example.jackshub',
+        androidInstallIfNotAvailable: false,
+        androidMinimumVersion: '12',
+        );
+    } catch(e) {
+      print(e.toString());
+    }
+  }
 
   // sign out
   Future signOut() async {
@@ -62,4 +78,3 @@ class AuthService {
     }
   }
 }  
-

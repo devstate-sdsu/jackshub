@@ -79,7 +79,7 @@ class EventsScreen extends StatelessWidget {
           Expanded(
             flex: 3,
             child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('eventsCol').snapshots(),
+              stream: Firestore.instance.collection('testEventsCol').snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return const Text('Loading...');
                 return ListView.builder(

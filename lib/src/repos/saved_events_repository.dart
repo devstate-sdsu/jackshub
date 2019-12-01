@@ -20,7 +20,7 @@ abstract class SavedEventsRepository {
     List<DocumentSnapshot> snapshotList = new List<DocumentSnapshot>();
     for (String docId in docIdList) {
         await Firestore.instance
-          .collection('eventsCol')
+          .collection('testEventsCol')
           .document(docId)
           .get()
           .then((DocumentSnapshot ds) {
