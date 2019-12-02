@@ -31,7 +31,7 @@ class HomeScreen extends StatelessWidget {
           time: doc['time'],
           timeUpdated: doc['time_updated'],
           img: doc['image'],
-          bigLocation: doc['location'],
+          bigLocation: doc['big_location'],
           tinyLocation: doc['tiny_location'],
           coords: doc['coords'],
           docId: doc.documentID,
