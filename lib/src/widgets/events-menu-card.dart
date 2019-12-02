@@ -11,7 +11,8 @@ class EventsMenuCard extends StatelessWidget {
     this.description,
     this.img,
     this.height = 360,
-    this.location,
+    this.tinyLocation,
+    this.bigLocation,
     this.coords,
     this.time,
     this.timeUpdated,
@@ -22,7 +23,8 @@ class EventsMenuCard extends StatelessWidget {
   final String name;
   final String description;
   final String summary;
-  final String location;
+  final String tinyLocation;
+  final String bigLocation;
   final String img;
   final String docId;
   final dynamic timeUpdated;
