@@ -123,6 +123,85 @@ class EventsMenuCard extends StatelessWidget {
                                                 minFontSize: 13,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
+                                              Row( // Bottom block that has location, date, time
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: <Widget>[
+                                                  Row(  // Location block
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                                    children: <Widget>[
+                                                      Icon(
+                                                        Icons.location_on,
+                                                        color: Color(0xFF747474)
+                                                      ),
+                                                      Visibility(
+                                                        visible: this.tinyLocation == "",
+                                                        child: AutoSizeText(
+                                                          this.bigLocation,
+                                                          maxFontSize: 15,
+                                                          maxLines: 2,
+                                                          style: TextStyle(
+                                                            fontWeight: FontWeight.w600,
+                                                            fontFamily: 'SF Pro',
+                                                            color: Color(0xFF747474),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      Visibility(
+                                                        visible: this.tinyLocation != "",
+                                                        child: Column(
+                                                          mainAxisAlignment: MainAxisAlignment.center,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: <Widget>[
+                                                            AutoSizeText(
+                                                              this.bigLocation,
+                                                              maxFontSize: 15,
+                                                              maxLines: 1,
+                                                              style: TextStyle(
+                                                                fontWeight: FontWeight.w600,
+                                                                fontFamily: 'SF Pro',
+                                                                color: Color(0xFF747474),
+                                                              ),
+                                                            ),
+                                                            AutoSizeText(
+                                                              this.tinyLocation,
+                                                              maxFontSize: 12,
+                                                              maxLines: 2,
+                                                              style: TextStyle(
+                                                                fontFamily: 'SF Pro',
+                                                                color: Color(0xFF747474),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    children: <Widget>[
+                                                      Row(
+                                                        children: <Widget>[
+                                                          Icon(
+                                                            Icons.calendar_today,
+                                                            color: Color(0xFF747474)
+                                                          ),
+                                                          AutoSizeText('Dec. 1'),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: <Widget>[
+                                                          Icon(
+                                                            Icons.schedule,
+                                                            color: Color(0xFF747474)
+                                                          ),
+                                                          AutoSizeText('10pm'),
+                                                        ],
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         ),
