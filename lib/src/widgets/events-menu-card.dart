@@ -43,7 +43,7 @@ class EventsMenuCard extends StatelessWidget {
               decoration: BoxDecoration(
                   image: DecorationImage(
                     fit: BoxFit.cover,
-                    colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.2), BlendMode.dstATop),
+                    colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
                     image: NetworkImage(
                       this.img
                     ),
