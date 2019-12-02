@@ -37,7 +37,7 @@ class EventsMenuCard extends StatelessWidget {
     double cardPadding = 20.0;
     double screenWidth = MediaQuery.of(context).size.width;
     double cardWidth = screenWidth - (cardPadding * 2);
-    double cardHeight = cardWidth * 1.1;
+    double cardHeight = cardWidth * 1.2;
     double cardBorderRadius = 15;
 
     DateTime start = DateTime.fromMillisecondsSinceEpoch(this.time[0].seconds * 1000);
@@ -103,33 +103,41 @@ class EventsMenuCard extends StatelessWidget {
                       child: FractionallySizedBox(
                         widthFactor: 0.89,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 5.0),
                           child: Column(  // The whole bottom block of an events card
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(
-                                child: AutoSizeText(
-                                  this.name,
-                                  textAlign: TextAlign.left,
-                                  minFontSize: 20,
-                                  style: TextStyle(
-                                    fontFamily: 'SF Pro',
-                                    fontWeight: FontWeight.w700,
-                                  ),
-                                  maxLines: 2,
-                                ),
-                              ),
-                              Flexible(
-                                child: AutoSizeText(
-                                  this.summary,
-                                  textAlign: TextAlign.left,
-                                  maxLines: 2,
-                                  minFontSize: 13,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
                               Expanded(
+                                flex: 2,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: AutoSizeText(
+                                        this.name,
+                                        textAlign: TextAlign.left,
+                                        minFontSize: 20,
+                                        style: TextStyle(
+                                          fontFamily: 'SF Pro',
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        maxLines: 2,
+                                      ),
+                                    ),
+                                    AutoSizeText(
+                                      this.summary,
+                                      textAlign: TextAlign.left,
+                                      maxLines: 2,
+                                      minFontSize: 13,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Flexible(
+                                flex: 1,
                                 child: Row( // Bottom block that has location, date, time
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   crossAxisAlignment: CrossAxisAlignment.end,
