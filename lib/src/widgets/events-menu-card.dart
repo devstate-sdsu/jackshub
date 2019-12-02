@@ -38,6 +38,7 @@ class EventsMenuCard extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double cardWidth = screenWidth - (cardPadding * 2);
     double cardHeight = cardWidth * 1.1;
+    double cardBorderRadius = 15;
 
     DateTime start = DateTime.fromMillisecondsSinceEpoch(this.time[0].seconds * 1000);
     DateTime end = DateTime.fromMillisecondsSinceEpoch(this.time[1].seconds * 1000);
@@ -59,7 +60,7 @@ class EventsMenuCard extends StatelessWidget {
                 ),
               ),
               color: Colors.white,
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(cardBorderRadius),
               boxShadow: [
                 BoxShadow(
                     color: Colors.black26,
@@ -76,8 +77,8 @@ class EventsMenuCard extends StatelessWidget {
                 flex: 618,   // Golden ratio
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15),
-                      topRight: Radius.circular(15)
+                      topLeft: Radius.circular(cardBorderRadius),
+                      topRight: Radius.circular(cardBorderRadius)
                   ),
                   child: Image(
                     image: Image.network(this.img).image,
@@ -89,154 +90,83 @@ class EventsMenuCard extends StatelessWidget {
                 flex: 382,
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(15),
-                      bottomRight: Radius.circular(15)
+                      bottomLeft: Radius.circular(cardBorderRadius),
+                      bottomRight: Radius.circular(cardBorderRadius)
                   ),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
                     ),
                     height: cardHeight * 0.382,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: FractionallySizedBox(
+                        widthFactor: 0.89,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+                          child: Column(  // The whole bottom block of an events card
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
+                              Flexible(
+                                child: AutoSizeText(
+                                  this.name,
+                                  textAlign: TextAlign.left,
+                                  minFontSize: 20,
+                                  style: TextStyle(
+                                    fontFamily: 'SF Pro',
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                  maxLines: 2,
+                                ),
+                              ),
+                              Flexible(
+                                child: AutoSizeText(
+                                  this.summary,
+                                  textAlign: TextAlign.left,
+                                  maxLines: 2,
+                                  minFontSize: 13,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
                               Expanded(
-                                child: SizedBox(
-                                  width: double.infinity,
-                                  child: FractionallySizedBox(
-                                    widthFactor: 0.89,
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row( // Bottom block that has location, date, time
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: <Widget>[
+                                    Flexible(
+                                      child: Row(  // Location block
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
                                         children: <Widget>[
+                                          Icon(
+                                            Icons.location_on,
+                                            color: Color(0xFF747474)
+                                          ),
                                           Flexible(
-                                            child: AutoSizeText(
-                                              this.name,
-                                              textAlign: TextAlign.left,
-                                              minFontSize: 20,
-                                              style: TextStyle(
-                                                fontFamily: 'SF Pro',
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                              maxLines: 2,
-                                            ),
-                                          ),
-                                          AutoSizeText(
-                                            this.summary,
-                                            textAlign: TextAlign.left,
-                                            maxLines: 2,
-                                            minFontSize: 13,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                          Expanded(
-                                            child: Row( // Bottom block that has location, date, time
-                                              mainAxisAlignment: MainAxisAlignment.start,
-                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
-                                                Flexible(
-                                                  child: Row(  // Location block
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                                    children: <Widget>[
-                                                      Icon(
-                                                        Icons.location_on,
-                                                        color: Color(0xFF747474)
-                                                      ),
-                                                      Flexible(
-                                                        child: Column(
-                                                          mainAxisAlignment: MainAxisAlignment.center,
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: <Widget>[
-                                                            Text(
-                                                              this.bigLocation,
-                                                              maxLines: 1,
-                                                              style: TextStyle(
-                                                                fontWeight: FontWeight.w600,
-                                                                fontFamily: 'SF Pro',
-                                                                fontSize : 13,
-                                                                color: Color(0xFF747474),
-                                                              ),
-                                                            ),
-                                                            Visibility(
-                                                              visible: this.tinyLocation != "",
-                                                              child: Text(
-                                                                this.tinyLocation,
-                                                                maxLines: 2,
-                                                                style: TextStyle(
-                                                                  fontFamily: 'SF Pro',
-                                                                  color: Color(0xFF747474),
-                                                                  fontSize : 12
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ],
+                                                Text(
+                                                  this.bigLocation,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: 'SF Pro',
+                                                    fontSize : 13,
+                                                    color: Color(0xFF747474),
                                                   ),
                                                 ),
-                                                Flexible(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.fromLTRB(5.0, 0, 0, 0),
-                                                    child: Column(  // Date and time blocks
-                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                      children: <Widget>[
-                                                        Flexible(
-                                                          child: Row(  // Date block
-                                                            children: <Widget>[
-                                                              Padding(
-                                                                padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
-                                                                child: Icon(
-                                                                  Icons.calendar_today,
-                                                                  size: 13,
-                                                                  color: Color(0xFF747474)
-                                                                ),
-                                                              ),
-                                                              AutoSizeText(
-                                                                dateString,
-                                                                maxFontSize: 12,
-                                                                maxLines: 1,
-                                                                style: TextStyle(
-                                                                  fontWeight: FontWeight.w600,
-                                                                  fontFamily: 'SF Pro',
-                                                                  color: Color(0xFF747474),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                        Flexible(
-                                                          child: Row(  // Time block
-                                                            children: <Widget>[
-                                                              Padding(
-                                                                padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
-                                                                child: Icon(
-                                                                  Icons.schedule,
-                                                                  size: 13,
-                                                                  color: Color(0xFF747474)
-                                                                ),
-                                                              ),
-                                                              Flexible(
-                                                                child: AutoSizeText(
-                                                                  startString + "-" + endString,
-                                                                  maxFontSize: 12,
-                                                                  maxLines: 1,
-                                                                  style: TextStyle(
-                                                                    fontWeight: FontWeight.w600,
-                                                                    fontFamily: 'SF Pro',
-                                                                    color: Color(0xFF747474),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ],
+                                                Visibility(
+                                                  visible: this.tinyLocation != "",
+                                                  child: Text(
+                                                    this.tinyLocation,
+                                                    maxLines: 2,
+                                                    style: TextStyle(
+                                                      fontFamily: 'SF Pro',
+                                                      color: Color(0xFF747474),
+                                                      fontSize : 12
                                                     ),
                                                   ),
                                                 ),
@@ -246,37 +176,73 @@ class EventsMenuCard extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                  ),
+                                    Flexible(
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(5.0, 0, 0, 0),
+                                        child: Column(  // Date and time blocks
+                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: Row(  // Date block
+                                                children: <Widget>[
+                                                  Padding(
+                                                    padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
+                                                    child: Icon(
+                                                      Icons.calendar_today,
+                                                      size: 13,
+                                                      color: Color(0xFF747474)
+                                                    ),
+                                                  ),
+                                                  AutoSizeText(
+                                                    dateString,
+                                                    maxFontSize: 12,
+                                                    maxLines: 1,
+                                                    style: TextStyle(
+                                                      fontWeight: FontWeight.w600,
+                                                      fontFamily: 'SF Pro',
+                                                      color: Color(0xFF747474),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Row(  // Time block
+                                                children: <Widget>[
+                                                  Padding(
+                                                    padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
+                                                    child: Icon(
+                                                      Icons.schedule,
+                                                      size: 13,
+                                                      color: Color(0xFF747474)
+                                                    ),
+                                                  ),
+                                                  Flexible(
+                                                    child: AutoSizeText(
+                                                      startString + "-" + endString,
+                                                      maxFontSize: 12,
+                                                      maxLines: 1,
+                                                      style: TextStyle(
+                                                        fontWeight: FontWeight.w600,
+                                                        fontFamily: 'SF Pro',
+                                                        color: Color(0xFF747474),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                              // SizedBox(
-                              //   width: double.infinity,
-                              //   child: FractionallySizedBox(
-                              //     widthFactor: 0.89,
-                              //     child: Padding(
-                              //       padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 2.0),
-                              //       child: AutoSizeText(
-                              //         this.summary,
-                              //         textAlign: TextAlign.left,
-                              //         maxLines: 2,
-                              //         minFontSize: 13,
-                              //         overflow: TextOverflow.ellipsis,
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-                              // Container(
-                              //   child: Padding(
-                              //     padding: EdgeInsets.all(5.0),
-                              //     child: FavoriteWidget(
-                              //       docId: docId,
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
