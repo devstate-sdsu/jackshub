@@ -63,7 +63,7 @@ class EventsMenuCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Expanded(
-                    flex: 618,
+                    flex: 618,   // Golden ratio
                     child: ClipRRect(
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(15),
