@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   fluro: "^1.4.0"
   auto_size_text: ^2.1.0
+  intl: ^0.16.0
   sqflite:
   path_provider:
   flutter_bloc:
