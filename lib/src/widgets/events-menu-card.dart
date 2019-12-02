@@ -61,7 +61,7 @@ class EventsMenuCard extends StatelessWidget {
                     child: Image(
                       image: Image.network(this.img).image,
                       fit: BoxFit.fitWidth,
-                      height: this.height *.8,
+                      height: this.height *.618,
                     ),
                   ),
                   ClipRRect(
@@ -70,45 +70,73 @@ class EventsMenuCard extends StatelessWidget {
                         bottomRight: Radius.circular(15)
                     ),
                     child: Container(
-                      height: this.height * 0.2,
+                      height: this.height * 0.382,
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Expanded(
                             child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: <Widget>[
                                 Expanded(
-                                  child: AutoSizeText(
-                                    this.name,
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(
-                                      fontFamily: 'Hobo',
-                                      fontSize: 35,
-                                    ),
-                                    maxLines: 1,
-                                  ),
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: FractionallySizedBox(
+                                      widthFactor: 0.89,
                                       child: Padding(
-                                        padding: EdgeInsets.only(left: 5.0, right: 5.0),
-                                        child: AutoSizeText(
-                                          this.summary,
-                                          textAlign: TextAlign.center,
-                                          maxLines: 2,
-                                          minFontSize: 15,
-                                          overflow: TextOverflow.ellipsis,
+                                        padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 0.0),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: AutoSizeText(
+                                                this.name,
+                                                textAlign: TextAlign.left,
+                                                minFontSize: 20,
+                                                style: TextStyle(
+                                                  fontFamily: 'SF Pro',
+                                                  fontWeight: FontWeight.w700,
+                                                ),
+                                                maxLines: 2,
+                                              ),
+                                            ),
+                                            AutoSizeText(
+                                              this.summary,
+                                              textAlign: TextAlign.left,
+                                              maxLines: 2,
+                                              minFontSize: 13,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                    Padding(
-                                      padding: EdgeInsets.all(5.0),
-                                      child: FavoriteWidget(
-                                        docId: docId,
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
+                                // SizedBox(
+                                //   width: double.infinity,
+                                //   child: FractionallySizedBox(
+                                //     widthFactor: 0.89,
+                                //     child: Padding(
+                                //       padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 2.0),
+                                //       child: AutoSizeText(
+                                //         this.summary,
+                                //         textAlign: TextAlign.left,
+                                //         maxLines: 2,
+                                //         minFontSize: 13,
+                                //         overflow: TextOverflow.ellipsis,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
+                                // Container(
+                                //   child: Padding(
+                                //     padding: EdgeInsets.all(5.0),
+                                //     child: FavoriteWidget(
+                                //       docId: docId,
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),

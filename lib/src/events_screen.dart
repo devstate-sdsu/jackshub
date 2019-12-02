@@ -46,12 +46,7 @@ class EventsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/autumn-studio-unsplash.jpg'),
-          fit: BoxFit.cover,
-        ),
-      ),
+      color: Colors.white,
       child: Column(
         children: <Widget>[
           BlocListener<SavedEventsBloc, SavedEventsState>(
