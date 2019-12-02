@@ -13,7 +13,9 @@ class EventsScreen extends StatelessWidget {
       child: EventsMenuCard(
           name: doc['name'],
           summary: doc['summary'],
-          time: doc['time'],
+          description: doc['description'],
+          startTime: doc['start_time'],
+          endTime: doc['end_time'],
           timeUpdated: doc['time_updated'],
           img: doc['image'],
           tinyLocation: doc['tiny_location'],
@@ -75,7 +77,7 @@ class EventsScreen extends StatelessWidget {
           Expanded(
             flex: 3,
             child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('eventsCol').snapshots(),
+              stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return const Text('Loading...');
                 return ListView.builder(

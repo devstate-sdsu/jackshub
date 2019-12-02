@@ -27,7 +27,8 @@ class HomeScreen extends StatelessWidget {
       child: EventsMenuCard(
           name: doc['name'],
           summary: doc['summary'],
-          time: doc['time'],
+          startTime: doc['start_time'],
+          endTime: doc['end_time'],
           timeUpdated: doc['time_updated'],
           img: doc['image'],
           bigLocation: doc['big_location'],

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -14,7 +15,8 @@ class EventsMenuCard extends StatelessWidget {
     this.tinyLocation,
     this.bigLocation,
     this.coords,
-    this.time,
+    this.startTime,
+    this.endTime,
     this.timeUpdated,
     this.favorite = false,
     this.docId
@@ -28,7 +30,8 @@ class EventsMenuCard extends StatelessWidget {
   final String img;
   final String docId;
   final dynamic timeUpdated;
-  final List<dynamic> time;
+  final Timestamp startTime;
+  final Timestamp endTime;
   final dynamic coords;
   bool favorite;
 
@@ -40,8 +43,8 @@ class EventsMenuCard extends StatelessWidget {
     double cardHeight = cardWidth * 1.2;
     double cardBorderRadius = 15;
 
-    DateTime start = DateTime.fromMillisecondsSinceEpoch(this.time[0].seconds * 1000);
-    DateTime end = DateTime.fromMillisecondsSinceEpoch(this.time[1].seconds * 1000);
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(this.startTime.seconds * 1000);
+    DateTime end = DateTime.fromMillisecondsSinceEpoch(this.endTime.seconds * 1000);
 
     String dateString = new DateFormat.MMMd().format(start);
     String startString = new DateFormat.jm().format(start);
@@ -103,7 +106,7 @@ class EventsMenuCard extends StatelessWidget {
                       child: FractionallySizedBox(
                         widthFactor: 0.89,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 5.0),
+                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 10.0),
                           child: Column(  // The whole bottom block of an events card
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -127,9 +130,9 @@ class EventsMenuCard extends StatelessWidget {
                                       ),
                                     ),
                                     AutoSizeText(
-                                      this.summary,
+                                      this.description,
                                       textAlign: TextAlign.left,
-                                      maxLines: 2,
+                                      maxLines: 3,
                                       minFontSize: 13,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -139,10 +142,11 @@ class EventsMenuCard extends StatelessWidget {
                               Flexible(
                                 flex: 1,
                                 child: Row( // Bottom block that has location, date, time
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: <Widget>[
-                                    Flexible(
+                                    Expanded(
+                                      flex: 3,
                                       child: Row(  // Location block
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,7 +162,7 @@ class EventsMenuCard extends StatelessWidget {
                                               children: <Widget>[
                                                 Text(
                                                   this.bigLocation,
-                                                  maxLines: 1,
+                                                  maxLines: 2,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w600,
                                                     fontFamily: 'SF Pro',
@@ -184,7 +188,8 @@ class EventsMenuCard extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                    Flexible(
+                                    Expanded(
+                                      flex: 2,
                                       child: Padding(
                                         padding: const EdgeInsets.fromLTRB(5.0, 0, 0, 0),
                                         child: Column(  // Date and time blocks
@@ -215,6 +220,7 @@ class EventsMenuCard extends StatelessWidget {
                                               ),
                                             ),
                                             Flexible(
+                                              flex: 1,
                                               child: Row(  // Time block
                                                 children: <Widget>[
                                                   Padding(
@@ -242,6 +248,11 @@ class EventsMenuCard extends StatelessWidget {
                                             ),
                                           ],
                                         ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: FavoriteWidget(
+                                        docId: this.docId
                                       ),
                                     ),
                                   ],
