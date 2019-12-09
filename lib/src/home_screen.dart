@@ -7,6 +7,7 @@ import 'widgets/menu-card.dart';
 import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'events_screen.dart';
+import 'test_events_screen.dart';
 
 
 class HomeScreen extends StatelessWidget {
@@ -75,33 +76,14 @@ class HomeScreen extends StatelessWidget {
                 builder: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEvents()),
                 child: EventsScreen(),
               ),
-              StreamBuilder<QuerySnapshot>(
-                  stream: Firestore.instance.collection('newCol').snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (!snapshot.hasData) return const Text('Loading...');
-                    return ListView.builder(
-                              itemCount: snapshot.data.documents.length,
-                              itemBuilder: (context, index) =>
-                                  _buildListItem(context, snapshot.data.documents[index])
-                    );
-                  }
+              BlocProvider(
+                builder: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEvents()),
+                child: TestEventsScreen(),
               ),
-              ListView(
-                children: <Widget>[
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-                    fit: BoxFit.fill)
-                  ),
-                  MenuCard(
-                    title: Text('HELLO'),
-                    description: Text('bitch'),
-                    img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.',
-                    fit: BoxFit.fill)
-                  ),
-                ],
-              )
+              BlocProvider(
+                builder: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEvents()),
+                child: TestEventsScreen(),
+              ),
             ],
           )
         )
