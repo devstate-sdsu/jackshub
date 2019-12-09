@@ -79,7 +79,7 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
           if (state is SavedEventsLoaded) {
               return IconButton(
                 icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-                color: Colors.red,
+                color: this.isFav ? Colors.red : Colors.grey,
                 onPressed: this.isFav ? _unfavorite : _favorite,
               ); 
           }
