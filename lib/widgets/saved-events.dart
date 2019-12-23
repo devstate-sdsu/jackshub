@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:jackshub/src/bloc/saved_events_bloc.dart';
-import '../../database_helpers.dart';
+import 'package:jackshub/util/database_helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'saved-event-card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

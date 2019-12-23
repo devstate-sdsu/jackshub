@@ -1,15 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'src/app_component.dart';
+import 'src/app.dart';
 
 void main() {
+  // Forces portrait orientation on devices.
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp,
   ]);
+
+  // Set the system status bar color to white with black text, and remove the default
+  // Flutter Material AppBar at the top.
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Color(0x00FFFFFF)));
-  runApp(new AppComponent());
+  
+  // Actually run the app, Located in app.dart.
+  runApp(new App());
 }
+
+
+
+
+
+
 
 //class Item {
 //  String key;
