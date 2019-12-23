@@ -1,51 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'bloc/saved_events_bloc.dart';
-import 'bloc/saved_events_state.dart';
-import 'widgets/events-menu-card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'widgets/saved-event-card.dart';
-import 'widgets/saved-events.dart';
-
-class TestEventsScreen extends StatelessWidget {
-  Widget _buildEventsListItem(BuildContext context, DocumentSnapshot doc) {
-    return Container(
-      child: EventsMenuCard(
-          name: doc['name'],
-          summary: doc['summary'],
-          description: doc['description'],
-          startTime: doc['start_time'],
-          endTime: doc['end_time'],
-          timeUpdated: doc['time_updated'],
-          img: doc['image'],
-          tinyLocation: doc['tiny_location'],
-          bigLocation: doc['big_location'],
-          coords: doc['coords'],
-          docId: doc.documentID,
-      ),
-    );
-  }
-
-  Widget _buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
-    return Container(
-      child: SavedEventCard(
-          name: doc['name'],
-          img: doc['image'],
-          docId: doc.documentID,
-      ),
-    );
-  }
-
-  Widget buildInitialSavedEvents() {
-    return Container();
-  }
-
-  Widget buildLoadingSavedEvents() {
-    return Container();
-  }
+import 'package:jackshub/src/bloc/index.dart';
+import 'package:jackshub/widgets/index.dart';
 
 
 
+class EventsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -70,20 +31,18 @@ class TestEventsScreen extends StatelessWidget {
                   return buildInitialSavedEvents();
                 }
                 return Container();
-              },
+              }
             ),
           ),
-          // SavedEvents(),
           Expanded(
             flex: 3,
             child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('testEventsCol').orderBy('start_time').snapshots(),
+              stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return const Text('Loading...');
                 return ListView.builder(
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) =>
-                        _buildEventsListItem(context, snapshot.data.documents[index])
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) => buildEventsListItem(context, snapshot.data.documents[index])
                 );
               }
             ),
@@ -92,6 +51,39 @@ class TestEventsScreen extends StatelessWidget {
       )
     );
   }
+
+  Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc) {
+    return EventsMenuCard(
+        name: doc['name'],
+        summary: doc['summary'],
+        description: doc['description'],
+        startTime: doc['start_time'],
+        endTime: doc['end_time'],
+        timeUpdated: doc['time_updated'],
+        img: doc['image'],
+        tinyLocation: doc['tiny_location'],
+        bigLocation: doc['big_location'],
+        coords: doc['coords'],
+        docId: doc.documentID,
+    );
+  }
+
+  Widget buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
+    return SavedEventCard(
+      name: doc['name'],
+      img: doc['image'],
+      docId: doc.documentID,
+    );
+  }
+
+  // Temporary
+  Widget buildInitialSavedEvents() {
+    return Container();
+  }
+
+  // Temporary
+  Widget buildLoadingSavedEvents() {
+    return Container();
+  }
+
 }
-
-

@@ -4,7 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jackshub/src/bloc/saved_events_bloc.dart';
 import 'package:jackshub/src/bloc/saved_events_event.dart';
 import 'package:jackshub/src/bloc/saved_events_state.dart';
-import '../../database_helpers.dart';
+import 'package:jackshub/util/database_helpers.dart';
+
+
 
 _read() async {
   DatabaseHelper helper = DatabaseHelper.instance;

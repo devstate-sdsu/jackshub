@@ -1,47 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jackshub/src/bloc/saved_events_event.dart';
+//import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:jackshub/src/bloc/index.dart';
+import 'package:jackshub/screens/index.dart';
 import 'package:jackshub/src/repos/saved_events_repository.dart';
-import 'bloc/saved_events_bloc.dart';
-import 'widgets/menu-card.dart';
-import 'widgets/events-menu-card.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'events_screen.dart';
-import 'test_events_screen.dart';
+
 
 
 class HomeScreen extends StatelessWidget {
-
-
-  Widget _buildListItem(BuildContext context, DocumentSnapshot doc) {
-    return Container(
-      child: new MenuCard(
-          title: Text(doc['carrotType']),
-          description: Text(doc['carrotType']),
-          img: Image.network('https://cdn-images-1.medium.com/fit/c/200/200/0*UIFfL_qd3osLl4LE.')
-      ),
-    );
-  }
-
-  Widget _buildEventsListItem(BuildContext context, DocumentSnapshot doc) {
-    return Container(
-      child: EventsMenuCard(
-          name: doc['name'],
-          summary: doc['summary'],
-          startTime: doc['start_time'],
-          endTime: doc['end_time'],
-          timeUpdated: doc['time_updated'],
-          img: doc['image'],
-          bigLocation: doc['big_location'],
-          tinyLocation: doc['tiny_location'],
-          coords: doc['coords'],
-          docId: doc.documentID,
-      ),
-    );
-  }
-
-  
-
   @override
   Widget build(BuildContext context) {
     return new DefaultTabController(
@@ -65,7 +31,7 @@ class HomeScreen extends StatelessWidget {
                     Tab(icon: Icon(Icons.event)),
                     Tab(icon: Icon(Icons.room_service)),
                     Tab(icon: Icon(Icons.fastfood)),
-                  ]
+                  ],
                 )
               )
             ];
@@ -78,18 +44,16 @@ class HomeScreen extends StatelessWidget {
               ),
               BlocProvider(
                 builder: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEvents()),
-                child: TestEventsScreen(),
+                child: ServicesScreen(),
               ),
               BlocProvider(
                 builder: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEvents()),
-                child: TestEventsScreen(),
-              ),
+                child: FoodScreen(),
+              )
             ],
-          )
+          ),
         )
       )
     );
   }
 }
-
-

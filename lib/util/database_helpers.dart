@@ -3,9 +3,13 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 
+
+
 // database table and column names
 final String savedEventsTable = 'saved_events';
 final String docId = 'doc_id';
+
+
 
 // Saved Events Datamodel
 class SavedEvent {
@@ -28,6 +32,8 @@ class SavedEvent {
   }
 }
 
+
+
 List<SavedEvent> _toList(List<Map> maps) {
   List<SavedEvent> newList = new List<SavedEvent>();
 
@@ -35,6 +41,8 @@ List<SavedEvent> _toList(List<Map> maps) {
 
   return newList;
 }
+
+
 
 // singleton class to manage the database
 class DatabaseHelper {
