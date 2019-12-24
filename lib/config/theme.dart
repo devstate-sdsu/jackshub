@@ -5,30 +5,45 @@ import 'package:flutter/material.dart';
 var lightTheme = new ThemeData(
   brightness: Brightness.light,
   primaryColor: Colors.white,
-  accentColor: Colors.blueAccent,
+  backgroundColor: Colors.white,
+  cardColor: Colors.white,
+
+  textTheme: TextTheme(
+    title: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 20.0,
+      fontWeight: FontWeight.w700,
+      color: Colors.black,
+    ),
+    caption: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 14.0,
+      fontWeight: FontWeight.w400,
+      color: Colors.black,
+    )
+  )
 );
+
+
 
 var darkTheme = new ThemeData(
   brightness: Brightness.dark,
-  primaryColor: Colors.black54,
-  accentColor: Colors.blueAccent,
+  primaryColor: Colors.grey[900],
+  backgroundColor: Colors.grey[900],
+  cardColor: Colors.grey[850],
+
+  textTheme: TextTheme(
+    title: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 20.0,
+      fontWeight: FontWeight.w700,
+      color: Colors.white,
+    ),
+    caption: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 14.0,
+      fontWeight: FontWeight.w400,
+      color: Colors.white,
+    )
+  )
 );
-
-
-
-var lightCardTitle = TextStyle(
-  fontFamily: 'Roboto',
-  fontSize: 20.0,
-  fontWeight: FontWeight.w700,
-  color: Colors.black,
-);
-
-var lightCardDescription = TextStyle(
-  fontFamily: 'Roboto',
-  fontSize: 11.0,
-  fontWeight: FontWeight.w400,
-  color: Colors.black,
-);
-
-
-

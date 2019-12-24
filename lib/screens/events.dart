@@ -10,7 +10,7 @@ class EventsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).backgroundColor,
       child: Column(
         children: <Widget>[
           BlocListener<SavedEventsBloc, SavedEventsState>(
