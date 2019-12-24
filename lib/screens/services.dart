@@ -8,7 +8,7 @@ class ServicesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).backgroundColor,
       child: Column(
         children: <Widget>[
           Expanded(
@@ -30,17 +30,10 @@ class ServicesScreen extends StatelessWidget {
   }
 
   Widget buildServicesListItem(BuildContext context, DocumentSnapshot doc) {
-    return EventsMenuCard(
+    return ServicesCard(
         name: doc['name'],
         summary: doc['summary'],
-        description: doc['description'],
-        startTime: doc['start_time'],
-        endTime: doc['end_time'],
-        timeUpdated: doc['time_updated'],
         img: doc['image'],
-        tinyLocation: doc['tiny_location'],
-        bigLocation: doc['big_location'],
-        coords: doc['coords'],
         docId: doc.documentID,
     );
   }

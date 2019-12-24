@@ -9,10 +9,6 @@ void main() {
     DeviceOrientation.portraitUp,
   ]);
 
-  // Set the system status bar color to white with black text, and remove the default
-  // Flutter Material AppBar at the top.
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(statusBarColor: Color(0x00FFFFFF)));
-  
   // Actually run the app, Located in app.dart.
   runApp(new App());
 }

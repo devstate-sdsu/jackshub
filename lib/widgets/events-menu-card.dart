@@ -62,7 +62,7 @@ class EventsMenuCard extends StatelessWidget {
                   this.img
                 ),
               ),
-              color: Colors.white,
+              color: Theme.of(context).backgroundColor,
               borderRadius: BorderRadius.circular(cardBorderRadius),
               boxShadow: [
                 BoxShadow(
@@ -98,7 +98,7 @@ class EventsMenuCard extends StatelessWidget {
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).backgroundColor
                     ),
                     height: cardHeight * 0.382,
                     child: SizedBox(
