@@ -12,9 +12,9 @@ class Routes {
     router.define("/", handler: rootHandler);
     /*
     router.define("/detailedEvents/:docId", handler: detailedEventsHandler);
-    router.define("/detailedFood/:docId", handler: detailedFoodHandler);
+    router.define("/detailedFood/:docId", handler: detailedFoodHandler);*/
     router.define("/detailedServices/:docId", handler: detailedServicesHandler);
-    */
+    
   }
 }
 
@@ -34,11 +34,14 @@ var detailedFoodHandler = new Handler(handlerFunc: (BuildContext context, Map<St
 var detailedEventsHandler = new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
   return DetailedEventsScreen(docId: params["docId"][0]);
 });
-
+*/
 var detailedServicesHandler = new Handler(handlerFunc: (BuildContext context, Map<String, dynamic> params) {
+  
+  //print("PARAMS[DOCID][0]");
+  //print(params["docId"][0]);
   return DetailedServicesScreen(docId: params["docId"][0]);
 });
-*/
+
 
 
 // This is the main important 'router' class for the app.

@@ -14,7 +14,7 @@ class ServicesScreen extends StatelessWidget {
           Expanded(
             flex: 3,
             child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
+              stream: Firestore.instance.collection('foodCol').snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return const Text('Loading...');
                 return ListView.builder(
