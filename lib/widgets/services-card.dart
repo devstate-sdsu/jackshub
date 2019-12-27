@@ -1,7 +1,6 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:jackshub/config/router.dart';
-import 'package:jackshub/util/database_helpers.dart';
 
 
 
@@ -9,6 +8,7 @@ class ServicesCard extends StatefulWidget {
   final String name;
   final String summary;
   final String img;
+  final String status;
   final String docId;
 
   const ServicesCard({
@@ -16,6 +16,7 @@ class ServicesCard extends StatefulWidget {
     this.name,
     this.summary,
     this.img,
+    this.status,
     this.docId
   }): super(key: key);
 
@@ -25,44 +26,46 @@ class ServicesCard extends StatefulWidget {
 
 
 
-
 class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
 
   AnimationController _controller;
   Animation _animation;
 
-  double cardTouchedScale = 0.94;
-  double cardRegularScale = 1;
-  var cardScale = 1.0;
-  int cardScaleDuration = 250;
+  int transitionDuration = 1000;  // in milliseconds
 
+  double cardTouchedScale = 0.94;
+  double cardRegularScale = 1.0;
+  int cardAnimateDuration = 250;  // in milliseconds
+  var cardScale = 1.0;
+
+  double cardVerticalSize = 130.0;
   double cardSidePadding = 20.0;
   double cardVerticalPadding = 10.0;
   double cardBorderRadius = 15.0;
 
-  Color shadowColor = Color.fromRGBO(0,0,0,0.25);
+  Color shadowColor = Color.fromRGBO(0, 0, 0, 0.25);
   double shadowBlurRadius = 20.0;
-  Offset shadowOffset = Offset(0,5);
+  Offset shadowOffset = Offset(0, 5);
 
   @override
   void initState() {
     super.initState();
-
     _controller = AnimationController(
       vsync: this,
       duration: Duration(
-        milliseconds: cardScaleDuration
+        milliseconds: cardAnimateDuration,
       )
     );
-
     _animation = Tween(
-      begin: cardRegularScale, 
+      begin: cardRegularScale,
       end: cardTouchedScale
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.fastOutSlowIn,
-      reverseCurve: Curves.easeInQuad
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.fastOutSlowIn,
+        reverseCurve: Curves.easeInQuad
+      )
+    );
   }
 
   @override
@@ -77,19 +80,19 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
       animation: _controller,
       builder: (BuildContext context, Widget child) {
         return GestureDetector(
-          
+
           onTapDown: (TapDownDetails details) {
             _controller.forward();
           },
 
           onTapUp: (TapUpDetails details) {
-            _controller.forward();
+            _controller.reverse();
             String docId = widget.docId;
             ApplicationRouter.router.navigateTo(
               context,
               "detailedServices/$docId",
-              transition: TransitionType.fadeIn,
-              transitionDuration: Duration(milliseconds: 1000)
+              transition: TransitionType.inFromBottom,
+              transitionDuration: Duration(milliseconds: transitionDuration),
             );
           },
 
@@ -100,6 +103,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
           child: Transform.scale(
             scale: _animation.value,
             child: Container(
+              height: cardVerticalSize,
               alignment: Alignment.center,
               margin: EdgeInsets.symmetric(
                 horizontal: cardSidePadding,
@@ -112,7 +116,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                   BoxShadow(
                     color: shadowColor,
                     blurRadius: shadowBlurRadius,
-                    offset: shadowOffset,
+                    offset: shadowOffset
                   )
                 ]
               ),
@@ -122,18 +126,18 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                   Expanded(
                     flex: 350,
                     child: Hero(
-                      tag: 'cardImg'+widget.docId,
+                      tag: 'servicesCardImg'+widget.docId,
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(cardBorderRadius),
-                          bottomLeft: Radius.circular(cardBorderRadius),
+                          bottomLeft: Radius.circular(cardBorderRadius)
                         ),
-                        child: Image(
-                          image: NetworkImage(
-                            widget.img
-                          )
+                        child: FadeInImage.assetNetwork(
+                          placeholder: 'lib/assets/images/loadingPlaceHolder.png',
+                          image: widget.img,
+                          fit: BoxFit.cover
                         )
-                      ),
+                      )
                     )
                   ),
                   Spacer(
@@ -147,11 +151,11 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                           height: 10.0
                         ),
                         Hero(
-                          tag: 'cardTitle'+widget.docId,
+                          tag: 'servicesCardTitle'+widget.docId,
                           child: Text(
                             widget.name,
                             textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.title,
+                            style: Theme.of(context).textTheme.title
                           )
                         ),
                         SizedBox(
@@ -160,13 +164,13 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                         Text(
                           widget.summary,
                           textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.caption,
+                          style: Theme.of(context).textTheme.caption
                         ),
                         SizedBox(
                           height: 10.0
                         ),
                         Text(
-                          "Currently: Closed, FOREVER because you suck.",
+                          widget.status,
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.caption
                         )
@@ -177,8 +181,11 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
               )
             )
           )
+
         );
       }
     );
   }
+
 }
+

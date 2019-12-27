@@ -14,7 +14,7 @@ class ServicesScreen extends StatelessWidget {
           Expanded(
             flex: 3,
             child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('foodCol').snapshots(),
+              stream: Firestore.instance.collection('servicesCol').snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return const Text('Loading...');
                 return ListView.builder(
@@ -34,6 +34,7 @@ class ServicesScreen extends StatelessWidget {
         name: doc['name'],
         summary: doc['summary'],
         img: doc['image'],
+        status: doc['status'],
         docId: doc.documentID,
     );
   }

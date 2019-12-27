@@ -47,3 +47,4 @@ flutter:
           weight: 900
   assets:
     - lib/assets/images/
+    - lib/assets/images/loadingPlaceHolder.png
