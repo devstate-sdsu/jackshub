@@ -30,11 +30,12 @@ class ServicesScreen extends StatelessWidget {
   }
 
   Widget buildServicesListItem(BuildContext context, DocumentSnapshot doc) {
+    Map<String, dynamic> docdata = doc.data;
     return ServicesCard(
-        name: doc['name'],
-        summary: doc['summary'],
-        img: doc['image'],
-        status: doc['status'],
+        name: docdata['name'],
+        summary: docdata['summary'],
+        image: docdata['image'],
+        status: docdata['status'],
         docId: doc.documentID,
     );
   }

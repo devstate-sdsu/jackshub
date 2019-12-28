@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluro/fluro.dart';
+//import 'package:fluro/fluro.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/config/router.dart';
 
@@ -15,11 +15,6 @@ class App extends StatefulWidget {
 
 
 class _App extends State<App> {
-  _App() {
-    final router = new Router();
-    Routes.configureRoutes(router);
-    ApplicationRouter.router = router;
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -30,7 +25,10 @@ class _App extends State<App> {
       theme: lightTheme,
       darkTheme: darkTheme,
 
-      onGenerateRoute: ApplicationRouter.router.generator,
+      onGenerateRoute: Routes().routes,
+
+      //initialRoute: '/',
+      //routes: Routes().routes,
     );
     return app;
   }

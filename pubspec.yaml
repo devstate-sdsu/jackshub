@@ -18,6 +18,7 @@ dependencies:
   path_provider:
   flutter_bloc:
   equatable:
+  page_transition: 
  
 
 dev_dependencies:

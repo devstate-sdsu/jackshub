@@ -1,13 +1,21 @@
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:jackshub/config/router.dart';
+import 'package:jackshub/util/database_helpers.dart';
 
 
+
+/*class ServicesRoutingParameters {
+  final String name;
+  final String image;
+  final String docId;
+  ServicesRoutingParameters(this.name, this.image, this.docId);
+}*/
 
 class ServicesCard extends StatefulWidget {
   final String name;
   final String summary;
-  final String img;
+  final String image;
   final String status;
   final String docId;
 
@@ -15,7 +23,7 @@ class ServicesCard extends StatefulWidget {
     Key key,
     this.name,
     this.summary,
-    this.img,
+    this.image,
     this.status,
     this.docId
   }): super(key: key);
@@ -38,7 +46,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
   int cardAnimateDuration = 250;  // in milliseconds
   var cardScale = 1.0;
 
-  double cardVerticalSize = 130.0;
+  double cardVerticalSize = 135.0;
   double cardSidePadding = 20.0;
   double cardVerticalPadding = 10.0;
   double cardBorderRadius = 15.0;
@@ -76,6 +84,8 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    print("widget image");
+    print(widget.image);
     return AnimatedBuilder(
       animation: _controller,
       builder: (BuildContext context, Widget child) {
@@ -87,12 +97,23 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
 
           onTapUp: (TapUpDetails details) {
             _controller.reverse();
-            String docId = widget.docId;
-            ApplicationRouter.router.navigateTo(
+            //String docId = widget.docId;
+            //String name = widget.name;
+            //String image = widget.image;
+            //var paramdata = '{"docId":'+docId+',"name":'+name+',"image":'+image+'}';
+            /*Map<String, dynamic> paramdata = {
+              "docId": docId,
+              "name": name,
+              //"image": image
+            };*/
+            Navigator.pushNamed(
               context,
-              "detailedServices/$docId",
-              transition: TransitionType.inFromBottom,
-              transitionDuration: Duration(milliseconds: transitionDuration),
+              '/detailedServices',
+              arguments: ServicesRoutingParameters(
+                widget.name,
+                widget.image,
+                widget.docId,
+              ),
             );
           },
 
@@ -110,7 +131,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                 vertical: cardVerticalPadding
               ),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(cardBorderRadius),
                 boxShadow: [
                   BoxShadow(
@@ -132,20 +153,34 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                           topLeft: Radius.circular(cardBorderRadius),
                           bottomLeft: Radius.circular(cardBorderRadius)
                         ),
-                        child: FadeInImage.assetNetwork(
+                        child: Container(
+                          //color: Colors.black87,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage(
+                                widget.image
+                              )
+                            )
+                          )
+                        )
+                        /*child: FadeInImage.assetNetwork(
                           placeholder: 'lib/assets/images/loadingPlaceHolder.png',
                           image: widget.img,
-                          fit: BoxFit.cover
-                        )
+                          imageScale: 2.1,
+                          //fit: BoxFit.fitHeight
+                        )*/
                       )
                     )
                   ),
                   Spacer(
-                    flex: 10,
+                    flex: 40
                   ),
                   Expanded(
-                    flex: 750,
+                    flex: 725,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(
                           height: 10.0
@@ -157,14 +192,18 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                             textAlign: TextAlign.left,
                             style: Theme.of(context).textTheme.title
                           )
-                        ),
+                        ),                            
                         SizedBox(
-                          height: 5.0
+                          height: 10.0
                         ),
-                        Text(
-                          widget.summary,
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.caption
+                        Expanded(
+                          child: Text(
+                            widget.summary,
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.caption,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3
+                          )
                         ),
                         SizedBox(
                           height: 10.0
@@ -173,9 +212,15 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                           widget.status,
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.caption
+                        ),
+                        SizedBox(
+                          height: 10.0
                         )
                       ],
                     )
+                  ),
+                  Spacer(
+                    flex: 20
                   )
                 ],
               )

@@ -7,11 +7,19 @@ var lightTheme = new ThemeData(
   primaryColor: Colors.white,
   backgroundColor: Colors.white,
   cardColor: Colors.white,
+  indicatorColor: Colors.black,
+  
 
   textTheme: TextTheme(
     title: TextStyle(
       fontFamily: 'Roboto',
       fontSize: 20.0,
+      fontWeight: FontWeight.w700,
+      color: Colors.black,
+    ),
+    headline: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 35.0,
       fontWeight: FontWeight.w700,
       color: Colors.black,
     ),
@@ -28,14 +36,21 @@ var lightTheme = new ThemeData(
 
 var darkTheme = new ThemeData(
   brightness: Brightness.dark,
-  primaryColor: Colors.grey[900],
-  backgroundColor: Colors.grey[900],
-  cardColor: Colors.grey[850],
+  primaryColor: Colors.black,
+  backgroundColor: Colors.black,
+  cardColor: Colors.grey[900],
+  indicatorColor: Colors.white,
 
   textTheme: TextTheme(
     title: TextStyle(
       fontFamily: 'Roboto',
       fontSize: 20.0,
+      fontWeight: FontWeight.w700,
+      color: Colors.white,
+    ),
+    headline: TextStyle(
+      fontFamily: 'Roboto',
+      fontSize: 35.0,
       fontWeight: FontWeight.w700,
       color: Colors.white,
     ),
