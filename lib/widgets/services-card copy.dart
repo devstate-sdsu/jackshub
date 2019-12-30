@@ -1,10 +1,10 @@
-import 'package:fluro/fluro.dart';
-import 'package:flutter/material.dart';
-import 'package:jackshub/config/router.dart';
+//import 'package:fluro/fluro.dart';
+//import 'package:flutter/material.dart';
+//import 'package:jackshub/config/router.dart';
 
 
 
-
+/*
 class DetailedServicesScreen extends StatelessWidget {
   DetailedServicesScreen({
     this.docId,
@@ -28,6 +28,7 @@ class DetailedServicesScreen extends StatelessWidget {
     });*/
     return snapshot;
   }
+*/
 
 //PAGE cardBase + DOC ID
 //flutter: cardBaseK01IOcyPu187rq4QgdUc
@@ -46,7 +47,7 @@ class DetailedServicesScreen extends StatelessWidget {
 */
 
 
-
+/*
   @override
   Widget build(BuildContext context) {
 
@@ -159,6 +160,7 @@ class DetailedServicesScreen extends StatelessWidget {
   }
 }
 
+*/
 
 
 
@@ -202,8 +204,7 @@ class DetailedServicesScreen extends StatelessWidget {
 
 
 
-
-
+/*
 class ServicesCard extends StatefulWidget {
   final String name;
   final String summary;
@@ -382,6 +383,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
   }
 }
 
+*/
 
 
 
@@ -443,7 +445,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
 
 
 
-
+/*
 class ServicesCard extends StatefulWidget {
   final String name;
   final String summary;
@@ -461,9 +463,9 @@ class ServicesCard extends StatefulWidget {
   @override
   _ServicesCard createState() => _ServicesCard();
 }
+*/
 
-
-
+/*
 class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
 //class _ServicesCard extends State<ServicesCard> {
 
@@ -1059,4 +1061,5 @@ class ServicesCard extends StatelessWidget {
   }
 }
 
+*/
 */

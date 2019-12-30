@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/widgets.dart';
 import 'package:jackshub/widgets/index.dart';
-//import 'dart:async';
 
 
 
@@ -23,13 +22,6 @@ class DetailedServicesScreen extends StatelessWidget {
   final Color shadowColor = Color.fromRGBO(0,0,0,0.25);
   final double shadowBlurRadius = 20.0;
   final Offset shadowOffset = Offset(0,5);
-  
-  /*
-  Future<DocumentSnapshot> _getSnapshot(String docId) async {
-    DocumentSnapshot snapshot = await Firestore.instance.collection('servicesCol').document(docId).get();
-    return snapshot;
-  }
-  */
 
   @override
   Widget build(BuildContext context) {

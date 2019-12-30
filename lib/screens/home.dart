@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jackshub/screens/services-detail.dart';
 import 'package:jackshub/src/bloc/index.dart';
 import 'package:jackshub/screens/index.dart';
 import 'package:jackshub/src/repos/saved_events_repository.dart';

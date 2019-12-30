@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:fluro/fluro.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/config/router.dart';
 
@@ -25,10 +24,10 @@ class _App extends State<App> {
       theme: lightTheme,
       darkTheme: darkTheme,
 
-      onGenerateRoute: Routes().routes,
+      //onGenerateRoute: Routes().routes,
 
-      //initialRoute: '/',
-      //routes: Routes().routes,
+      initialRoute: '/',
+      routes: Routes().routes,
     );
     return app;
   }
