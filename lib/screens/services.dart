@@ -14,7 +14,7 @@ class ServicesScreen extends StatelessWidget {
           Expanded(
             flex: 3,
             child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
+              stream: Firestore.instance.collection('servicesCol').snapshots(),
               builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) return const Text('Loading...');
                 return ListView.builder(
@@ -30,10 +30,12 @@ class ServicesScreen extends StatelessWidget {
   }
 
   Widget buildServicesListItem(BuildContext context, DocumentSnapshot doc) {
+    Map<String, dynamic> docdata = doc.data;
     return ServicesCard(
-        name: doc['name'],
-        summary: doc['summary'],
-        img: doc['image'],
+        name: docdata['name'],
+        summary: docdata['summary'],
+        image: docdata['image'],
+        status: docdata['status'],
         docId: doc.documentID,
     );
   }

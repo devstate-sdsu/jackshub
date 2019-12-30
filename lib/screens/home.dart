@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
               ),
               BlocProvider(
                 builder: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEvents()),
-                child: FoodScreen(),
+                child: ServicesScreen(),
               )
             ],
           ),
