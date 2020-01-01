@@ -6,22 +6,7 @@ import 'package:intl/intl.dart';
 import 'favorite-widget.dart';
 
 
-class EventsMenuCard extends StatelessWidget {
-  EventsMenuCard({
-    this.name,
-    this.summary,
-    this.description,
-    this.img,
-    this.tinyLocation,
-    this.bigLocation,
-    this.coords,
-    this.startTime,
-    this.endTime,
-    this.timeUpdated,
-    this.favorite,
-    this.docId
-  });
-
+class EventsMenuCard extends StatefulWidget {
   final String name;
   final String description;
   final String summary;
@@ -33,8 +18,29 @@ class EventsMenuCard extends StatelessWidget {
   final Timestamp startTime;
   final Timestamp endTime;
   final dynamic coords;
-  bool favorite;
+  final bool favorite;
 
+  const EventsMenuCard({
+    Key key,
+    this.name,
+    this.description,
+    this.summary,
+    this.tinyLocation,
+    this.bigLocation,
+    this.img,
+    this.docId,
+    this.timeUpdated,
+    this.startTime,
+    this.endTime,
+    this.coords,
+    this.favorite,
+  }): super(key: key);
+
+  @override
+  _EventsMenuCardState createState() => _EventsMenuCardState();
+}
+
+class _EventsMenuCardState extends State<EventsMenuCard> {
   @override
   Widget build(BuildContext context) {
     double cardPadding = 20.0;
@@ -43,8 +49,8 @@ class EventsMenuCard extends StatelessWidget {
     double cardHeight = cardWidth * 1.2;
     double cardBorderRadius = 15;
 
-    DateTime start = DateTime.fromMillisecondsSinceEpoch(this.startTime.seconds * 1000);
-    DateTime end = DateTime.fromMillisecondsSinceEpoch(this.endTime.seconds * 1000);
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(widget.startTime.seconds * 1000);
+    DateTime end = DateTime.fromMillisecondsSinceEpoch(widget.endTime.seconds * 1000);
 
     String dateString = new DateFormat.MMMd().format(start);
     String startString = new DateFormat.jm().format(start);
@@ -59,7 +65,7 @@ class EventsMenuCard extends StatelessWidget {
                 fit: BoxFit.cover,
                 colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
                 image: NetworkImage(
-                  this.img
+                  widget.img
                 ),
               ),
               color: Theme.of(context).backgroundColor,
@@ -84,7 +90,7 @@ class EventsMenuCard extends StatelessWidget {
                       topRight: Radius.circular(cardBorderRadius)
                   ),
                   child: Image(
-                    image: Image.network(this.img).image,
+                    image: Image.network(widget.img).image,
                     fit: BoxFit.fitWidth,
                   ),
                 ),
@@ -119,7 +125,7 @@ class EventsMenuCard extends StatelessWidget {
                                   children: <Widget>[
                                     Flexible(
                                       child: AutoSizeText(
-                                        this.name,
+                                        widget.name,
                                         textAlign: TextAlign.left,
                                         minFontSize: 20,
                                         style: TextStyle(
@@ -130,7 +136,7 @@ class EventsMenuCard extends StatelessWidget {
                                       ),
                                     ),
                                     AutoSizeText(
-                                      this.description,
+                                      widget.description,
                                       textAlign: TextAlign.left,
                                       maxLines: 3,
                                       minFontSize: 13,
@@ -161,7 +167,7 @@ class EventsMenuCard extends StatelessWidget {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
-                                                  this.bigLocation,
+                                                  widget.bigLocation,
                                                   maxLines: 2,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -171,9 +177,9 @@ class EventsMenuCard extends StatelessWidget {
                                                   ),
                                                 ),
                                                 Visibility(
-                                                  visible: this.tinyLocation != "",
+                                                  visible: widget.tinyLocation != "",
                                                   child: Text(
-                                                    this.tinyLocation,
+                                                    widget.tinyLocation,
                                                     maxLines: 2,
                                                     style: TextStyle(
                                                       fontFamily: 'SF Pro',
@@ -252,8 +258,8 @@ class EventsMenuCard extends StatelessWidget {
                                     ),
                                     Flexible(
                                       child: FavoriteWidget(
-                                        docId: docId,
-                                        isFav: favorite,
+                                        docId: widget.docId,
+                                        isFav: widget.favorite,
                                       ),
                                     ),
                                   ],
