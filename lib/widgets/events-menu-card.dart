@@ -18,7 +18,7 @@ class EventsMenuCard extends StatelessWidget {
     this.startTime,
     this.endTime,
     this.timeUpdated,
-    this.favorite = false,
+    this.favorite,
     this.docId
   });
 
@@ -252,7 +252,8 @@ class EventsMenuCard extends StatelessWidget {
                                     ),
                                     Flexible(
                                       child: FavoriteWidget(
-                                        docId: this.docId
+                                        docId: docId,
+                                        isFav: favorite,
                                       ),
                                     ),
                                   ],

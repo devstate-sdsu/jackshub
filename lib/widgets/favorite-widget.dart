@@ -34,28 +34,28 @@ Future<void> _delete(String documentId) async {
 
 class FavoriteWidget extends StatefulWidget {
   final String docId;
+  final bool isFav;
 
-  const FavoriteWidget({Key key, this.docId}): super(key: key);
+  const FavoriteWidget({Key key, this.docId, this.isFav}): super(key: key);
 
   @override
   _FavoriteWidgetState createState() => _FavoriteWidgetState();
 }
 
 class _FavoriteWidgetState extends State<FavoriteWidget> {
-  bool isFav = false;
   Map docIdSet;
 
   @override
   Widget build(BuildContext context) {
+    final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
+
     void _favorite() {
-      final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
       _save(widget.docId).then((_) {
         savedEventsBloc.add(GetSavedEvents());
       });
     }
 
     void _unfavorite() {
-      final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
       _delete(widget.docId).then((_) {
         savedEventsBloc.add(GetSavedEvents());
       });
@@ -66,33 +66,23 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
     //       color: Colors.red,
     //       onPressed: _toggleFavorite,
     //     );
-    return BlocListener<SavedEventsBloc, SavedEventsState>(
-      listener: (context, state) {
-        if (state is SavedEventsLoaded) {
-          docIdSet = Map.fromIterable(state.savedEvents, key: (savedEvent) => savedEvent.documentID, value: (savedEvent) => true);
-          if (docIdSet.containsKey(widget.docId)) {
-            this.isFav = true;
-          } else {
-            this.isFav = false;
-          }
-        } 
-      },
-      child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
-        builder: (context, state) {
-          if (state is SavedEventsLoaded) {
+    // return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+    //     builder: (context, state) {
+    //       print("State in Bloc Builder in Favorite Widget: ");
+    //       print(state);
+    //       if (state is SavedEventsLoaded) {
               return IconButton(
-                icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-                color: this.isFav ? Colors.red : Colors.red,
-                onPressed: this.isFav ? _unfavorite : _favorite,
+                icon: widget.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+                color: widget.isFav ? Colors.red : Colors.red,
+                onPressed: widget.isFav ? _unfavorite : _favorite,
               ); 
-          }
-          return IconButton(
-            icon: Icon(Icons.favorite_border),
-            color: Colors.grey,
-            onPressed: () {},
-          ); 
-        },
-      ),
-    );
+          // }
+          // return IconButton(
+          //   icon: Icon(Icons.favorite_border),
+          //   color: Colors.grey,
+          //   onPressed: () {},
+          // ); 
+      //   },
+      // );
   }
 }

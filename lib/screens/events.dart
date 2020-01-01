@@ -86,19 +86,63 @@ class _EventsScreenState extends State<EventsScreen>{
   }
 
   Widget buildEventsList(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-        if (!snapshot.hasData) return const Text('Loading...');
-        return ListView.builder(
-          itemCount: snapshot.data.documents.length,
-          itemBuilder: (context, index) => buildEventsListItem(context, snapshot.data.documents[index])
-        );
-      }
+    Map favoriteDocIds = Map.fromIterable(
+      []
     );
+    return BlocListener<SavedEventsBloc, SavedEventsState>(
+      listener: (context, state) {
+        print("State in Bloc Listener in Events Screen: ");
+        print(state);
+        if (state is SavedEventsLoaded) {
+          favoriteDocIds = Map.fromIterable(
+            state.savedEvents, 
+            key: (savedEvent) => savedEvent.documentID, value: (savedEvent) => true
+          );
+        } 
+      },
+      // child: StreamBuilder<QuerySnapshot>(
+      //   stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
+      //   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+      //     if (!snapshot.hasData) return const Text('Loading...');
+      //     return ListView.builder(
+      //       itemCount: snapshot.data.documents.length,
+      //       itemBuilder: (context, index) {
+      //         bool favorite = favoriteDocIds.containsKey(snapshot.data.documents[index].documentID);
+      //         return buildEventsListItem(context, snapshot.data.documents[index], favorite);
+      //       }
+      //     );
+      //   }
+      // ),
+      child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
+        builder: (context, state) {
+          print("State in Bloc Builder in Events Screen: ");
+          print(state);
+          if (state is SavedEventsLoaded) {
+            return StreamBuilder<QuerySnapshot>(
+              stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) return const Text('Loading...');
+                return ListView.builder(
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) {
+                    bool favorite = favoriteDocIds.containsKey(snapshot.data.documents[index].documentID);
+                    return buildEventsListItem(context, snapshot.data.documents[index], favorite);
+                  }
+                );
+              }
+            ); 
+          }
+          return Container(
+            child: Text("Loading")
+          );
+        },
+      ),
+    );
+    
+   
   }
 
-  Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc) {
+  Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
     return EventsMenuCard(
         name: doc['name'],
         summary: doc['summary'],
@@ -111,6 +155,7 @@ class _EventsScreenState extends State<EventsScreen>{
         bigLocation: doc['big_location'],
         coords: doc['coords'],
         docId: doc.documentID,
+        favorite: favorite
     );
   }
 
