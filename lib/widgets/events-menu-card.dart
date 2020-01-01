@@ -6,7 +6,22 @@ import 'package:intl/intl.dart';
 import 'favorite-widget.dart';
 
 
-class EventsMenuCard extends StatefulWidget {
+class EventsMenuCard extends StatelessWidget {
+  EventsMenuCard({
+    this.name,
+    this.summary,
+    this.description,
+    this.img,
+    this.tinyLocation,
+    this.bigLocation,
+    this.coords,
+    this.startTime,
+    this.endTime,
+    this.timeUpdated,
+    this.favorite,
+    this.docId
+  });
+
   final String name;
   final String description;
   final String summary;
@@ -18,29 +33,8 @@ class EventsMenuCard extends StatefulWidget {
   final Timestamp startTime;
   final Timestamp endTime;
   final dynamic coords;
-  final bool favorite;
+  bool favorite;
 
-  const EventsMenuCard({
-    Key key,
-    this.name,
-    this.description,
-    this.summary,
-    this.tinyLocation,
-    this.bigLocation,
-    this.img,
-    this.docId,
-    this.timeUpdated,
-    this.startTime,
-    this.endTime,
-    this.coords,
-    this.favorite,
-  }): super(key: key);
-
-  @override
-  _EventsMenuCardState createState() => _EventsMenuCardState();
-}
-
-class _EventsMenuCardState extends State<EventsMenuCard> {
   @override
   Widget build(BuildContext context) {
     double cardPadding = 20.0;
@@ -49,8 +43,8 @@ class _EventsMenuCardState extends State<EventsMenuCard> {
     double cardHeight = cardWidth * 1.2;
     double cardBorderRadius = 15;
 
-    DateTime start = DateTime.fromMillisecondsSinceEpoch(widget.startTime.seconds * 1000);
-    DateTime end = DateTime.fromMillisecondsSinceEpoch(widget.endTime.seconds * 1000);
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(this.startTime.seconds * 1000);
+    DateTime end = DateTime.fromMillisecondsSinceEpoch(this.endTime.seconds * 1000);
 
     String dateString = new DateFormat.MMMd().format(start);
     String startString = new DateFormat.jm().format(start);
@@ -65,7 +59,7 @@ class _EventsMenuCardState extends State<EventsMenuCard> {
                 fit: BoxFit.cover,
                 colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
                 image: NetworkImage(
-                  widget.img
+                  this.img
                 ),
               ),
               color: Theme.of(context).backgroundColor,
@@ -90,7 +84,7 @@ class _EventsMenuCardState extends State<EventsMenuCard> {
                       topRight: Radius.circular(cardBorderRadius)
                   ),
                   child: Image(
-                    image: Image.network(widget.img).image,
+                    image: Image.network(this.img).image,
                     fit: BoxFit.fitWidth,
                   ),
                 ),
@@ -125,7 +119,7 @@ class _EventsMenuCardState extends State<EventsMenuCard> {
                                   children: <Widget>[
                                     Flexible(
                                       child: AutoSizeText(
-                                        widget.name,
+                                        this.name,
                                         textAlign: TextAlign.left,
                                         minFontSize: 20,
                                         style: TextStyle(
@@ -136,7 +130,7 @@ class _EventsMenuCardState extends State<EventsMenuCard> {
                                       ),
                                     ),
                                     AutoSizeText(
-                                      widget.description,
+                                      this.description,
                                       textAlign: TextAlign.left,
                                       maxLines: 3,
                                       minFontSize: 13,
@@ -167,7 +161,7 @@ class _EventsMenuCardState extends State<EventsMenuCard> {
                                               crossAxisAlignment: CrossAxisAlignment.start,
                                               children: <Widget>[
                                                 Text(
-                                                  widget.bigLocation,
+                                                  this.bigLocation,
                                                   maxLines: 2,
                                                   style: TextStyle(
                                                     fontWeight: FontWeight.w600,
@@ -177,9 +171,9 @@ class _EventsMenuCardState extends State<EventsMenuCard> {
                                                   ),
                                                 ),
                                                 Visibility(
-                                                  visible: widget.tinyLocation != "",
+                                                  visible: this.tinyLocation != "",
                                                   child: Text(
-                                                    widget.tinyLocation,
+                                                    this.tinyLocation,
                                                     maxLines: 2,
                                                     style: TextStyle(
                                                       fontFamily: 'SF Pro',
@@ -258,8 +252,8 @@ class _EventsMenuCardState extends State<EventsMenuCard> {
                                     ),
                                     Flexible(
                                       child: FavoriteWidget(
-                                        docId: widget.docId,
-                                        isFav: widget.favorite,
+                                        docId: docId,
+                                        isFav: favorite,
                                       ),
                                     ),
                                   ],
