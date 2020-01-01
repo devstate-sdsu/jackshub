@@ -115,8 +115,6 @@ class _EventsScreenState extends State<EventsScreen>{
       // ),
       child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
         builder: (context, state) {
-          print("State in Bloc Builder in Events Screen: ");
-          print(state);
           if (state is SavedEventsLoaded) {
             return StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
