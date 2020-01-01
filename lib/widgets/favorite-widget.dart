@@ -44,22 +44,23 @@ class FavoriteWidget extends StatefulWidget {
 class _FavoriteWidgetState extends State<FavoriteWidget> {
   bool isFav = false;
   Map docIdSet;
-  void _favorite() {
-    final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
-    _save(widget.docId).then((_) {
-      savedEventsBloc.add(GetSavedEvents());
-    });
-  }
-
-  void _unfavorite() {
-    final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
-    _delete(widget.docId).then((_) {
-      savedEventsBloc.add(GetSavedEvents());
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
+    void _favorite() {
+      final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
+      _save(widget.docId).then((_) {
+        savedEventsBloc.add(GetSavedEvents());
+      });
+    }
+
+    void _unfavorite() {
+      final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
+      _delete(widget.docId).then((_) {
+        savedEventsBloc.add(GetSavedEvents());
+      });
+    }
+  
     // return IconButton(
     //       icon: (_isFavorited ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
     //       color: Colors.red,
