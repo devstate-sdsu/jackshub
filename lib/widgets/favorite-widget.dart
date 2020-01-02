@@ -23,7 +23,7 @@ class FavoriteWidget extends StatelessWidget {
   final String docId;
   final bool isFav;
 
-  const FavoriteWidget(this.docId, this.isFav);
+  const FavoriteWidget({this.docId, this.isFav});
 
   @override
   Widget build(BuildContext context) {
