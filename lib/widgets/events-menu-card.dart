@@ -18,7 +18,7 @@ class EventsMenuCard extends StatelessWidget {
     this.startTime,
     this.endTime,
     this.timeUpdated,
-    this.favorite = false,
+    this.favorite,
     this.docId
   });
 
@@ -33,7 +33,7 @@ class EventsMenuCard extends StatelessWidget {
   final Timestamp startTime;
   final Timestamp endTime;
   final dynamic coords;
-  bool favorite;
+  final bool favorite;
 
   @override
   Widget build(BuildContext context) {
@@ -252,7 +252,8 @@ class EventsMenuCard extends StatelessWidget {
                                     ),
                                     Flexible(
                                       child: FavoriteWidget(
-                                        docId: this.docId
+                                        docId: this.docId,
+                                        isFav: this.favorite,
                                       ),
                                     ),
                                   ],

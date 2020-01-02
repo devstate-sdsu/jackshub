@@ -26,7 +26,13 @@ class SavedEventsLoading extends SavedEventsState {
 
 class SavedEventsLoaded extends SavedEventsState {
   final List<DocumentSnapshot> savedEvents;
-  const SavedEventsLoaded(this.savedEvents);
+  final Map savedEventsMap;
+  SavedEventsLoaded(this.savedEvents)
+    : savedEventsMap = Map.fromIterable(
+      savedEvents,
+      key: (doc) => doc.documentID,
+      value: (_) => true,
+    );
   @override
   List<Object> get props => [savedEvents];
 }

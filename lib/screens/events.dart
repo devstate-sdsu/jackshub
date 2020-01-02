@@ -11,48 +11,37 @@ class EventsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).backgroundColor,
-      child: Column(
-        children: <Widget>[
-          BlocListener<SavedEventsBloc, SavedEventsState>(
-            listener: (context, state) {
-              if (state is SavedEventsError) {
-                Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-              }
-            },
-            child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
-              builder: (context, state) {
-                if (state is SavedEventsInitial) {
-                  return buildInitialSavedEvents();
-                } else if (state is SavedEventsLoading) {
-                  return buildLoadingSavedEvents();
-                } else if (state is SavedEventsLoaded) {
-                  return state.savedEvents.length == 0 ? Container() : SavedEvents(savedEvents: state.savedEvents);
-                } else if (state is SavedEventsError) {
-                  return buildInitialSavedEvents();
+      child: BlocListener<SavedEventsBloc, SavedEventsState>(
+        listener: (context, state) {
+          if (state is SavedEventsError) {
+            Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+          }
+        },
+        child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
+          builder: (context, state) {
+              return StreamBuilder<QuerySnapshot>(
+                stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
+                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) return const Text('Loading...');
+                  return ListView.builder(
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) => buildEventsListItem(
+                      context, 
+                      snapshot.data.documents[index], 
+                      state is SavedEventsLoaded
+                        ? state.savedEventsMap.containsKey(snapshot.data.documents[index].documentID)
+                        : false
+                    )
+                  );
                 }
-                return Container();
-              }
-            ),
-          ),
-          Expanded(
-            flex: 3,
-            child: StreamBuilder<QuerySnapshot>(
-              stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) return const Text('Loading...');
-                return ListView.builder(
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, index) => buildEventsListItem(context, snapshot.data.documents[index])
-                );
-              }
-            ),
-          ),
-        ],
+              );
+          }
+        ),
       )
     );
   }
 
-  Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc) {
+  Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
     return EventsMenuCard(
         name: doc['name'],
         summary: doc['summary'],
@@ -65,6 +54,7 @@ class EventsScreen extends StatelessWidget {
         bigLocation: doc['big_location'],
         coords: doc['coords'],
         docId: doc.documentID,
+        favorite: favorite,
     );
   }
 
