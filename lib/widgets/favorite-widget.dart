@@ -6,19 +6,6 @@ import 'package:jackshub/src/bloc/saved_events_event.dart';
 import 'package:jackshub/src/bloc/saved_events_state.dart';
 import 'package:jackshub/util/database_helpers.dart';
 
-
-
-_read() async {
-  DatabaseHelper helper = DatabaseHelper.instance;
-  int docId = 1;
-  SavedEvent savedEvent = await helper.querySavedEvent();
-  if (savedEvent == null) {
-    print('read row $docId: empty');
-  } else {
-    print('read row $docId: ${savedEvent.documentId}');
-  }
-}
-
 Future<void> _save(String documentId) async {
   SavedEvent newSavedEvent = SavedEvent();
   newSavedEvent.documentId = documentId;
@@ -60,11 +47,6 @@ class _FavoriteWidgetState extends State<FavoriteWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // return IconButton(
-    //       icon: (_isFavorited ? Icon(Icons.favorite) : Icon(Icons.favorite_border)),
-    //       color: Colors.red,
-    //       onPressed: _toggleFavorite,
-    //     );
     return BlocListener<SavedEventsBloc, SavedEventsState>(
       listener: (context, state) {
         if (state is SavedEventsLoaded) {

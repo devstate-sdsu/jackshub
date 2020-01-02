@@ -18,7 +18,6 @@ class SavedEventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("BUILDING SAVED EVENT CARD");
     return Center(
             child: Align(
               child: Container(
