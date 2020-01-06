@@ -31,18 +31,18 @@ class FavoriteWidget extends StatelessWidget {
 
     void _favorite() {
       _save(this.docId).then((_) {
-        savedEventsBloc.add(GetSavedEvents());
+        savedEventsBloc.add(GetSavedEventsInfo());
       });
     }
 
     void _unfavorite() {
       _delete(this.docId).then((_) {
-        savedEventsBloc.add(GetSavedEvents());
+        savedEventsBloc.add(GetSavedEventsInfo());
       });
     }
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
       builder: (context, state) {
-        if (state is SavedEventsLoaded) {
+        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
             return IconButton(
               icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
               color: Colors.red,

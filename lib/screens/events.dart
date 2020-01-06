@@ -76,6 +76,8 @@ class _EventsScreenState extends State<EventsScreen>{
             return buildLoadingSavedEvents();
           } else if (state is SavedEventsLoaded) {
             return state.savedEvents.length == 0 ? Container() : SavedEvents(savedEvents: state.savedEvents);
+          } else if (state is SavedEventsInfoLoaded) {
+            return state.savedEventsInfo.length == 0 ? Container() : SavedEvents(savedEvents: state.savedEventsInfo);
           } else if (state is SavedEventsError) {
             return buildInitialSavedEvents();
           }
@@ -88,12 +90,12 @@ class _EventsScreenState extends State<EventsScreen>{
   Widget buildEventsList(BuildContext context) {
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
       builder: (context, state) {
-        if (state is SavedEventsLoaded) {
-          Map ultimateDocIds = state.savedEventsMap;
+        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+          Map ultimateDocIds = state.savedEventsIdsMap;
           return StreamBuilder<QuerySnapshot>(
             stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) return const Text('Loading...');
+              if (!snapshot.hasData) return const Text('Fetching events...');
               return ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {

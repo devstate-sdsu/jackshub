@@ -5,13 +5,14 @@ import 'package:jackshub/util/database_helpers.dart';
 
 
 abstract class SavedEventsState extends Equatable {
-  const SavedEventsState();
+  final Map savedEventsIdsMap;
+  SavedEventsState() : savedEventsIdsMap = Map();
 }
 
 
 
 class SavedEventsInitial extends SavedEventsState {
-  const SavedEventsInitial();
+  SavedEventsInitial();
   @override
   List<Object> get props => [];
 }
@@ -19,7 +20,7 @@ class SavedEventsInitial extends SavedEventsState {
 
 
 class SavedEventsLoading extends SavedEventsState {
-  const SavedEventsLoading();
+  SavedEventsLoading();
   @override
   List<Object> get props => [];
 }
@@ -41,7 +42,7 @@ class SavedEventsLoaded extends SavedEventsState {
 
 class SavedEventsError extends SavedEventsState {
   final String message;
-  const SavedEventsError(this.message);
+  SavedEventsError(this.message);
   @override
   List<Object> get props => [message];
 }
@@ -61,8 +62,15 @@ class SavedEventsIdsLoaded extends SavedEventsState {
 }
 
 class SavedEventsInfoLoaded extends SavedEventsState {
+  final List<String> savedEventsIds;
+  final Map savedEventsIdsMap;
   final List<DocumentSnapshot> savedEventsInfo;
-  SavedEventsInfoLoaded(this.savedEventsInfo);
+  SavedEventsInfoLoaded(this.savedEventsIds, this.savedEventsInfo)
+      : savedEventsIdsMap = Map.fromIterable(
+      savedEventsIds,
+      key: (id) => id,
+      value: (_) => true,
+    );
   @override
   List<Object> get props => [savedEventsInfo];
 }
