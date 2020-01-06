@@ -3,8 +3,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jackshub/src/bloc/saved_events_bloc.dart';
 import 'package:jackshub/src/bloc/saved_events_event.dart';
+import 'package:jackshub/src/bloc/saved_events_state.dart';
 import 'package:jackshub/util/database_helpers.dart';
-
 
 Future<void> _save(String documentId) async {
   SavedEvent newSavedEvent = SavedEvent();
@@ -40,11 +40,21 @@ class FavoriteWidget extends StatelessWidget {
         savedEventsBloc.add(GetSavedEvents());
       });
     }
-  
-    return IconButton(
-      icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
-      color: Colors.red,
-      onPressed: this.isFav ? _unfavorite : _favorite,
-    ); 
+    return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+      builder: (context, state) {
+        if (state is SavedEventsLoaded) {
+            return IconButton(
+              icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+              color: Colors.red,
+              onPressed: this.isFav ? _unfavorite : _favorite,
+            ); 
+        }
+        return IconButton(
+          icon: Icon(Icons.favorite_border),
+          color: Colors.grey,
+          onPressed: () {},
+        ); 
+      },
+    );
   }
 }

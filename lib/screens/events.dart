@@ -126,7 +126,15 @@ class _EventsScreenState extends State<EventsScreen>{
         bigLocation: doc['big_location'],
         coords: doc['coords'],
         docId: doc.documentID,
-        favorite: favorite
+        favorite: favorite,
+    );
+  }
+
+  Widget buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
+    return SavedEventCard(
+      name: doc['name'],
+      img: doc['image'],
+      docId: doc.documentID,
     );
   }
 

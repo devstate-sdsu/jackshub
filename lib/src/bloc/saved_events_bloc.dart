@@ -35,8 +35,6 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
         final savedEvents = await savedEventsRepo.fetchSavedEvents();
         yield SavedEventsLoaded(savedEvents);
       } on Error catch (e) {
-        print("FRIGGIN ERROR: ");
-        print(e);
         yield SavedEventsError("No events sorry sis");
       }
   }

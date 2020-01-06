@@ -7,8 +7,6 @@ abstract class SavedEventsRepository {
   Future<List<DocumentSnapshot>> fetchSavedEvents();
 }
 
-
-
 Future<List<DocumentSnapshot>> _list() async {
   DatabaseHelper helper = DatabaseHelper.instance;
   List<SavedEvent> savedEvents = await helper.listSavedEvents();
@@ -30,7 +28,6 @@ Future<List<DocumentSnapshot>> _getSavedEventsInfo(List<String> docIdList) async
         .get()
         .then((DocumentSnapshot ds) {
         // use ds as a snapshot
-        print(ds.data['name']);
         snapshotList.add(ds);
       });
   }
