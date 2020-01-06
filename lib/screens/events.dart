@@ -62,28 +62,13 @@ class _EventsScreenState extends State<EventsScreen>{
   }
 
   Widget buildSavedEventsList(BuildContext context) {
-    return BlocListener<SavedEventsBloc, SavedEventsState>(
-      listener: (context, state) {
-        if (state is SavedEventsError) {
-          Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-        }
-      },
-      child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
-        builder: (context, state) {
-          if (state is SavedEventsInitial) {
-            return buildInitialSavedEvents();
-          } else if (state is SavedEventsLoading) {
-            return buildLoadingSavedEvents();
-          } else if (state is SavedEventsLoaded) {
-            return state.savedEvents.length == 0 ? Container() : SavedEvents(savedEvents: state.savedEvents);
-          } else if (state is SavedEventsInfoLoaded) {
-            return state.savedEventsInfo.length == 0 ? Container() : SavedEvents(savedEvents: state.savedEventsInfo);
-          } else if (state is SavedEventsError) {
-            return buildInitialSavedEvents();
-          }
-          return Container();
-        }
-      ),
+    return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+      builder: (context, state) {
+        if (state is SavedEventsInfoLoaded) {
+          return state.savedEventsInfo.length == 0 ? Container() : SavedEvents(savedEvents: state.savedEventsInfo);
+        } 
+        return Container(child: Text("Fetching saved events..."));
+      }
     );
   }
 
@@ -131,23 +116,4 @@ class _EventsScreenState extends State<EventsScreen>{
         favorite: favorite,
     );
   }
-
-  Widget buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
-    return SavedEventCard(
-      name: doc['name'],
-      img: doc['image'],
-      docId: doc.documentID,
-    );
-  }
-
-  // Temporary
-  Widget buildInitialSavedEvents() {
-    return Container();
-  }
-
-  // Temporary
-  Widget buildLoadingSavedEvents() {
-    return Container();
-  }
-
 }

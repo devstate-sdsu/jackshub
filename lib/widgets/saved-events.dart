@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jackshub/src/bloc/saved_events_state.dart';
 
 
-Widget _buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
+Widget _buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
   return EventsMenuCard(
         name: doc['name'],
         summary: doc['summary'],
@@ -21,34 +21,30 @@ Widget _buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
         bigLocation: doc['big_location'],
         coords: doc['coords'],
         docId: doc.documentID,
+        favorite: favorite
     );
 }
 
 Widget _buildWithSnapshotList(snapshot) {
-  return ListView.builder(
-      scrollDirection: Axis.vertical,
-      itemCount: snapshot.length,
-      itemBuilder: (context, index) =>
-          _buildSavedEventsListItem(context, snapshot[index])
+  return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+    builder: (context, state) {
+      if (state is SavedEventsInfoLoaded) {
+        return ListView.builder(
+          scrollDirection: Axis.vertical,
+          itemCount: snapshot.length,
+          itemBuilder: (context, index) =>
+            _buildSavedEventsListItem(
+              context, 
+              snapshot[index], 
+              state.savedEventsIdsMap.containsKey(snapshot[index].documentID)
+            )
+        );
+      }
+      return Container(child: Text("Loading..."));
+    },
   );
-}
 
-Widget buildInitialSavedEvents() {
-  return Container(
-    child: Text(
-      "Initializing..."
-    ),
-  );
 }
-
-Widget buildLoadingSavedEvents() {
-  return Container(
-    child: Text(
-      "Loading..."
-    ),
-  );
-}
-
 
 class SavedEvents extends StatefulWidget {
   final List<DocumentSnapshot> savedEvents;
@@ -64,10 +60,6 @@ class _SavedEventsState extends State<SavedEvents> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SavedEventsBloc, SavedEventsState>(
-      builder: (context, state) {
-        return _buildWithSnapshotList(widget.savedEvents);
-      },
-    );
+    return _buildWithSnapshotList(widget.savedEvents);
   }
 }
