@@ -55,16 +55,14 @@ class SavedEventsRepo implements SavedEventsRepository {
   @override
   Future<List<DocumentSnapshot>> fetchSavedEventsInfo(List<String> savedEventsIds) async {
     List<DocumentSnapshot> snapshotList = new List<DocumentSnapshot>();
-    for (String docId in savedEventsIds) {
-        await Firestore.instance
-          .collection('eventsCol')
-          .document(docId)
-          .get()
-          .then((DocumentSnapshot ds) {
-          // use ds as a snapshot
-          snapshotList.add(ds);
-        });
-    }
+    await Firestore.instance
+      .collection('eventsCol')
+      .where('__name__', whereIn: savedEventsIds)
+      .getDocuments()
+      .then((ds) {
+      // use ds as a snapshot
+      snapshotList = ds.documents;
+    });
     return snapshotList;
   }
 }
