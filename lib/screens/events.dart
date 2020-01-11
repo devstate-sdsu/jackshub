@@ -42,7 +42,7 @@ class EventsScreen extends StatelessWidget {
   }
 
   Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
-    return EventsMenuCard(
+    return EventsCard(
         name: doc['name'],
         summary: doc['summary'],
         description: doc['description'],

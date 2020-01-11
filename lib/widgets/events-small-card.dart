@@ -1,44 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:jackshub/config/router.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:jackshub/config/theme.dart';
+import 'package:jackshub/widgets/index.dart';
 
 
-
-class ServicesCard extends StatefulWidget {
+class EventsSmallCard extends StatefulWidget {
   final String name;
-  final String summary;
   final String image;
-  final String status;
+  final String bigLocation;
+  final String littleLocation;
+  final Timestamp startTime;
+  final Timestamp endTime;
+  final bool favorite;
   final String docId;
 
-  const ServicesCard({
+  const EventsSmallCard({
     Key key,
     this.name,
-    this.summary,
     this.image,
-    this.status,
-    this.docId
-  }): super(key: key);
+    this.bigLocation,
+    this.littleLocation,
+    this.startTime,
+    this.endTime,
+    this.favorite,
+    this.docId,
+  });
 
   @override
-  _ServicesCard createState() => _ServicesCard();
+  _EventsSmallCard createState() => _EventsSmallCard();
 }
 
-
-
-class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
+class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMixin {
 
   AnimationController _controller;
   Animation _animation;
 
-  int transitionDuration = 1000;  // in milliseconds
-
-  double cardTouchedScale = 0.94;
-  double cardRegularScale = 1.0;
-  int cardAnimateDuration = 250;  // in milliseconds
-  var cardScale = 1.0;
-
   double cardVerticalSize = 135.0;
+
+  var cardScale = 1.0;
 
   @override
   void initState() {
@@ -46,17 +46,17 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
     _controller = AnimationController(
       vsync: this,
       duration: Duration(
-        milliseconds: cardAnimateDuration,
+        milliseconds: AppTheme.cardAnimateDuration,
       )
     );
     _animation = Tween(
-      begin: cardRegularScale,
-      end: cardTouchedScale
+      begin: 1.0,
+      end: AppTheme.cardTouchedScale
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.fastOutSlowIn,
-        reverseCurve: Curves.easeInQuad
+        curve: AppTheme.cardForwardCurve,
+        reverseCurve: AppTheme.cardReverseCurve,
       )
     );
   }
@@ -69,6 +69,15 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+
+    DateTime start = DateTime.fromMillisecondsSinceEpoch(widget.startTime.seconds * 1000);
+    DateTime end = DateTime.fromMillisecondsSinceEpoch(widget.endTime.seconds * 1000);
+
+    String dateString = new DateFormat.MMMd().format(start);
+    String startString = new DateFormat.jm().format(start);
+    String endString = new DateFormat.jm().format(end);
+
+
     return AnimatedBuilder(
       animation: _controller,
       builder: (BuildContext context, Widget child) {
@@ -80,15 +89,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
 
           onTapUp: (TapUpDetails details) {
             _controller.reverse();
-            Navigator.pushNamed(
-              context,
-              '/detailedServices',
-              arguments: ServicesRoutingParameters(
-                widget.name,
-                widget.image,
-                widget.docId,
-              ),
-            );
+            // PushNamed route!
           },
 
           onTapCancel: () {
@@ -121,16 +122,16 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                   Expanded(
                     flex: 350,
                     child: Hero(
-                      tag: 'servicesCardImg'+widget.docId,
+                      tag: 'eventsSmallCardImg'+widget.docId,
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(AppTheme.cardRadius),
-                          bottomLeft: Radius.circular(AppTheme.cardRadius)
+                          bottomLeft: Radius.circular(AppTheme.cardRadius),
                         ),
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              fit: BoxFit.cover,
+                              fit: BoxFit.fill,
                               image: NetworkImage(
                                 widget.image
                               )
@@ -153,41 +154,34 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                           height: 10.0
                         ),
                         Hero(
-                          tag: 'servicesCardTitle'+widget.docId,
+                          tag: 'eventsSmallCardTitle'+widget.docId,
                           child: Text(
                             widget.name,
                             textAlign: TextAlign.left,
                             style: Theme.of(context).textTheme.title
                           )
-                        ),                            
+                        ),
                         SizedBox(
                           height: 10.0
                         ),
                         Expanded(
-                          child: Text(
-                            widget.summary,
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.caption,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 3
+                          child: locationComponent(context, widget.bigLocation, widget.littleLocation),
+                        ),
+                        Expanded(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              Flexible(
+                                child: dateComponent(context, dateString),
+                              ),
+                              Flexible(
+                                child: timeComponent(context, startString, endString)
+                              )
+                            ],
                           )
-                        ),
-                        SizedBox(
-                          height: 10.0
-                        ),
-                        Text(
-                          widget.status,
-                          textAlign: TextAlign.left,
-                          style: Theme.of(context).textTheme.caption
-                        ),
-                        SizedBox(
-                          height: 10.0
                         )
                       ],
                     )
-                  ),
-                  Spacer(
-                    flex: 20
                   )
                 ],
               )
@@ -198,4 +192,3 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
     );
   }
 }
-

@@ -58,7 +58,7 @@ class DetailedServicesScreen extends StatelessWidget {
                 );
               },
               child: Container(
-                height: MediaQuery.of(context).size.width - 150.0,
+                height: MediaQuery.of(context).size.width*0.85,
                 color: Colors.transparent,
               )
             ),
@@ -81,7 +81,7 @@ class DetailedServicesScreen extends StatelessWidget {
               ],
             ),
             SizedBox(
-              height: 25
+              height: 20
             ),
             StreamBuilder<QuerySnapshot>(
               stream: Firestore.instance.collection('servicesCol').document(this.docId).collection('cards').snapshots(),

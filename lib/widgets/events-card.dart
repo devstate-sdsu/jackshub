@@ -4,10 +4,12 @@ import 'package:flutter/widgets.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
 import 'favorite-widget.dart';
+import 'package:jackshub/config/theme.dart';
+import 'package:jackshub/widgets/index.dart';
 
 
-class EventsMenuCard extends StatelessWidget {
-  EventsMenuCard({
+class EventsCard extends StatelessWidget {
+  EventsCard({
     this.name,
     this.summary,
     this.description,
@@ -37,11 +39,9 @@ class EventsMenuCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double cardPadding = 20.0;
     double screenWidth = MediaQuery.of(context).size.width;
-    double cardWidth = screenWidth - (cardPadding * 2);
-    double cardHeight = cardWidth * 1.2;
-    double cardBorderRadius = 15;
+    double cardWidth = screenWidth - (AppTheme.cardSideMargin * 2);
+    double cardHeight = cardWidth * 1.25;
 
     DateTime start = DateTime.fromMillisecondsSinceEpoch(this.startTime.seconds * 1000);
     DateTime end = DateTime.fromMillisecondsSinceEpoch(this.endTime.seconds * 1000);
@@ -53,7 +53,10 @@ class EventsMenuCard extends StatelessWidget {
     return Center(
         child: Container(
           height: cardHeight,
-          margin: EdgeInsets.all(cardPadding),
+          margin: EdgeInsets.symmetric(
+            horizontal: AppTheme.cardSideMargin,
+            vertical: AppTheme.cardVerticalMargin
+          ),
           decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.cover,
@@ -63,12 +66,12 @@ class EventsMenuCard extends StatelessWidget {
                 ),
               ),
               color: Theme.of(context).backgroundColor,
-              borderRadius: BorderRadius.circular(cardBorderRadius),
+              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
               boxShadow: [
                 BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 50,
-                    offset: Offset(0, 5)
+                    color: AppTheme.shadowColor,
+                    blurRadius: AppTheme.shadowBlurRadius,
+                    offset: AppTheme.shadowOffset
                 )
               ]
           ),
@@ -80,8 +83,8 @@ class EventsMenuCard extends StatelessWidget {
                 flex: 618,   // Golden ratio
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(cardBorderRadius),
-                      topRight: Radius.circular(cardBorderRadius)
+                      topLeft: Radius.circular(AppTheme.cardRadius),
+                      topRight: Radius.circular(AppTheme.cardRadius)
                   ),
                   child: Image(
                     image: Image.network(this.img).image,
@@ -93,8 +96,8 @@ class EventsMenuCard extends StatelessWidget {
                 flex: 382,
                 child: ClipRRect(
                   borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(cardBorderRadius),
-                      bottomRight: Radius.circular(cardBorderRadius)
+                      bottomLeft: Radius.circular(AppTheme.cardRadius),
+                      bottomRight: Radius.circular(AppTheme.cardRadius)
                   ),
                   child: Container(
                     decoration: BoxDecoration(
@@ -104,7 +107,7 @@ class EventsMenuCard extends StatelessWidget {
                     child: SizedBox(
                       width: double.infinity,
                       child: FractionallySizedBox(
-                        widthFactor: 0.89,
+                        widthFactor: 0.92,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 10.0),
                           child: Column(  // The whole bottom block of an events card
@@ -147,7 +150,8 @@ class EventsMenuCard extends StatelessWidget {
                                   children: <Widget>[
                                     Expanded(
                                       flex: 3,
-                                      child: Row(  // Location block
+                                      child: locationComponent(context, this.bigLocation, this.tinyLocation)
+                                      /*child: Row(  // Location block
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: <Widget>[
@@ -186,28 +190,54 @@ class EventsMenuCard extends StatelessWidget {
                                             ),
                                           ),
                                         ],
-                                      ),
+                                      ),*/
                                     ),
                                     Expanded(
                                       flex: 2,
-                                      child: Padding(
-                                        padding: const EdgeInsets.fromLTRB(5.0, 0, 0, 0),
-                                        child: Column(  // Date and time blocks
-                                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                          children: <Widget>[
-                                            Flexible(
-                                              child: Row(  // Date block
-                                                children: <Widget>[
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
-                                                    child: Icon(
-                                                      Icons.calendar_today,
-                                                      size: 13,
-                                                      color: Color(0xFF747474)
-                                                    ),
+                                      child: Column(  // Date and time blocks
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        children: <Widget>[
+                                          Flexible(
+                                            child: dateComponent(context, dateString)
+                                            /*child: Row(  // Date block
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
+                                                  child: Icon(
+                                                    Icons.calendar_today,
+                                                    size: 13,
+                                                    color: Color(0xFF747474)
                                                   ),
-                                                  AutoSizeText(
-                                                    dateString,
+                                                ),
+                                                AutoSizeText(
+                                                  dateString,
+                                                  maxFontSize: 12,
+                                                  maxLines: 1,
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontFamily: 'SF Pro',
+                                                    color: Color(0xFF747474),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),*/
+                                          ),
+                                          Flexible(
+                                            flex: 1,
+                                            child: timeComponent(context, startString, endString)
+                                            /*child: Row(  // Time block
+                                              children: <Widget>[
+                                                Padding(
+                                                  padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
+                                                  child: Icon(
+                                                    Icons.schedule,
+                                                    size: 13,
+                                                    color: Color(0xFF747474)
+                                                  ),
+                                                ),
+                                                Flexible(
+                                                  child: AutoSizeText(
+                                                    startString + "-" + endString,
                                                     maxFontSize: 12,
                                                     maxLines: 1,
                                                     style: TextStyle(
@@ -216,38 +246,11 @@ class EventsMenuCard extends StatelessWidget {
                                                       color: Color(0xFF747474),
                                                     ),
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                            Flexible(
-                                              flex: 1,
-                                              child: Row(  // Time block
-                                                children: <Widget>[
-                                                  Padding(
-                                                    padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
-                                                    child: Icon(
-                                                      Icons.schedule,
-                                                      size: 13,
-                                                      color: Color(0xFF747474)
-                                                    ),
-                                                  ),
-                                                  Flexible(
-                                                    child: AutoSizeText(
-                                                      startString + "-" + endString,
-                                                      maxFontSize: 12,
-                                                      maxLines: 1,
-                                                      style: TextStyle(
-                                                        fontWeight: FontWeight.w600,
-                                                        fontFamily: 'SF Pro',
-                                                        color: Color(0xFF747474),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                                ),
+                                              ],
+                                            ),*/
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     Flexible(

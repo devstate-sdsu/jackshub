@@ -129,7 +129,7 @@ DEPENDENCIES:
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
 
 SPEC REPOS:
-  https://github.com/CocoaPods/Specs.git:
+  https://github.com/cocoapods/specs.git:
     - BoringSSL-GRPC
     - Firebase
     - FirebaseAnalytics
@@ -190,4 +190,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 64b2109b760ac9073c864e2a8278e6464efaa219
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.6.1
