@@ -43,12 +43,16 @@ class EventsCard extends StatelessWidget {
     double cardWidth = screenWidth - (AppTheme.cardSideMargin * 2);
     double cardHeight = cardWidth * 1.25;
 
-    DateTime start = DateTime.fromMillisecondsSinceEpoch(this.startTime.seconds * 1000);
-    DateTime end = DateTime.fromMillisecondsSinceEpoch(this.endTime.seconds * 1000);
+    String dateString = new DateFormat.MMMd().format(this.startTime.toDate());
+    String startString = new DateFormat.jm().format(this.startTime.toDate());
+    String endString = new DateFormat.jm().format(this.endTime.toDate());
 
-    String dateString = new DateFormat.MMMd().format(start);
-    String startString = new DateFormat.jm().format(start);
-    String endString = new DateFormat.jm().format(end);
+    // DateTime start = DateTime.fromMillisecondsSinceEpoch(this.startTime.seconds * 1000);
+    // DateTime end = DateTime.fromMillisecondsSinceEpoch(this.endTime.seconds * 1000);
+
+    // String dateString = new DateFormat.MMMd().format(start);
+    // String startString = new DateFormat.jm().format(start);
+    // String endString = new DateFormat.jm().format(end);
 
     return Center(
         child: Container(
