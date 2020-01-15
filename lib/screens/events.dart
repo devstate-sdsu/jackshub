@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,54 @@ import 'package:jackshub/src/bloc/index.dart';
 import 'package:jackshub/widgets/index.dart';
 
 
+class EventsToggle extends StatefulWidget {
+  @override
+  _EventsToggleState createState() => _EventsToggleState();
+}
+
+class _EventsToggleState extends State<EventsToggle> {
+
+
+  int groupval = 0;
+
+  final Map<int, Widget> logoWidgets = const <int, Widget>{
+    0: Text("Head1"),
+    1: Text("Head2"),
+  };
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(child: Text("Center"),),
+      appBar: AppBar(
+        elevation: 2.0,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        title: Text("title", style: TextStyle(color: Colors.black),),
+        bottom: PreferredSize(
+          preferredSize: Size(double.infinity, 45.0),
+          child: Padding(
+            padding: EdgeInsets.only(top : 5.0, bottom : 10.0),
+            child: Row(children: <Widget>[
+              SizedBox(
+                width : 15.0
+                ,),
+                Expanded(child: CupertinoSegmentedControl(
+                  groupValue: groupval ,
+                  onValueChanged: (changeFromGroupValue){
+                    setState(() {
+                      groupval = changeFromGroupValue;
+                    });
+                  } ,
+                  children: logoWidgets ,
+                ))
+            ],)
+          )
+        )
+      )
+      
+    );
+  }
+}
 
 class EventsScreen extends StatelessWidget {
   @override
