@@ -1,281 +1,209 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:intl/intl.dart';
 import 'favorite-widget.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/widgets/index.dart';
 
 
-class EventsCard extends StatelessWidget {
-  EventsCard({
-    this.name,
-    this.summary,
-    this.description,
-    this.img,
-    this.tinyLocation,
-    this.bigLocation,
-    this.coords,
-    this.startTime,
-    this.endTime,
-    this.timeUpdated,
-    this.favorite,
-    this.docId
-  });
 
+class EventsCard extends StatefulWidget {
   final String name;
+  final String image;
   final String description;
   final String summary;
-  final String tinyLocation;
   final String bigLocation;
-  final String img;
-  final String docId;
-  final dynamic timeUpdated;
+  final String littleLocation;
   final Timestamp startTime;
   final Timestamp endTime;
-  final dynamic coords;
   final bool favorite;
+  final String docId;
+
+  const EventsCard({
+    Key key,
+    this.name,
+    this.image,
+    this.description,
+    this.summary,
+    this.bigLocation,
+    this.littleLocation,
+    this.startTime,
+    this.endTime,
+    this.favorite,
+    this.docId,
+  });
+
+  @override
+  _EventsCard createState() => _EventsCard();
+}
+
+
+
+class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
+  AnimationController _controller;
+  Animation _animation;
+  var cardScale = 1.0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: AppTheme.cardAnimateDuration
+      )
+    );
+    _animation = Tween(
+      begin: 1.0,
+      end: AppTheme.cardTouchedScale
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: AppTheme.cardForwardCurve,
+        reverseCurve: AppTheme.cardReverseCurve
+      )
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    String dateString = new DateFormat.MMMd().format(widget.startTime.toDate());
+    String startString = new DateFormat.jm().format(widget.startTime.toDate());
+    String endString = new DateFormat.jm().format(widget.endTime.toDate());
     double screenWidth = MediaQuery.of(context).size.width;
-    double cardWidth = screenWidth - (AppTheme.cardSideMargin * 2);
-    double cardHeight = cardWidth * 1.25;
+    double cardVerticalSize = screenWidth - (AppTheme.cardSideMargin*2) * 1;
 
-    String dateString = new DateFormat.MMMd().format(this.startTime.toDate());
-    String startString = new DateFormat.jm().format(this.startTime.toDate());
-    String endString = new DateFormat.jm().format(this.endTime.toDate());
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (BuildContext context, Widget child) {
+        return GestureDetector(
 
-    // DateTime start = DateTime.fromMillisecondsSinceEpoch(this.startTime.seconds * 1000);
-    // DateTime end = DateTime.fromMillisecondsSinceEpoch(this.endTime.seconds * 1000);
+          onTapDown: (TapDownDetails details) {
+            _controller.forward();
+          },
 
-    // String dateString = new DateFormat.MMMd().format(start);
-    // String startString = new DateFormat.jm().format(start);
-    // String endString = new DateFormat.jm().format(end);
+          onTapUp: (TapUpDetails details) {
+            _controller.reverse();
+            // PushNamed route!
+          },
 
-    return Center(
-        child: Container(
-          height: cardHeight,
-          margin: EdgeInsets.symmetric(
-            horizontal: AppTheme.cardSideMargin,
-            vertical: AppTheme.cardVerticalMargin
-          ),
-          decoration: BoxDecoration(
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.dstATop),
-                image: NetworkImage(
-                  this.img
-                ),
+          onTapCancel: () {
+            _controller.reverse();
+          },
+
+          child: Transform.scale(
+            scale: _animation.value,
+            child: Container(
+              height: cardVerticalSize,
+              alignment: Alignment.center,
+              margin: EdgeInsets.symmetric(
+                horizontal: AppTheme.cardSideMargin,
+                vertical: AppTheme.cardVerticalMargin
               ),
-              color: Theme.of(context).backgroundColor,
-              borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-              boxShadow: [
-                BoxShadow(
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+                boxShadow: [
+                  BoxShadow(
                     color: AppTheme.shadowColor,
                     blurRadius: AppTheme.shadowBlurRadius,
                     offset: AppTheme.shadowOffset
-                )
-              ]
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Expanded(
-                flex: 618,   // Golden ratio
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(AppTheme.cardRadius),
-                      topRight: Radius.circular(AppTheme.cardRadius)
-                  ),
-                  child: Image(
-                    image: Image.network(this.img).image,
-                    fit: BoxFit.fitWidth,
-                  ),
-                ),
+                  )
+                ]
               ),
-              Expanded(
-                flex: 382,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(AppTheme.cardRadius),
-                      bottomRight: Radius.circular(AppTheme.cardRadius)
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Expanded(
+                    flex: 400,
+                    child: Hero(
+                      tag: 'eventsCardImg'+widget.docId,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppTheme.cardRadius),
+                          topRight: Radius.circular(AppTheme.cardRadius),
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: NetworkImage(
+                                widget.image
+                              )
+                            )
+                          )
+                        )
+                      )
+                    )
                   ),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).backgroundColor
-                    ),
-                    height: cardHeight * 0.382,
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: FractionallySizedBox(
-                        widthFactor: 0.92,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 10.0),
-                          child: Column(  // The whole bottom block of an events card
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  Spacer(
+                    flex: 10
+                  ),
+                  Hero(
+                    tag: 'eventsCardTitle'+widget.docId,
+                    child: Text(
+                      widget.name,
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.title
+                    )
+                  ),
+                  Spacer(
+                    flex: 5
+                  ),
+                  Flexible(
+                    flex: 100,
+                    child: Text(
+                      widget.description,
+                      textAlign: TextAlign.left,
+                      style: Theme.of(context).textTheme.caption,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                    )
+                  ),
+                  Spacer(
+                    flex: 10
+                  ),
+                  Flexible(
+                    flex: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Expanded(
+                          flex: 3,
+                          child: locationComponent(context, widget.bigLocation, widget.littleLocation)
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
-                              Expanded(
-                                flex: 2,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Flexible(
-                                      child: AutoSizeText(
-                                        this.name,
-                                        textAlign: TextAlign.left,
-                                        minFontSize: 20,
-                                        style: TextStyle(
-                                          fontFamily: 'SF Pro',
-                                          fontWeight: FontWeight.w700,
-                                        ),
-                                        maxLines: 2,
-                                      ),
-                                    ),
-                                    AutoSizeText(
-                                      this.description,
-                                      textAlign: TextAlign.left,
-                                      maxLines: 3,
-                                      minFontSize: 13,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ],
-                                ),
+                              Flexible(
+                                child: dateComponent(context, dateString)
                               ),
                               Flexible(
-                                flex: 1,
-                                child: Row( // Bottom block that has location, date, time
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 3,
-                                      child: locationComponent(context, this.bigLocation, this.tinyLocation)
-                                      /*child: Row(  // Location block
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.center,
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.location_on,
-                                            color: Color(0xFF747474)
-                                          ),
-                                          Flexible(
-                                            child: Column(
-                                              mainAxisAlignment: MainAxisAlignment.center,
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: <Widget>[
-                                                Text(
-                                                  this.bigLocation,
-                                                  maxLines: 2,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontFamily: 'SF Pro',
-                                                    fontSize : 13,
-                                                    color: Color(0xFF747474),
-                                                  ),
-                                                ),
-                                                Visibility(
-                                                  visible: this.tinyLocation != "",
-                                                  child: Text(
-                                                    this.tinyLocation,
-                                                    maxLines: 2,
-                                                    style: TextStyle(
-                                                      fontFamily: 'SF Pro',
-                                                      color: Color(0xFF747474),
-                                                      fontSize : 12
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),*/
-                                    ),
-                                    Expanded(
-                                      flex: 2,
-                                      child: Column(  // Date and time blocks
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                        children: <Widget>[
-                                          Flexible(
-                                            child: dateComponent(context, dateString)
-                                            /*child: Row(  // Date block
-                                              children: <Widget>[
-                                                Padding(
-                                                  padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
-                                                  child: Icon(
-                                                    Icons.calendar_today,
-                                                    size: 13,
-                                                    color: Color(0xFF747474)
-                                                  ),
-                                                ),
-                                                AutoSizeText(
-                                                  dateString,
-                                                  maxFontSize: 12,
-                                                  maxLines: 1,
-                                                  style: TextStyle(
-                                                    fontWeight: FontWeight.w600,
-                                                    fontFamily: 'SF Pro',
-                                                    color: Color(0xFF747474),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),*/
-                                          ),
-                                          Flexible(
-                                            flex: 1,
-                                            child: timeComponent(context, startString, endString)
-                                            /*child: Row(  // Time block
-                                              children: <Widget>[
-                                                Padding(
-                                                  padding: const EdgeInsets.fromLTRB(0, 0, 5.0, 0),
-                                                  child: Icon(
-                                                    Icons.schedule,
-                                                    size: 13,
-                                                    color: Color(0xFF747474)
-                                                  ),
-                                                ),
-                                                Flexible(
-                                                  child: AutoSizeText(
-                                                    startString + "-" + endString,
-                                                    maxFontSize: 12,
-                                                    maxLines: 1,
-                                                    style: TextStyle(
-                                                      fontWeight: FontWeight.w600,
-                                                      fontFamily: 'SF Pro',
-                                                      color: Color(0xFF747474),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),*/
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Flexible(
-                                      child: FavoriteWidget(
-                                        docId: this.docId,
-                                        isFav: this.favorite,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                child: timeComponent(context, startString, endString)
+                              )
                             ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),);
+                          )
+                        )
+                      ],
+                    )
+                  )
+                ],
+              )
+            )
+          )
+        );
+      }
+    );
   }
 }

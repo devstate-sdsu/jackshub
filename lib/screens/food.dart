@@ -36,11 +36,11 @@ class FoodScreen extends StatelessWidget {
         description: doc['description'],
         startTime: doc['start_time'],
         endTime: doc['end_time'],
-        timeUpdated: doc['time_updated'],
-        img: doc['image'],
-        tinyLocation: doc['tiny_location'],
+        //timeUpdated: doc['time_updated'],
+        image: doc['image'],
+        littleLocation: doc['tiny_location'],
         bigLocation: doc['big_location'],
-        coords: doc['coords'],
+        //coords: doc['coords'],
         docId: doc.documentID,
     );
   }
