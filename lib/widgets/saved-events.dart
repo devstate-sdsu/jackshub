@@ -20,7 +20,7 @@ Widget _buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
 
 Widget _buildWithSnapshotList(snapshot) {
   return ListView.builder(
-      scrollDirection: Axis.horizontal,
+      scrollDirection: Axis.vertical,
       itemCount: snapshot.length,
       itemBuilder: (context, index) =>
           _buildSavedEventsListItem(context, snapshot[index])
@@ -45,9 +45,9 @@ Widget buildLoadingSavedEvents() {
 
 
 class SavedEvents extends StatefulWidget {
-  final List<DocumentSnapshot> savedEvents;
+ // final List<DocumentSnapshot> savedEvents;
 
-  const SavedEvents({Key key, this.savedEvents}): super(key: key);
+  const SavedEvents({Key key}): super(key: key);
 
   @override
   _SavedEventsState createState() => _SavedEventsState();
@@ -57,14 +57,28 @@ class _SavedEventsState extends State<SavedEvents> {
   
   List<SavedEvent> eventsList = new List<SavedEvent>();
 
+
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
-        builder: (context, state) {
-          return _buildWithSnapshotList(widget.savedEvents);
-        },
-      ),
+    return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+      builder: (context, state) {
+        if(state is SavedEventsLoaded)
+        {
+        return ListView.builder(
+          itemCount: state.savedEvents.length,
+          itemBuilder: (_, index) => buildEventsListItem(
+            state.savedEvents[index], 
+            true
+            // state is SavedEventsLoaded
+            //     true
+              // ? state.savedEventsMap.containsKey(state.savedEvents[index].documentID)
+              // : false
+          )
+        );
+      }
+      
+      },
     );
   }
 }
+
