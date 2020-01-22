@@ -78,7 +78,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
     String startString = new DateFormat.jm().format(widget.startTime.toDate());
     String endString = new DateFormat.jm().format(widget.endTime.toDate());
     double screenWidth = MediaQuery.of(context).size.width;
-    double cardVerticalSize = screenWidth - (AppTheme.cardSideMargin*2) * 1;
+    double cardVerticalSize = screenWidth - (AppTheme.cardSideMargin*2) - 15;
 
     return AnimatedBuilder(
       animation: _controller,
@@ -119,7 +119,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                 ]
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
                     flex: 400,
@@ -147,26 +147,52 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                   Spacer(
                     flex: 10
                   ),
-                  Hero(
-                    tag: 'eventsCardTitle'+widget.docId,
-                    child: Text(
-                      widget.name,
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context).textTheme.title
-                    )
+                  Row(
+                    children: <Widget>[
+                      Spacer(
+                        flex: 3
+                      ),
+                      Expanded(
+                        flex: 100,
+                        child: Hero(
+                          tag: 'eventsCardTitle'+widget.docId,
+                          child: Text(
+                            widget.name,
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.title
+                          )
+                        )
+                      ),
+                      Spacer(
+                        flex: 3
+                      )
+                    ]
                   ),
                   Spacer(
                     flex: 5
                   ),
                   Flexible(
                     flex: 100,
-                    child: Text(
-                      widget.description,
-                      textAlign: TextAlign.left,
-                      style: Theme.of(context).textTheme.caption,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                    )
+                    child: Row(
+                      children: <Widget>[
+                        Spacer(
+                          flex: 3
+                        ),
+                        Expanded(
+                          flex: 100,
+                          child: Text(
+                            widget.description,
+                            textAlign: TextAlign.left,
+                            style: Theme.of(context).textTheme.caption,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                          ),
+                        ),
+                        Spacer(
+                          flex: 3
+                        )
+                      ],
+                    ),
                   ),
                   Spacer(
                     flex: 10

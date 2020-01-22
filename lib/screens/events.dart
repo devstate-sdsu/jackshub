@@ -42,20 +42,32 @@ class EventsScreen extends StatelessWidget {
   }
 
   Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
-    return EventsCard(
+    String imageurl = doc['image'];
+    if (imageurl.contains("teaser") || imageurl.contains("artboard")) {
+      return EventsSmallCard(
         name: doc['name'],
-        summary: doc['summary'],
-        description: doc['description'],
+        image: doc['image'],
+        bigLocation: doc['big_location'],
+        littleLocation: doc['tiny_location'],
         startTime: doc['start_time'],
         endTime: doc['end_time'],
-        //timeUpdated: doc['time_updated'],
-        image: doc['image'],
-        littleLocation: doc['tiny_location'],
-        bigLocation: doc['big_location'],
-        //coords: doc['coords'],
-        docId: doc.documentID,
         favorite: favorite,
-    );
+        docId: doc.documentID
+      );
+    } else {
+      return EventsCard(
+        name: doc['name'],
+        image: doc['image'],
+        description: doc['description'],
+        summary: doc['summary'],
+        bigLocation: doc['big_location'],
+        littleLocation: doc['tiny_location'],
+        startTime: doc['start_time'],
+        endTime: doc['end_time'],
+        favorite: favorite,
+        docId: doc.documentID
+      );
+    }
   }
 
   Widget buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
