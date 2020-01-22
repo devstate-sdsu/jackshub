@@ -43,7 +43,17 @@ class EventsScreen extends StatelessWidget {
 
   Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
     String imageurl = doc['image'];
-    if (imageurl.contains("teaser") || imageurl.contains("artboard")) {
+    String titlename = doc['name'];
+    if (
+      //imageurl.contains("teaser") || 
+      titlename.contains("Basketball") ||
+      titlename.contains("basketball") ||
+      titlename.contains("College of") ||
+      titlename.contains("Wrestling") ||
+      titlename.contains("Track") ||
+      titlename.contains("Preview") ||
+      titlename.contains("Theatre")
+      ) {
       return EventsSmallCard(
         name: doc['name'],
         image: doc['image'],
