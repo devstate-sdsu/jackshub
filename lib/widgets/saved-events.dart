@@ -4,6 +4,7 @@ import 'package:jackshub/screens/events.dart';
 import 'package:jackshub/src/bloc/saved_events_bloc.dart';
 import 'package:jackshub/util/database_helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:jackshub/widgets/ColorLoader.dart';
 import 'saved-event-card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jackshub/src/bloc/saved_events_state.dart';
@@ -38,9 +39,10 @@ Widget buildInitialSavedEvents() {
 
 Widget buildLoadingSavedEvents() {
   return Container(
-    child: Text(
-      "Loading..."
-    ),
+    child: ColorLoader5(),
+    // child: Text(
+    //   "Loading..."
+    // ),
   );
 }
 

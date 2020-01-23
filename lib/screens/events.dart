@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jackshub/src/bloc/index.dart';
+import 'package:jackshub/widgets/ColorLoader.dart';
 import 'package:jackshub/widgets/index.dart';
 import 'package:jackshub/widgets/saved-events.dart';
 
@@ -41,7 +42,7 @@ class _EventsToggleState extends State<EventsToggle> {
         bottom: PreferredSize(
           preferredSize: Size(double.infinity, 5.0),
           child: Padding(
-            padding: EdgeInsets.only(top : 5.0, bottom : 10.0),
+            padding: EdgeInsets.only(top : 1.0, bottom : 10.0),
             child: Row(children: <Widget>[
               SizedBox(
                 width : 15.0
@@ -80,7 +81,11 @@ class EventsScreen extends StatelessWidget {
               return StreamBuilder<QuerySnapshot>(
                 stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
                 builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) return const Text('Loading...');
+                  if (!snapshot.hasData) {
+                    return Center(
+                      child: ColorLoader5()
+                      );
+                  }
                   return ListView.builder(
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (_, index) => buildEventsListItem( 
@@ -115,22 +120,14 @@ class EventsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
-    return SavedEventCard(
-      name: doc['name'],
-      img: doc['image'],
-      docId: doc.documentID,
-    );
-  }
+//   // Temporary
+//   Widget buildInitialSavedEvents() {
+//     return Container();
+//   }
 
-  // Temporary
-  Widget buildInitialSavedEvents() {
-    return Container();
-  }
+//   // Temporary
+//   Widget buildLoadingSavedEvents() {
+//     return Container();
+//   }
 
-  // Temporary
-  Widget buildLoadingSavedEvents() {
-    return Container();
-  }
-
-}
+ }
