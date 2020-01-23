@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:jackshub/screens/events.dart';
 import 'package:jackshub/src/bloc/saved_events_bloc.dart';
 import 'package:jackshub/util/database_helpers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,13 +67,9 @@ class _SavedEventsState extends State<SavedEvents> {
         {
         return ListView.builder(
           itemCount: state.savedEvents.length,
-          itemBuilder: (_, index) => buildEventsListItem(
+          itemBuilder: (_, index) => EventsScreen.buildEventsListItem(
             state.savedEvents[index], 
             true
-            // state is SavedEventsLoaded
-            //     true
-              // ? state.savedEventsMap.containsKey(state.savedEvents[index].documentID)
-              // : false
           )
         );
       }

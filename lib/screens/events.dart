@@ -83,8 +83,7 @@ class EventsScreen extends StatelessWidget {
                   if (!snapshot.hasData) return const Text('Loading...');
                   return ListView.builder(
                     itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) => buildEventsListItem(
-                      context, 
+                    itemBuilder: (_, index) => buildEventsListItem( 
                       snapshot.data.documents[index], 
                       state is SavedEventsLoaded
                         ? state.savedEventsMap.containsKey(snapshot.data.documents[index].documentID)
@@ -99,7 +98,7 @@ class EventsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
+  static Widget buildEventsListItem(DocumentSnapshot doc, bool favorite) {
     return EventsCard(
         name: doc['name'],
         summary: doc['summary'],
