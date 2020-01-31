@@ -14,13 +14,13 @@ Widget locationComponent(context, bigLocation, littleLocation) {
         width: 1.0
       ),
       Flexible(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: ListView(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
           children: <Widget>[
             AutoSizeText(
               bigLocation,
-              maxLines: 2,
+              maxLines: 1,
               maxFontSize: AppTheme.bigLocationTextSize,
               style: Theme.of(context).textTheme.display3
             ),
@@ -31,7 +31,7 @@ Widget locationComponent(context, bigLocation, littleLocation) {
               visible: littleLocation != "",
               child: AutoSizeText(
                 littleLocation,
-                maxLines: 2,
+                maxLines: 1,
                 maxFontSize: AppTheme.littleLocationTextSize,
                 style: Theme.of(context).textTheme.display4
               )
@@ -82,6 +82,7 @@ Widget timeComponent(context, startString, endString) {
         child: AutoSizeText(
           startString + "-" + endString,
           maxLines: 1,
+          minFontSize: AppTheme.timeStringMinTextSize,
           maxFontSize: AppTheme.timeStringTextSize,
           style: Theme.of(context).textTheme.display2
         )

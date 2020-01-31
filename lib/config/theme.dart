@@ -98,6 +98,9 @@ var darkTheme = new ThemeData(
 
 class AppTheme {
 
+  // Testing... font size decrease for smaller screens...
+  static double fontSizeReduction = 2.0;
+
   // Global theming of cards
   static double cardRadius = 15.0;
   static double cardSideMargin = 20.0;
@@ -115,9 +118,11 @@ class AppTheme {
   static Offset shadowOffset = Offset(0, 5);
 
   // Global theming of auto-sized texts (used in location, date, time texts)
+  static double cardTitleMinTextSize = 10.0;
   static double bigLocationTextSize = 14.0;
   static double littleLocationTextSize = 12.0;
   static double dateStringTextSize = 12.0;
   static double timeStringTextSize = 12.0;
+  static double timeStringMinTextSize = 9.0;
 
 }

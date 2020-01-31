@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/widgets/index.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 
 
@@ -142,41 +143,57 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                   Expanded(
                     flex: 725,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      // mainAxisSize: MainAxisSize.min,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(
-                          height: 10.0
-                        ),
-                        Hero(
-                          tag: 'eventsSmallCardTitle'+widget.docId,
-                          child: Text(
-                            widget.name,
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.title
-                          )
-                        ),
-                        SizedBox(
-                          height: 10.0
+                        Spacer(
+                          flex: 10
                         ),
                         Expanded(
+                          flex: 100,
+                          child: Hero(
+                            tag: 'eventsSmallCardTitle'+widget.docId,
+                            child: AutoSizeText(
+                              widget.name,
+                              maxLines: 3,
+                              textAlign: TextAlign.left,
+                              minFontSize: AppTheme.cardTitleMinTextSize,
+                              style: Theme.of(context).textTheme.title
+                            )
+                          ),
+                        ),
+                        Spacer(
+                          flex: 8
+                        ),
+                        Expanded(
+                          flex: 50,
                           child: locationComponent(context, widget.bigLocation, widget.littleLocation),
                         ),
                         Expanded(
+                          flex: 50,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               Flexible(
+                                flex: 40,
                                 child: dateComponent(context, dateString),
                               ),
                               Flexible(
+                                flex: 60,
                                 child: timeComponent(context, startString, endString)
                               )
                             ],
                           )
+                        ),
+                        Spacer(
+                          flex: 2
                         )
                       ],
                     )
+                  ),
+                  Spacer(
+                    flex: 30
                   )
                 ],
               )
