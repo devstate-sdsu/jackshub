@@ -12,7 +12,6 @@ class EventsCard extends StatefulWidget {
   final String name;
   final String image;
   final String description;
-  final String summary;
   final String bigLocation;
   final String littleLocation;
   final Timestamp startTime;
@@ -25,7 +24,6 @@ class EventsCard extends StatefulWidget {
     this.name,
     this.image,
     this.description,
-    this.summary,
     this.bigLocation,
     this.littleLocation,
     this.startTime,

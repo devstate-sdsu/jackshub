@@ -21,7 +21,8 @@ Widget locationComponent(context, bigLocation, littleLocation) {
             AutoSizeText(
               bigLocation,
               maxLines: 1,
-              maxFontSize: AppTheme.bigLocationTextSize,
+              maxFontSize: AppTheme.bigLocationTextSize.max,
+              minFontSize: AppTheme.bigLocationTextSize.min,
               style: Theme.of(context).textTheme.display3
             ),
             SizedBox(
@@ -32,7 +33,8 @@ Widget locationComponent(context, bigLocation, littleLocation) {
               child: AutoSizeText(
                 littleLocation,
                 maxLines: 1,
-                maxFontSize: AppTheme.littleLocationTextSize,
+                maxFontSize: AppTheme.littleLocationTextSize.max,
+                minFontSize: AppTheme.littleLocationTextSize.min,
                 style: Theme.of(context).textTheme.display4
               )
             )
@@ -55,12 +57,13 @@ Widget dateComponent(context, dateString) {
         color: Theme.of(context).accentColor
       ),
       SizedBox(
-        width: 5.0
+        width: 4.0
       ),
       AutoSizeText(
         dateString,
         maxLines: 1,
-        maxFontSize: AppTheme.dateStringTextSize,
+        maxFontSize: AppTheme.dateStringTextSize.max,
+        minFontSize: AppTheme.dateStringTextSize.min,
         style: Theme.of(context).textTheme.display2
       )
     ],
@@ -76,14 +79,14 @@ Widget timeComponent(context, startString, endString) {
         color: Theme.of(context).accentColor
       ),
       SizedBox(
-        width: 5.0
+        width: 4.0
       ),
       Flexible(
         child: AutoSizeText(
           startString + "-" + endString,
           maxLines: 1,
-          minFontSize: AppTheme.timeStringMinTextSize,
-          maxFontSize: AppTheme.timeStringTextSize,
+          maxFontSize: AppTheme.timeStringTextSize.max,
+          minFontSize: AppTheme.timeStringTextSize.min,
           style: Theme.of(context).textTheme.display2
         )
       )

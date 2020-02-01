@@ -1,3 +1,7 @@
+/* Hafidh Satyanto */
+// Since we're using a lot of auto-text-sizing, it's discouraged to put fontSizes in the TextStyle themselves.
+// Instead, put them in the global 'AppTheme' class.
+
 import 'package:flutter/material.dart';
 
 
@@ -23,7 +27,7 @@ var lightTheme = new ThemeData(
       fontWeight: FontWeight.w700,
       color: Colors.black,
     ),
-    caption: TextStyle(
+    caption: TextStyle(     // Used as the card description's text
       fontFamily: 'Roboto',
       fontSize: 14.0,
       fontWeight: FontWeight.w400,
@@ -105,6 +109,7 @@ class AppTheme {
   static double cardRadius = 15.0;
   static double cardSideMargin = 20.0;
   static double cardVerticalMargin = 10.0;
+  static double cardEventsSmallHeight = 135.0;
 
   // Global theming of card touch depress animation
   static double cardTouchedScale = 0.94;
@@ -118,11 +123,19 @@ class AppTheme {
   static Offset shadowOffset = Offset(0, 5);
 
   // Global theming of auto-sized texts (used in location, date, time texts)
-  static double cardTitleMinTextSize = 10.0;
-  static double bigLocationTextSize = 14.0;
-  static double littleLocationTextSize = 12.0;
-  static double dateStringTextSize = 12.0;
-  static double timeStringTextSize = 12.0;
-  static double timeStringMinTextSize = 9.0;
+  static TextSize cardTitleTextSize = TextSize(20.0, 10.0);
+  static TextSize cardDescriptionTextSize = TextSize(14.0, 10.0);
+  static TextSize bigLocationTextSize = TextSize(14.0, 10.0);
+  static TextSize littleLocationTextSize = TextSize(12.0, 10.0);
+  static TextSize dateStringTextSize = TextSize(13.0, 10.0);
+  static TextSize timeStringTextSize = TextSize(13.0, 9.0);
+}
 
+
+
+// Just my custom classes
+class TextSize {
+  final double max;
+  final double min;
+  TextSize(this.max, this.min);
 }

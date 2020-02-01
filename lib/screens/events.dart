@@ -42,7 +42,7 @@ class EventsScreen extends StatelessWidget {
   }
 
   Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
-    String imageurl = doc['image'];
+    //String imageurl = doc['image'];   DEPRECATED
     String titlename = doc['name'];
     if (
       //imageurl.contains("teaser") || 
@@ -69,7 +69,7 @@ class EventsScreen extends StatelessWidget {
         name: doc['name'],
         image: doc['image'],
         description: doc['description'],
-        summary: doc['summary'],
+        //summary: doc['summary'],   DEPRECATED
         bigLocation: doc['big_location'],
         littleLocation: doc['tiny_location'],
         startTime: doc['start_time'],

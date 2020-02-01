@@ -124,7 +124,7 @@ PODS:
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `Flutter`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
 
@@ -156,7 +156,7 @@ EXTERNAL SOURCES:
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: Flutter
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   sqflite:
@@ -188,6 +188,6 @@ SPEC CHECKSUMS:
   Protobuf: 67fb42ba613def994e61854de2b3164f13790cc4
   sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a
 
-PODFILE CHECKSUM: 64b2109b760ac9073c864e2a8278e6464efaa219
+PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
 
 COCOAPODS: 1.6.1

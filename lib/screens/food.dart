@@ -32,7 +32,7 @@ class FoodScreen extends StatelessWidget {
   Widget buildFoodListItem(BuildContext context, DocumentSnapshot doc) {
     return EventsCard(
         name: doc['name'],
-        summary: doc['summary'],
+        //summary: doc['summary'],     DEPRECATED
         description: doc['description'],
         startTime: doc['start_time'],
         endTime: doc['end_time'],

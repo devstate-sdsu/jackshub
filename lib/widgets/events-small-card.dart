@@ -38,7 +38,8 @@ class EventsSmallCard extends StatefulWidget {
 class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMixin {
   AnimationController _controller;
   Animation _animation;
-  double cardVerticalSize = 135.0;
+  double cardVerticalSize = AppTheme.cardEventsSmallHeight;
+  double locationIconOffset = 2.0;
   var cardScale = 1.0;
 
   @override
@@ -127,7 +128,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               image: NetworkImage(
                                 widget.image
                               )
@@ -143,57 +144,136 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                   Expanded(
                     flex: 725,
                     child: Column(
-                      // mainAxisAlignment: MainAxisAlignment.start,
-                      // mainAxisSize: MainAxisSize.min,
-                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      //physics: NeverScrollableScrollPhysics(),
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Spacer(
-                          flex: 10
+                        SizedBox(
+                          height: 8
                         ),
                         Expanded(
                           flex: 100,
-                          child: Hero(
-                            tag: 'eventsSmallCardTitle'+widget.docId,
-                            child: AutoSizeText(
-                              widget.name,
-                              maxLines: 3,
-                              textAlign: TextAlign.left,
-                              minFontSize: AppTheme.cardTitleMinTextSize,
-                              style: Theme.of(context).textTheme.title
-                            )
-                          ),
-                        ),
-                        Spacer(
-                          flex: 8
-                        ),
-                        Expanded(
-                          flex: 50,
-                          child: locationComponent(context, widget.bigLocation, widget.littleLocation),
-                        ),
-                        Expanded(
-                          flex: 50,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(
-                                flex: 40,
-                                child: dateComponent(context, dateString),
+                              SizedBox(
+                                width: locationIconOffset
                               ),
-                              Flexible(
-                                flex: 60,
-                                child: timeComponent(context, startString, endString)
+                              Expanded(
+                                flex: 150,
+                                child: Hero(
+                                  tag: 'eventsSmallCardTitle'+widget.docId,
+                                    child: AutoSizeText(    // Card title
+                                      widget.name,
+                                      maxLines: 2,
+                                      textAlign: TextAlign.left,
+                                      maxFontSize: AppTheme.cardTitleTextSize.max,
+                                      minFontSize: AppTheme.cardTitleTextSize.min,
+                                      style: Theme.of(context).textTheme.title
+                                    )
+                                ),
                               )
                             ],
                           )
                         ),
                         Spacer(
-                          flex: 2
+                          flex: 10
+                        ),
+                        Expanded(
+                          flex: 30,
+                          child: locationComponent(context, widget.bigLocation, widget.littleLocation),
+                        ),
+                        Spacer(
+                          flex: 10
+                        ),
+                        Expanded(
+                          flex: 90,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: locationIconOffset,
+                              ),
+                              Expanded(
+                                flex: 80,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 30,
+                                      child: timeComponent(context, startString, endString)
+                                    ),
+                                    Spacer(
+                                      flex: 10
+                                    ),
+                                    Expanded(
+                                      flex: 30,
+                                      child: dateComponent(context, dateString)
+                                    )
+                                  ],
+                                )
+                              ),
+                              Expanded(
+                                flex: 20,
+                                child: FavoriteWidget(    ////////////////////////////////// Hi Jin
+                                  docId: widget.docId,
+                                  isFav: false,
+                                )
+                              )
+                            ],
+                          )
+                        ),
+
+
+                        /*
+                        Expanded(
+                          flex: 30,
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(
+                                width: locationIconOffset
+                              ),
+                              Expanded(
+                                flex: 100,
+                                child: timeComponent(context, startString, endString)
+                              )
+                            ],
+                          ),
+                        ),
+                        Spacer(
+                          flex: 10
+                        ),
+                        Expanded(
+                          flex: 30,
+                          child: Row(
+                            children: <Widget>[
+                              SizedBox(
+                                width: locationIconOffset
+                              ),
+                              Expanded(
+                                flex: 100,
+                                child: dateComponent(context, dateString)
+                              )
+                            ],
+                          )
+                        ),
+                        */
+
+
+
+
+                        SizedBox(
+                          height: 10
                         )
                       ],
                     )
                   ),
                   Spacer(
-                    flex: 30
+                    flex: 40
                   )
                 ],
               )
