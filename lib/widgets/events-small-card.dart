@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/widgets/index.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
 
 
 class EventsSmallCard extends StatefulWidget {
@@ -31,13 +33,13 @@ class EventsSmallCard extends StatefulWidget {
   _EventsSmallCard createState() => _EventsSmallCard();
 }
 
-class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMixin {
 
+
+class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMixin {
   AnimationController _controller;
   Animation _animation;
-
-  double cardVerticalSize = 135.0;
-
+  double cardVerticalSize = AppTheme.cardSmallEventsHeight;
+  double locationIconOffset = 2.0;
   var cardScale = 1.0;
 
   @override
@@ -69,14 +71,9 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-
-    DateTime start = DateTime.fromMillisecondsSinceEpoch(widget.startTime.seconds * 1000);
-    DateTime end = DateTime.fromMillisecondsSinceEpoch(widget.endTime.seconds * 1000);
-
-    String dateString = new DateFormat.MMMd().format(start);
-    String startString = new DateFormat.jm().format(start);
-    String endString = new DateFormat.jm().format(end);
-
+    String dateString = new DateFormat.MMMd().format(widget.startTime.toDate());
+    String startString = new DateFormat.jm().format(widget.startTime.toDate());
+    String endString = new DateFormat.jm().format(widget.endTime.toDate());
 
     return AnimatedBuilder(
       animation: _controller,
@@ -131,7 +128,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              fit: BoxFit.fill,
+                              fit: BoxFit.cover,
                               image: NetworkImage(
                                 widget.image
                               )
@@ -147,41 +144,103 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                   Expanded(
                     flex: 725,
                     child: Column(
+                      //physics: NeverScrollableScrollPhysics(),
                       mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(
-                          height: 10.0
-                        ),
-                        Hero(
-                          tag: 'eventsSmallCardTitle'+widget.docId,
-                          child: Text(
-                            widget.name,
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.title
-                          )
-                        ),
-                        SizedBox(
-                          height: 10.0
+                          height: 8
                         ),
                         Expanded(
-                          child: locationComponent(context, widget.bigLocation, widget.littleLocation),
-                        ),
-                        Expanded(
+                          flex: 100,
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(
-                                child: dateComponent(context, dateString),
+                              SizedBox(
+                                width: locationIconOffset
                               ),
-                              Flexible(
-                                child: timeComponent(context, startString, endString)
+                              Expanded(
+                                flex: 150,
+                                child: Hero(
+                                  tag: 'eventsSmallCardTitle'+widget.docId,
+                                    child: AutoSizeText(    // Card title
+                                      widget.name,
+                                      maxLines: 2,
+                                      textAlign: TextAlign.left,
+                                      maxFontSize: AppTheme.cardSmallEventsTitleTextSize.max,
+                                      minFontSize: AppTheme.cardSmallEventsTitleTextSize.min,
+                                      style: Theme.of(context).textTheme.title
+                                    )
+                                ),
                               )
                             ],
                           )
+                        ),
+                        Spacer(
+                          flex: 10
+                        ),
+                        Expanded(
+                          flex: 30,
+                          child: locationComponent(context, widget.bigLocation, widget.littleLocation),
+                        ),
+                        Spacer(
+                          flex: 10
+                        ),
+                        Expanded(
+                          flex: 70,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: locationIconOffset,
+                              ),
+                              Expanded(
+                                flex: 80,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Expanded(
+                                      flex: 30,
+                                      child: timeComponent(context, startString, endString)
+                                    ),
+                                    Spacer(
+                                      flex: 4
+                                    ),
+                                    Expanded(
+                                      flex: 30,
+                                      child: dateComponent(context, dateString)
+                                    ),
+                                    Spacer(
+                                      flex: 1
+                                    )
+                                  ],
+                                )
+                              ),
+                              Expanded(
+                                flex: 18,
+                                child: FavoriteWidget(    ////////////////////////////////// Hi Jin
+                                  docId: widget.docId,
+                                  isFav: false,
+                                )
+                              ),
+                              Spacer(
+                                flex: 1
+                              )
+                            ],
+                          )
+                        ),
+                        SizedBox(
+                          height: 9
                         )
                       ],
                     )
+                  ),
+                  Spacer(
+                    flex: 40
                   )
                 ],
               )

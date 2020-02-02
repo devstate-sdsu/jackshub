@@ -42,20 +42,42 @@ class EventsScreen extends StatelessWidget {
   }
 
   Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
-    return EventsCard(
+    //String imageurl = doc['image'];   DEPRECATED
+    String titlename = doc['name'];
+    if (
+      //imageurl.contains("teaser") || 
+      titlename.contains("Basketball") ||
+      titlename.contains("basketball") ||
+      titlename.contains("College of") ||
+      titlename.contains("Wrestling") ||
+      titlename.contains("Track") ||
+      titlename.contains("Preview") ||
+      titlename.contains("Theatre")
+      ) {
+      return EventsSmallCard(
         name: doc['name'],
-        summary: doc['summary'],
-        description: doc['description'],
+        image: doc['image'],
+        bigLocation: doc['big_location'],
+        littleLocation: doc['tiny_location'],
         startTime: doc['start_time'],
         endTime: doc['end_time'],
-        timeUpdated: doc['time_updated'],
-        img: doc['image'],
-        tinyLocation: doc['tiny_location'],
-        bigLocation: doc['big_location'],
-        coords: doc['coords'],
-        docId: doc.documentID,
         favorite: favorite,
-    );
+        docId: doc.documentID
+      );
+    } else {
+      return EventsCard(
+        name: doc['name'],
+        image: doc['image'],
+        description: doc['description'],
+        //summary: doc['summary'],   DEPRECATED
+        bigLocation: doc['big_location'],
+        littleLocation: doc['tiny_location'],
+        startTime: doc['start_time'],
+        endTime: doc['end_time'],
+        favorite: favorite,
+        docId: doc.documentID
+      );
+    }
   }
 
   Widget buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
