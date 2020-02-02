@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:jackshub/config/router.dart';
 import 'package:jackshub/config/theme.dart';
-
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:jackshub/src/app.dart';
+import 'package:jackshub/util/date-time-helper.dart';
 
 
 class ServicesCard extends StatefulWidget {
   final String name;
   final String summary;
   final String image;
-  final String status;
+  //final String status;
   final String docId;
 
   const ServicesCard({
@@ -16,7 +19,7 @@ class ServicesCard extends StatefulWidget {
     this.name,
     this.summary,
     this.image,
-    this.status,
+    //this.status,
     this.docId
   }): super(key: key);
 
@@ -127,67 +130,116 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                           topLeft: Radius.circular(AppTheme.cardRadius),
                           bottomLeft: Radius.circular(AppTheme.cardRadius)
                         ),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: NetworkImage(
-                                widget.image
+                        child: CachedNetworkImage(
+                          imageUrl: widget.image,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
                               )
                             )
-                          )
+                          ),
+                          placeholder: (context, url) => Image(
+                            image: AssetImage('assets/images/loadingPlaceHolder.png')
+                          ),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.error,
+                            color: Colors.red,
+                            size: 30.0
+                          ),
                         )
                       )
                     )
                   ),
-                  Spacer(
-                    flex: 40
+                  SizedBox(
+                    width: 15
                   ),
                   Expanded(
                     flex: 725,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         SizedBox(
-                          height: 10.0
+                          height: 5
                         ),
-                        Hero(
-                          tag: 'servicesCardTitle'+widget.docId,
-                          child: Text(
-                            widget.name,
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.title
+                        Flexible(
+                          flex: 20,
+                          child: Hero(
+                            tag: 'servicesCardTitle'+widget.docId,
+                            child: AutoSizeText(
+                              widget.name,
+                              maxLines: 2,
+                              textAlign: TextAlign.left,
+                              maxFontSize: AppTheme.cardSmallEventsTitleTextSize.max,
+                              minFontSize: AppTheme.cardSmallEventsTitleTextSize.min,
+                              style: Theme.of(context).textTheme.title
+                            )
                           )
-                        ),                            
-                        SizedBox(
-                          height: 10.0
                         ),
-                        Expanded(
-                          child: Text(
+                        Spacer(
+                          flex: 2
+                        ),
+                        Flexible(
+                          flex: 25,
+                          child: AutoSizeText(
                             widget.summary,
+                            maxLines: 3,
                             textAlign: TextAlign.left,
+                            maxFontSize: AppTheme.cardDescriptionTextSize.max,
+                            minFontSize: AppTheme.cardDescriptionTextSize.min,
                             style: Theme.of(context).textTheme.caption,
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 3
                           )
                         ),
                         SizedBox(
-                          height: 10.0
+                          height: 10
                         ),
-                        Text(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Icon(
+                              Icons.lens,
+                              size: 10.0,
+                              color: Colors.green,
+                            ),
+                            SizedBox(
+                              width: 1
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: AutoSizeText(
+                                "Currently open until 4:00pm",
+                                maxLines: 1,
+                                textAlign: TextAlign.left,
+                                maxFontSize: AppTheme.cardDescriptionTextSize.max,
+                                minFontSize: AppTheme.cardDescriptionTextSize.min,
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Roboto'
+                                )
+                              )
+                            ),
+                          ],
+                        ),
+                        /*Text(
                           widget.status,
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.caption
-                        ),
+                        ),*/
                         SizedBox(
-                          height: 10.0
+                          height: 7
                         )
                       ],
                     )
                   ),
-                  Spacer(
-                    flex: 20
+                  SizedBox(
+                    width: 10
                   )
                 ],
               )
@@ -198,4 +250,4 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
     );
   }
 }
-
+ 

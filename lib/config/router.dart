@@ -6,7 +6,7 @@ import '../screens/index.dart';
 
 class Routes {
   Map<String, Widget Function(BuildContext)> routes = <String, WidgetBuilder>{
-    '/': (context) => HomeScreen(),
+    '/': (context) => SplashScreen(),
     '/detailedServices': (context) => RouteToDetailedServices(),
     '/detailedEvents' : (context) => RouteToDetailedEvents(),
   };
