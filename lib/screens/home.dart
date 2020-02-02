@@ -38,7 +38,7 @@ class HomeScreen extends StatelessWidget {
           body: TabBarView(
             children: <Widget>[
               BlocProvider(
-                builder: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEventsInfo()),
+                create: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEventsInfo()),
                 child: EventsToggle(),
               ),
               ServicesScreen(),
