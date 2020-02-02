@@ -118,7 +118,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                   ),
                   BoxShadow(
                     color: Color.fromRGBO(255, 255, 255, 0.83),
-                    blurRadius: 5,
+                    blurRadius: 7,
                     offset: Offset(-6, -6)
                   )
                 ]
