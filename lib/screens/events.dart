@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jackshub/config/theme.dart';
@@ -42,6 +43,10 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
   Color _backgroundOn = Colors.black;
   Color _backgroundOff = Colors.grey[300];
   ScrollController _scrollController = new ScrollController();
+  ScrollController _verticalScrollController = new ScrollController();
+  bool upDirection = true, flag = true;
+  double fabOpacity = 1.0;
+
   List _keys = [];
   bool _buttonTap = false;
   int selectedScreenIdx = 0;
@@ -87,6 +92,14 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
     _colorTweenForegroundOn =
         ColorTween(begin: _foregroundOff, end: _foregroundOn)
             .animate(_animationControllerOn);
+
+    _verticalScrollController..addListener(() {
+      upDirection = _verticalScrollController.position.userScrollDirection == ScrollDirection.forward;
+      if (upDirection != flag) {
+        setState(() {});
+      }
+      flag = upDirection;
+    });
   }
 
   @override
@@ -242,7 +255,7 @@ class EventsScreen extends StatelessWidget {
               if (!snapshot.hasData) {
                 return Center(
                   child: ColorLoader5()
-                  );
+                );
               }
               return ListView.builder(
                 itemCount: snapshot.data.documents.length,
@@ -254,8 +267,8 @@ class EventsScreen extends StatelessWidget {
             }
           ); 
         }
-        return Container(
-          child: Text("Loading")
+        return Center(
+          child: ColorLoader5()
         );
       },
     );
