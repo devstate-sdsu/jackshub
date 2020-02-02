@@ -23,7 +23,7 @@ var lightTheme = new ThemeData(
     ),
     headline: TextStyle(
       fontFamily: 'Roboto',
-      fontSize: 35.0,
+      fontSize: 25.0,
       fontWeight: FontWeight.w700,
       color: Colors.black,
     ),
@@ -70,7 +70,7 @@ var darkTheme = new ThemeData(
     ),
     headline: TextStyle(
       //fontFamily: 'Roboto',
-      fontSize: 35.0,
+      fontSize: 20.0,
       fontWeight: FontWeight.w700,
       color: Colors.white,
     ),
@@ -111,6 +111,7 @@ class AppTheme {
   static double cardVerticalMargin = 10.0;
   static double cardSmallEventsHeight = 120.0;
   static double cardLargeEventsHeight = 380.0;
+  static double detailCardInnerPadding = 15.0;
 
   // Global theming of card touch depress animation
   static double cardTouchedScale = 0.94;
