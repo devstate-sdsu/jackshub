@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
+
+
 Widget locationComponent(context, bigLocation, littleLocation) {
   return Row(
     children: <Widget>[
@@ -57,6 +59,8 @@ Widget locationComponent(context, bigLocation, littleLocation) {
   );
 }
 
+
+
 Widget dateComponent(context, dateString) {
   return Row(
     children: <Widget>[
@@ -78,6 +82,8 @@ Widget dateComponent(context, dateString) {
     ],
   );
 }
+
+
 
 Widget timeComponent(context, startString, endString) {
   return Row(

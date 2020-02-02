@@ -6,6 +6,8 @@ import 'package:jackshub/src/bloc/saved_events_event.dart';
 import 'package:jackshub/src/bloc/saved_events_state.dart';
 import 'package:jackshub/util/database_helpers.dart';
 
+
+
 Future<void> _save(String documentId) async {
   SavedEvent newSavedEvent = SavedEvent();
   newSavedEvent.documentId = documentId;
@@ -14,10 +16,14 @@ Future<void> _save(String documentId) async {
   print('inserted row: $id');
 }
 
+
+
 Future<void> _delete(String documentId) async {
   DatabaseHelper helper = DatabaseHelper.instance;
   await helper.delete(documentId);
 }
+
+
 
 class FavoriteWidget extends StatelessWidget {
   final String docId;
