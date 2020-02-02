@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
+
+
 Widget locationComponent(context, bigLocation, littleLocation) {
   return Row(
     children: <Widget>[
@@ -15,27 +17,38 @@ Widget locationComponent(context, bigLocation, littleLocation) {
       ),
       Flexible(
         child: Column(
+          //physics: const NeverScrollableScrollPhysics(),
+          //shrinkWrap: true,
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AutoSizeText(
-              bigLocation,
-              maxLines: 2,
-              maxFontSize: AppTheme.bigLocationTextSize,
-              style: Theme.of(context).textTheme.display3
+            Flexible(
+              flex: 120,
+              child: AutoSizeText(
+                bigLocation,
+                maxLines: 1,
+                maxFontSize: AppTheme.bigLocationTextSize.max,
+                minFontSize: AppTheme.bigLocationTextSize.min,
+                style: Theme.of(context).textTheme.display3
+              ),
             ),
-            SizedBox(
-              height: 2.0
+            Spacer(
+              flex: 5
             ),
             Visibility(
               visible: littleLocation != "",
-              child: AutoSizeText(
-                littleLocation,
-                maxLines: 2,
-                maxFontSize: AppTheme.littleLocationTextSize,
-                style: Theme.of(context).textTheme.display4
+              child: Flexible(
+                flex: 80,
+                child: AutoSizeText(
+                  littleLocation,
+                  maxLines: 1,
+                  maxFontSize: AppTheme.littleLocationTextSize.max,
+                  minFontSize: AppTheme.littleLocationTextSize.min,
+                  style: Theme.of(context).textTheme.display4
+                )
               )
-            )
+            ),
           ],
         )
       ),
@@ -46,6 +59,8 @@ Widget locationComponent(context, bigLocation, littleLocation) {
   );
 }
 
+
+
 Widget dateComponent(context, dateString) {
   return Row(
     children: <Widget>[
@@ -55,17 +70,20 @@ Widget dateComponent(context, dateString) {
         color: Theme.of(context).accentColor
       ),
       SizedBox(
-        width: 5.0
+        width: 4.0
       ),
       AutoSizeText(
         dateString,
         maxLines: 1,
-        maxFontSize: AppTheme.dateStringTextSize,
+        maxFontSize: AppTheme.dateStringTextSize.max,
+        minFontSize: AppTheme.dateStringTextSize.min,
         style: Theme.of(context).textTheme.display2
       )
     ],
   );
 }
+
+
 
 Widget timeComponent(context, startString, endString) {
   return Row(
@@ -76,13 +94,14 @@ Widget timeComponent(context, startString, endString) {
         color: Theme.of(context).accentColor
       ),
       SizedBox(
-        width: 5.0
+        width: 4.0
       ),
       Flexible(
         child: AutoSizeText(
           startString + "-" + endString,
           maxLines: 1,
-          maxFontSize: AppTheme.timeStringTextSize,
+          maxFontSize: AppTheme.timeStringTextSize.max,
+          minFontSize: AppTheme.timeStringTextSize.min,
           style: Theme.of(context).textTheme.display2
         )
       )
