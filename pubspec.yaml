@@ -15,11 +15,11 @@ dependencies:
   auto_size_text: ^2.1.0
   cached_network_image: ^2.0.0
   intl: ^0.16.0
-  sqflite:
-  path_provider:
-  flutter_bloc:
-  equatable:
-  page_transition: 
+  sqflite: ^1.2.0
+  path_provider: ^1.6.0
+  flutter_bloc: ^3.2.0
+  equatable: ^1.0.3
+  page_transition: ^1.1.5
  
 
 dev_dependencies:
