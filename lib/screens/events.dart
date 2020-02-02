@@ -29,12 +29,14 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
   double _prevAniValue = 0.0;
   List _icons = [
     Icons.zoom_out_map,
+    Icons.group,
     Icons.directions_run,
     Icons.favorite,
   ];
   List<Widget> _screens = 
   [
     EventsScreen(filter: 'all'),
+    EventsScreen(filter: 'clubs'),
     EventsScreen(filter: 'sporting'),
     SavedEvents(),
   ];
