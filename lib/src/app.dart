@@ -13,8 +13,7 @@ class App extends StatefulWidget {
 
 
 
-class _App extends State<App> {
-  
+class _App extends State<App> {  
   @override
   Widget build(BuildContext context) {
     final app = new MaterialApp(
@@ -32,3 +31,4 @@ class _App extends State<App> {
     return app;
   }
 }
+

@@ -38,7 +38,7 @@ class EventsSmallCard extends StatefulWidget {
 class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMixin {
   AnimationController _controller;
   Animation _animation;
-  double cardVerticalSize = AppTheme.cardEventsSmallHeight;
+  double cardVerticalSize = AppTheme.cardSmallEventsHeight;
   double locationIconOffset = 2.0;
   var cardScale = 1.0;
 
@@ -169,8 +169,8 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                                       widget.name,
                                       maxLines: 2,
                                       textAlign: TextAlign.left,
-                                      maxFontSize: AppTheme.cardTitleTextSize.max,
-                                      minFontSize: AppTheme.cardTitleTextSize.min,
+                                      maxFontSize: AppTheme.cardSmallEventsTitleTextSize.max,
+                                      minFontSize: AppTheme.cardSmallEventsTitleTextSize.min,
                                       style: Theme.of(context).textTheme.title
                                     )
                                 ),
@@ -189,7 +189,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                           flex: 10
                         ),
                         Expanded(
-                          flex: 90,
+                          flex: 70,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,66 +208,33 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                                       child: timeComponent(context, startString, endString)
                                     ),
                                     Spacer(
-                                      flex: 10
+                                      flex: 4
                                     ),
                                     Expanded(
                                       flex: 30,
                                       child: dateComponent(context, dateString)
+                                    ),
+                                    Spacer(
+                                      flex: 1
                                     )
                                   ],
                                 )
                               ),
                               Expanded(
-                                flex: 20,
+                                flex: 18,
                                 child: FavoriteWidget(    ////////////////////////////////// Hi Jin
                                   docId: widget.docId,
                                   isFav: false,
                                 )
+                              ),
+                              Spacer(
+                                flex: 1
                               )
                             ],
                           )
                         ),
-
-
-                        /*
-                        Expanded(
-                          flex: 30,
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(
-                                width: locationIconOffset
-                              ),
-                              Expanded(
-                                flex: 100,
-                                child: timeComponent(context, startString, endString)
-                              )
-                            ],
-                          ),
-                        ),
-                        Spacer(
-                          flex: 10
-                        ),
-                        Expanded(
-                          flex: 30,
-                          child: Row(
-                            children: <Widget>[
-                              SizedBox(
-                                width: locationIconOffset
-                              ),
-                              Expanded(
-                                flex: 100,
-                                child: dateComponent(context, dateString)
-                              )
-                            ],
-                          )
-                        ),
-                        */
-
-
-
-
                         SizedBox(
-                          height: 10
+                          height: 9
                         )
                       ],
                     )

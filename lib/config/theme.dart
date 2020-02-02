@@ -109,7 +109,8 @@ class AppTheme {
   static double cardRadius = 15.0;
   static double cardSideMargin = 20.0;
   static double cardVerticalMargin = 10.0;
-  static double cardEventsSmallHeight = 135.0;
+  static double cardSmallEventsHeight = 120.0;
+  static double cardLargeEventsHeight = 380.0;
 
   // Global theming of card touch depress animation
   static double cardTouchedScale = 0.94;
@@ -123,10 +124,11 @@ class AppTheme {
   static Offset shadowOffset = Offset(0, 5);
 
   // Global theming of auto-sized texts (used in location, date, time texts)
-  static TextSize cardTitleTextSize = TextSize(20.0, 10.0);
-  static TextSize cardDescriptionTextSize = TextSize(14.0, 10.0);
-  static TextSize bigLocationTextSize = TextSize(14.0, 10.0);
-  static TextSize littleLocationTextSize = TextSize(12.0, 10.0);
+  static TextSize cardLargeEventsTitleTextSize = TextSize(20.0, 17.0);
+  static TextSize cardSmallEventsTitleTextSize = TextSize(20.0, 10.0);
+  static TextSize cardDescriptionTextSize = TextSize(14.0, 12.0);
+  static TextSize bigLocationTextSize = TextSize(14.0, 12.0);
+  static TextSize littleLocationTextSize = TextSize(12.0, 12.0);
   static TextSize dateStringTextSize = TextSize(13.0, 10.0);
   static TextSize timeStringTextSize = TextSize(13.0, 9.0);
 }

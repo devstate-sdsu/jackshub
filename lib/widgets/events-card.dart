@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'favorite-widget.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/widgets/index.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 
 
@@ -76,7 +77,8 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
     String startString = new DateFormat.jm().format(widget.startTime.toDate());
     String endString = new DateFormat.jm().format(widget.endTime.toDate());
     double screenWidth = MediaQuery.of(context).size.width;
-    double cardVerticalSize = screenWidth - (AppTheme.cardSideMargin*2) - 15;
+    //double cardVerticalSize = screenWidth - (AppTheme.cardSideMargin*2) - 15;
+    double cardVerticalSize = AppTheme.cardLargeEventsHeight;
 
     return AnimatedBuilder(
       animation: _controller,
@@ -117,10 +119,11 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                 ]
               ),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Expanded(
-                    flex: 400,
+                    flex: 600,
                     child: Hero(
                       tag: 'eventsCardImg'+widget.docId,
                       child: ClipRRect(
@@ -132,6 +135,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                           decoration: BoxDecoration(
                             color: Colors.white,
                             image: DecorationImage(
+                              alignment: Alignment.topCenter,
                               fit: BoxFit.cover,
                               image: NetworkImage(
                                 widget.image
@@ -142,85 +146,108 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                       )
                     )
                   ),
-                  Spacer(
-                    flex: 10
+                  SizedBox(
+                    height: 10
                   ),
-                  Row(
-                    children: <Widget>[
-                      Spacer(
-                        flex: 3
-                      ),
-                      Expanded(
-                        flex: 100,
-                        child: Hero(
-                          tag: 'eventsCardTitle'+widget.docId,
-                          child: Text(
-                            widget.name,
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.title
-                          )
-                        )
-                      ),
-                      Spacer(
-                        flex: 3
-                      )
-                    ]
-                  ),
-                  Spacer(
-                    flex: 5
-                  ),
-                  Flexible(
-                    flex: 100,
+                  Expanded(
+                    flex: 400,
                     child: Row(
                       children: <Widget>[
-                        Spacer(
-                          flex: 3
+                        SizedBox(
+                          width: 12
                         ),
                         Expanded(
-                          flex: 100,
-                          child: Text(
-                            widget.description,
-                            textAlign: TextAlign.left,
-                            style: Theme.of(context).textTheme.caption,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 2,
-                          ),
-                        ),
-                        Spacer(
-                          flex: 3
-                        )
-                      ],
-                    ),
-                  ),
-                  Spacer(
-                    flex: 10
-                  ),
-                  Flexible(
-                    flex: 100,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Expanded(
-                          flex: 3,
-                          child: locationComponent(context, widget.bigLocation, widget.littleLocation)
-                        ),
-                        Expanded(
-                          flex: 2,
+                          flex: 1,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            //mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Flexible(
-                                child: dateComponent(context, dateString)
+                              Hero(
+                                tag: 'eventsCardTitle'+widget.docId,
+                                child: AutoSizeText(
+                                  widget.name,
+                                  maxLines: 2,
+                                  textAlign: TextAlign.left,
+                                  maxFontSize: AppTheme.cardLargeEventsTitleTextSize.max,
+                                  minFontSize: AppTheme.cardLargeEventsTitleTextSize.min,
+                                  style: Theme.of(context).textTheme.title,
+                                  overflow: TextOverflow.ellipsis
+                                )
+                              ),
+                              Spacer(
+                                flex: 10
+                              ),
+                              AutoSizeText(
+                                widget.description,
+                                maxLines: 2,
+                                textAlign: TextAlign.left,
+                                maxFontSize: AppTheme.cardDescriptionTextSize.max,
+                                minFontSize: AppTheme.cardDescriptionTextSize.min,
+                                style: Theme.of(context).textTheme.caption,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              Spacer(
+                                flex: 10
                               ),
                               Flexible(
-                                child: timeComponent(context, startString, endString)
-                              )
+                                flex: 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Flexible(
+                                      flex: 50,
+                                      child: timeComponent(context, startString, endString)
+                                    ),
+                                    Spacer(
+                                      flex: 5
+                                    ),
+                                    Flexible(
+                                      flex: 50,
+                                      child: dateComponent(context, dateString)
+                                    )
+                                  ],
+                                )
+                              ),
+                              Spacer(
+                                flex: 5
+                              ),
+                              Flexible(
+                                flex: 50,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  //mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Flexible(
+                                      flex: 20,
+                                      child: locationComponent(context, widget.bigLocation, widget.littleLocation)
+                                    ),
+                                    Spacer(
+                                      flex: 1
+                                    ),
+                                    Flexible(
+                                      flex: 3,
+                                      child: FavoriteWidget(
+                                        docId: widget.docId,
+                                        isFav: false
+                                      )
+                                    )
+                                  ],
+                                )
+                              ),
                             ],
-                          )
+                          ),
+                        ),
+                        SizedBox(
+                          width: 12
                         )
                       ],
                     )
+                  ),
+                  SizedBox(
+                    height: 10
                   )
                 ],
               )

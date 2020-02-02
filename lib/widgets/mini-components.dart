@@ -14,30 +14,39 @@ Widget locationComponent(context, bigLocation, littleLocation) {
         width: 1.0
       ),
       Flexible(
-        child: ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
+        child: Column(
+          //physics: const NeverScrollableScrollPhysics(),
+          //shrinkWrap: true,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AutoSizeText(
-              bigLocation,
-              maxLines: 1,
-              maxFontSize: AppTheme.bigLocationTextSize.max,
-              minFontSize: AppTheme.bigLocationTextSize.min,
-              style: Theme.of(context).textTheme.display3
+            Flexible(
+              flex: 120,
+              child: AutoSizeText(
+                bigLocation,
+                maxLines: 1,
+                maxFontSize: AppTheme.bigLocationTextSize.max,
+                minFontSize: AppTheme.bigLocationTextSize.min,
+                style: Theme.of(context).textTheme.display3
+              ),
             ),
-            SizedBox(
-              height: 2.0
+            Spacer(
+              flex: 5
             ),
             Visibility(
               visible: littleLocation != "",
-              child: AutoSizeText(
-                littleLocation,
-                maxLines: 1,
-                maxFontSize: AppTheme.littleLocationTextSize.max,
-                minFontSize: AppTheme.littleLocationTextSize.min,
-                style: Theme.of(context).textTheme.display4
+              child: Flexible(
+                flex: 80,
+                child: AutoSizeText(
+                  littleLocation,
+                  maxLines: 1,
+                  maxFontSize: AppTheme.littleLocationTextSize.max,
+                  minFontSize: AppTheme.littleLocationTextSize.min,
+                  style: Theme.of(context).textTheme.display4
+                )
               )
-            )
+            ),
           ],
         )
       ),

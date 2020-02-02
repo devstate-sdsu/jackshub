@@ -44,13 +44,19 @@ class FavoriteWidget extends StatelessWidget {
       builder: (context, state) {
         if (state is SavedEventsLoaded) {
             return IconButton(
+              padding: EdgeInsets.all(0.0),
+              alignment: Alignment.center,
               icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
+              iconSize: 24.0,
               color: Colors.red,
               onPressed: this.isFav ? _unfavorite : _favorite,
             ); 
         }
         return IconButton(
+          padding: EdgeInsets.all(0.0),
+          alignment: Alignment.center,
           icon: Icon(Icons.favorite_border),
+          iconSize: 24.0,
           color: Colors.grey,
           onPressed: () {},
         ); 
