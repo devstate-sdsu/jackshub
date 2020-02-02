@@ -35,9 +35,12 @@ class ServicesScreen extends StatelessWidget {
         name: docdata['name'],
         summary: docdata['summary'],
         image: docdata['image'],
-        status: docdata['status'],
+        //status: docdata['status'],       DEPRECATED
         docId: doc.documentID,
     );
   }
 
 }
+
+
+

@@ -4,3 +4,4 @@ export 'services.dart';
 export 'food.dart';
 export 'services-detail.dart';
 export 'events-detail.dart';
+export 'splash-screen.dart';
