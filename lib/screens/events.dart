@@ -1,47 +1,97 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jackshub/src/bloc/index.dart';
+import 'package:jackshub/widgets/ColorLoader.dart';
 import 'package:jackshub/widgets/index.dart';
+import 'package:jackshub/widgets/saved-events.dart';
 
 
+class EventsToggle extends StatefulWidget {
+  @override
+  _EventsToggleState createState() => _EventsToggleState();
+}
+
+class _EventsToggleState extends State<EventsToggle> {
+  int selectedScreenIdx = 0;
+  List savedEventsList;
+
+  final Map<int, Widget> selectionTexts = const<int, Widget> {
+    0: Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Text("All"),
+        ), 
+    1: Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Text("Saved"),
+        ), 
+  };
+  
+
+  List <Widget> screens = 
+  [
+    EventsScreen(),
+    SavedEvents(),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+          child: CupertinoSegmentedControl(
+            groupValue: selectedScreenIdx,
+            onValueChanged: (screenIdx){
+              setState(() {
+                selectedScreenIdx = screenIdx;
+              });
+            }, 
+            children: selectionTexts,
+          ),
+        ),
+        Expanded(child: screens[selectedScreenIdx]),
+      ],
+    );
+  }
+}
 
 class EventsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).backgroundColor,
-      child: BlocListener<SavedEventsBloc, SavedEventsState>(
-        listener: (context, state) {
-          if (state is SavedEventsError) {
-            Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-          }
-        },
-        child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
-          builder: (context, state) {
-              return StreamBuilder<QuerySnapshot>(
-                stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
-                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) return const Text('Loading...');
-                  return ListView.builder(
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) => buildEventsListItem(
-                      context, 
-                      snapshot.data.documents[index], 
-                      state is SavedEventsLoaded
-                        ? state.savedEventsMap.containsKey(snapshot.data.documents[index].documentID)
-                        : false
-                    )
+    return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+      builder: (context, state) {
+        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+          Map ultimateDocIds = state.savedEventsIdsMap;
+          return StreamBuilder<QuerySnapshot>(
+            stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: ColorLoader5()
                   );
+              }
+              return ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) {
+                  bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
+                  return buildEventsListItem(snapshot.data.documents[index], favorite);
                 }
               );
-          }
-        ),
-      )
+            }
+          ); 
+        }
+        return Container(
+          child: Text("Loading")
+        );
+      },
     );
+    
+   
   }
 
-  Widget buildEventsListItem(BuildContext context, DocumentSnapshot doc, bool favorite) {
+  static Widget buildEventsListItem(DocumentSnapshot doc, bool favorite) {
     //String imageurl = doc['image'];   DEPRECATED
     String titlename = doc['name'];
     if (
@@ -79,23 +129,4 @@ class EventsScreen extends StatelessWidget {
       );
     }
   }
-
-  Widget buildSavedEventsListItem(BuildContext context, DocumentSnapshot doc) {
-    return SavedEventCard(
-      name: doc['name'],
-      img: doc['image'],
-      docId: doc.documentID,
-    );
-  }
-
-  // Temporary
-  Widget buildInitialSavedEvents() {
-    return Container();
-  }
-
-  // Temporary
-  Widget buildLoadingSavedEvents() {
-    return Container();
-  }
-
 }

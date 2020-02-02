@@ -262,7 +262,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                                 flex: 18,
                                 child: FavoriteWidget(    ////////////////////////////////// Hi Jin
                                   docId: widget.docId,
-                                  isFav: false,
+                                  isFav: widget.favorite,
                                 )
                               ),
                               Spacer(

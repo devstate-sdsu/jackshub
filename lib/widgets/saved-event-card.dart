@@ -7,7 +7,7 @@ class SavedEventCard extends StatelessWidget {
   SavedEventCard({
     this.name,
     this.img,
-    this.height = 120,
+    this.height = 250,
     this.docId
   });
 

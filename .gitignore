@@ -74,3 +74,9 @@ ios/Flutter/flutter_export_environment.sh
 
 # IGNORING PODFILE.LOCK. SOME SAY IT SHOULD NOT BE IGNORED. SO REMOVE AS YOU WISH.
 ios/Podfile.lock
+<<<<<<< HEAD
+=======
+
+ios/build/XCBuildData/*
+
+>>>>>>> master-merge-card-saving

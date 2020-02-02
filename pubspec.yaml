@@ -1,7 +1,7 @@
 name: jackshub
 description: A new Flutter project.
 
-version: 1.0.0+1
+version: 1.10.0+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cloud_firestore:
+  cloud_firestore: 0.13.0+1
   cupertino_icons: ^0.1.2
   fluro: "^1.4.0"
   auto_size_text: ^2.1.0
