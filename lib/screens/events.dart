@@ -27,7 +27,6 @@ class _EventsToggleState extends State<EventsToggle> {
           child: Text("Saved"),
         ), 
   };
-
   
 
   List <Widget> screens = 
@@ -39,53 +38,22 @@ class _EventsToggleState extends State<EventsToggle> {
   @override
   Widget build(BuildContext context) {
     return Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
-            child: CupertinoSegmentedControl(
-              groupValue: selectedScreenIdx,
-              onValueChanged: (screenIdx){
-                setState(() {
-                  selectedScreenIdx = screenIdx;
-                });
-              }, 
-              children: selectionTexts,
-            ),
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+          child: CupertinoSegmentedControl(
+            groupValue: selectedScreenIdx,
+            onValueChanged: (screenIdx){
+              setState(() {
+                selectedScreenIdx = screenIdx;
+              });
+            }, 
+            children: selectionTexts,
           ),
-          Expanded(child: screens[selectedScreenIdx]),
-        ],
-      );
-      // appBar: AppBar(
-      //   elevation: 2.0,
-      //   backgroundColor: Colors.white,
-      //   centerTitle: true,
-      //   bottom: PreferredSize(
-      //     preferredSize: Size(double.infinity, 5.0),
-      //     child: Padding(
-      //       padding: EdgeInsets.only(top : 1.0, bottom : 10.0),
-      //       child: Row(
-      //         children: <Widget>[
-      //           SizedBox(
-      //             width : 15.0
-      //           ),
-      //           Expanded(
-      //             child: CupertinoSegmentedControl(
-      //               groupValue: selectedScreenIdx,
-      //               onValueChanged: (screenIdx){
-      //                 setState(() {
-      //                   selectedScreenIdx = screenIdx;
-      //                 });
-      //               }, 
-      //               children: selectionTexts ,
-      //             )
-      //           )
-      //         ],
-      //       )
-      //     )
-      //   )
-      // )
-      
-    // );
+        ),
+        Expanded(child: screens[selectedScreenIdx]),
+      ],
+    );
   }
 }
 
