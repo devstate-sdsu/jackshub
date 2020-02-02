@@ -231,7 +231,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                                       flex: 3,
                                       child: FavoriteWidget(
                                         docId: widget.docId,
-                                        isFav: false
+                                        isFav: widget.favorite
                                       )
                                     )
                                   ],
