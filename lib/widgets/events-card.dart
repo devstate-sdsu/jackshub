@@ -108,13 +108,18 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                 vertical: AppTheme.cardVerticalMargin
               ),
               decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
+                color: Color(0xFFEFEEEE),
                 borderRadius: BorderRadius.circular(AppTheme.cardRadius),
                 boxShadow: [
                   BoxShadow(
                     color: AppTheme.shadowColor,
                     blurRadius: AppTheme.shadowBlurRadius,
-                    offset: AppTheme.shadowOffset
+                    offset: Offset(6, 6)
+                  ),
+                  BoxShadow(
+                    color: Color.fromRGBO(255, 255, 255, 0.83),
+                    blurRadius: 5,
+                    offset: Offset(-6, -6)
                   )
                 ]
               ),

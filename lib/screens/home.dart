@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
     return new DefaultTabController(
       length: 3,
       child: Scaffold(
+        backgroundColor: Color(0xFFEFEEEE),
         body: NestedScrollView(
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
             return <Widget>[
