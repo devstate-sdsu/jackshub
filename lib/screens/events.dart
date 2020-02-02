@@ -14,17 +14,23 @@ class EventsToggle extends StatefulWidget {
 }
 
 class _EventsToggleState extends State<EventsToggle> {
-
-
-  int groupval = 0;
+  int selectedScreenIdx = 0;
   List savedEventsList;
 
-  final Map<int, Widget> logoWidgets = const <int, Widget>{
-    0: Text("All"),
-    1: Text("Favorite"),
+  final Map<int, Widget> selectionTexts = const<int, Widget> {
+    0: Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Text("All"),
+        ), 
+    1: Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+          child: Text("Saved"),
+        ), 
   };
 
-  List <Widget> bodies = 
+  
+
+  List <Widget> screens = 
   [
     EventsScreen(),
     SavedEvents(),
@@ -32,75 +38,89 @@ class _EventsToggleState extends State<EventsToggle> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: bodies[groupval],
-      appBar: AppBar(
-        elevation: 2.0,
-        backgroundColor: Colors.white,
-        centerTitle: true,
-       // title: Text("title", style: TextStyle(color: Colors.black),),
-        bottom: PreferredSize(
-          preferredSize: Size(double.infinity, 5.0),
-          child: Padding(
-            padding: EdgeInsets.only(top : 1.0, bottom : 10.0),
-            child: Row(children: <Widget>[
-              SizedBox(
-                width : 15.0
-                ,),
-                Expanded(child: CupertinoSegmentedControl(
-                  groupValue: groupval,
-                  onValueChanged: (changeFromGroupValue){
-                    setState(() {
-                      groupval = changeFromGroupValue;
-                    });
-                  } , 
-                  children: logoWidgets ,
-                ))
-            ],)
-          )
-        )
-      )
+    return Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
+            child: CupertinoSegmentedControl(
+              groupValue: selectedScreenIdx,
+              onValueChanged: (screenIdx){
+                setState(() {
+                  selectedScreenIdx = screenIdx;
+                });
+              }, 
+              children: selectionTexts,
+            ),
+          ),
+          Expanded(child: screens[selectedScreenIdx]),
+        ],
+      );
+      // appBar: AppBar(
+      //   elevation: 2.0,
+      //   backgroundColor: Colors.white,
+      //   centerTitle: true,
+      //   bottom: PreferredSize(
+      //     preferredSize: Size(double.infinity, 5.0),
+      //     child: Padding(
+      //       padding: EdgeInsets.only(top : 1.0, bottom : 10.0),
+      //       child: Row(
+      //         children: <Widget>[
+      //           SizedBox(
+      //             width : 15.0
+      //           ),
+      //           Expanded(
+      //             child: CupertinoSegmentedControl(
+      //               groupValue: selectedScreenIdx,
+      //               onValueChanged: (screenIdx){
+      //                 setState(() {
+      //                   selectedScreenIdx = screenIdx;
+      //                 });
+      //               }, 
+      //               children: selectionTexts ,
+      //             )
+      //           )
+      //         ],
+      //       )
+      //     )
+      //   )
+      // )
       
-    );
+    // );
   }
 }
 
 class EventsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Theme.of(context).backgroundColor,
-      child: BlocListener<SavedEventsBloc, SavedEventsState>(
-        listener: (context, state) {
-          if (state is SavedEventsError) {
-            Scaffold.of(context).showSnackBar(SnackBar(content: Text(state.message)));
-          }
-        },
-        child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
-          builder: (context, state) {
-              return StreamBuilder<QuerySnapshot>(
-                stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
-                builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: ColorLoader5()
-                      );
-                  }
-                  return ListView.builder(
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (_, index) => buildEventsListItem(
-                      snapshot.data.documents[index], 
-                      state is SavedEventsLoaded
-                        ? state.savedEventsMap.containsKey(snapshot.data.documents[index].documentID)
-                        : false
-                    )
+    return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+      builder: (context, state) {
+        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+          Map ultimateDocIds = state.savedEventsIdsMap;
+          return StreamBuilder<QuerySnapshot>(
+            stream: Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: ColorLoader5()
                   );
+              }
+              return ListView.builder(
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) {
+                  bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
+                  return buildEventsListItem(snapshot.data.documents[index], favorite);
                 }
               );
-          }
-        ),
-      )
+            }
+          ); 
+        }
+        return Container(
+          child: Text("Loading")
+        );
+      },
     );
+    
+   
   }
 
   static Widget buildEventsListItem(DocumentSnapshot doc, bool favorite) {
@@ -141,15 +161,4 @@ class EventsScreen extends StatelessWidget {
       );
     }
   }
-
-//   // Temporary
-//   Widget buildInitialSavedEvents() {
-//     return Container();
-//   }
-
-//   // Temporary
-//   Widget buildLoadingSavedEvents() {
-//     return Container();
-//   }
-
- }
+}
