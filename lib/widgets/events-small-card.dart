@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:jackshub/config/router.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/widgets/index.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 
 
@@ -86,7 +88,20 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
 
           onTapUp: (TapUpDetails details) {
             _controller.reverse();
-            // PushNamed route!
+            Navigator.pushNamed(
+              context,
+              '/detailedEvents',
+              arguments: EventsRoutingParameters(
+                widget.docId,
+                widget.name,
+                widget.image,
+                "", // description
+                widget.bigLocation,
+                widget.littleLocation,
+                widget.startTime,
+                widget.endTime,
+              )
+            );
           },
 
           onTapCancel: () {
@@ -119,23 +134,46 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                   Expanded(
                     flex: 350,
                     child: Hero(
-                      tag: 'eventsSmallCardImg'+widget.docId,
+                      tag: 'eventsCardImg'+widget.docId,
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(AppTheme.cardRadius),
                           bottomLeft: Radius.circular(AppTheme.cardRadius),
                         ),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.image,
+                          imageBuilder: (context, imageProvider) => Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: imageProvider, 
+                                fit: BoxFit.cover
+                              ),
+                            )
+                          ),
+                          placeholder: (context, url) => Image(
+                            image: AssetImage('assets/images/loadingPlaceHolder.png')
+                          ),
+                          errorWidget: (context, url, error) => Icon(
+                            Icons.error,
+                            color: Colors.red,
+                            size: 30.0
+                          ),
+                        )
+                      )
+
+                        /*
                         child: Container(
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               fit: BoxFit.cover,
-                              image: NetworkImage(
+                              image: CachedNetw(
                                 widget.image
                               )
                             )
                           )
                         )
                       )
+                      */
                     )
                   ),
                   Spacer(
@@ -164,7 +202,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                               Expanded(
                                 flex: 150,
                                 child: Hero(
-                                  tag: 'eventsSmallCardTitle'+widget.docId,
+                                  tag: 'eventsCardTitle'+widget.docId,
                                     child: AutoSizeText(    // Card title
                                       widget.name,
                                       maxLines: 2,
