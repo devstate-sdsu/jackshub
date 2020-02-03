@@ -50,3 +50,4 @@ flutter:
   assets:
     - lib/assets/images/
     - lib/assets/images/loadingPlaceHolder.png
+    - lib/assets/images/devstatelogo.png

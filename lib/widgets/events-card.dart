@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
+
 import 'package:jackshub/config/router.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/widgets/index.dart';
+
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 
 
 class EventsCard extends StatefulWidget {
@@ -75,19 +78,15 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
     String dateString = new DateFormat.MMMd().format(widget.startTime.toDate());
     String startString = new DateFormat.jm().format(widget.startTime.toDate());
     String endString = new DateFormat.jm().format(widget.endTime.toDate());
-    double screenWidth = MediaQuery.of(context).size.width;
-    //double cardVerticalSize = screenWidth - (AppTheme.cardSideMargin*2) - 15;
     double cardVerticalSize = AppTheme.cardLargeEventsHeight;
 
     return AnimatedBuilder(
       animation: _controller,
       builder: (BuildContext context, Widget child) {
         return GestureDetector(
-
           onTapDown: (TapDownDetails details) {
             _controller.forward();
           },
-
           onTapUp: (TapUpDetails details) {
             _controller.reverse();
             Navigator.pushNamed(
@@ -105,11 +104,9 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
               )
             );
           },
-
           onTapCancel: () {
             _controller.reverse();
           },
-
           child: Transform.scale(
             scale: _animation.value,
             child: Container(

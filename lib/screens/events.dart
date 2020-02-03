@@ -259,13 +259,25 @@ class EventsScreen extends StatelessWidget {
                   child: ColorLoader5()
                 );
               }
-              return ListView.builder(
+              return Container(
+                color: Theme.of(context).backgroundColor,
+                child: ListView.builder(
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) {
+                    bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
+                    return buildEventsListItem(snapshot.data.documents[index], favorite);
+                  }
+                )
+              );
+              /*
+              ListView.builder(
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
                   bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
                   return buildEventsListItem(snapshot.data.documents[index], favorite);
                 }
               );
+              */
             }
           ); 
         }
