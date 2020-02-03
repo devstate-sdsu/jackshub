@@ -26,7 +26,12 @@ class _SplashScreen extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            //Image.asset('assets/images/devstatelogo.jpg'),
+            Image.asset('lib/assets/images/devstatelogo.png',
+            width: 150.0,
+            height: 150.0),
+            SizedBox(
+              height: 20.0
+            ),
             Text(
               "Made by students, for students.",
               style: Theme.of(context).textTheme.title

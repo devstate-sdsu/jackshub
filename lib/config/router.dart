@@ -22,8 +22,7 @@ class ServicesRoutingParameters {
 }
 
 class RouteToDetailedServices extends StatelessWidget {
-  //static const routeName = '/detailedServices';
-
+  //static const routeName = '/detailedServices';       DEPRECATED
   @override
   Widget build(BuildContext context) {
     final ServicesRoutingParameters parameters = ModalRoute.of(context).settings.arguments;
@@ -52,3 +51,26 @@ class RouteToDetailedEvents extends StatelessWidget {
     return DetailedEventsScreen(docId: parameters.docId, name: parameters.name, image: parameters.image, description: parameters.description, bigLocation: parameters.bigLocation, littleLocation: parameters.littleLocation, startTime: parameters.startTime, endTime: parameters.endTime);
   }
 }
+
+
+
+
+
+
+/*  NEED TO BE LOOKED INTO
+class FadeTransitionRoute extends PageRouteBuilder {
+  final Widget enterPage;
+  final Widget exitPage;
+  FadeTransitionRoute({this.exitPage, this.enterPage}) : super (
+    pageBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) => enterPage,
+    transitionsBuilder: (BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) => Stack(
+      children: <Widget>[
+        FadeTransition(
+          opacity: animation,
+          child: child
+        )
+      ],
+    )
+  );
+}
+*/

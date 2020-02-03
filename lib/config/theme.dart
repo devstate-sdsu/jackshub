@@ -105,6 +105,13 @@ class AppTheme {
   // Testing... font size decrease for smaller screens...
   static double fontSizeReduction = 2.0;
 
+  // Testing... animate detailed screen cards transition...
+  static int detailedScreenAnimateDuration = 600;
+  static double detailedScreenAnimateOffset = 300;
+  static Curve detailedScreenCurve = Curves.easeInOutQuart;
+  //static double detailedScreenAnimateStartOffset = 1.1;
+  //static double detailedScreenAnimateEndOffset = 0.7;
+
   // Global theming of cards
   static double cardRadius = 15.0;
   static double cardSideMargin = 20.0;

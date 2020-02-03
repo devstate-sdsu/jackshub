@@ -3,8 +3,6 @@ import 'package:jackshub/config/router.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:jackshub/src/app.dart';
-import 'package:jackshub/util/date-time-helper.dart';
 
 
 class ServicesCard extends StatefulWidget {
