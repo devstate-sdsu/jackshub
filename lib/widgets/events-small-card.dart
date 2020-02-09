@@ -100,6 +100,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                 widget.littleLocation,
                 widget.startTime,
                 widget.endTime,
+                context
               )
             );
           },

@@ -41,14 +41,15 @@ class EventsRoutingParameters {
   final String littleLocation;
   final Timestamp startTime;
   final Timestamp endTime;
-  EventsRoutingParameters(this.docId, this.name, this.image, this.description, this.bigLocation, this.littleLocation, this.startTime, this.endTime);
+  final BuildContext blocContext;
+  EventsRoutingParameters(this.docId, this.name, this.image, this.description, this.bigLocation, this.littleLocation, this.startTime, this.endTime, this.blocContext);
 }
 
 class RouteToDetailedEvents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final EventsRoutingParameters parameters = ModalRoute.of(context).settings.arguments;
-    return DetailedEventsScreen(docId: parameters.docId, name: parameters.name, image: parameters.image, description: parameters.description, bigLocation: parameters.bigLocation, littleLocation: parameters.littleLocation, startTime: parameters.startTime, endTime: parameters.endTime);
+    return DetailedEventsScreen(docId: parameters.docId, name: parameters.name, image: parameters.image, description: parameters.description, bigLocation: parameters.bigLocation, littleLocation: parameters.littleLocation, startTime: parameters.startTime, endTime: parameters.endTime, blocContext: parameters.blocContext);
   }
 }
 

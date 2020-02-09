@@ -101,6 +101,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                 widget.littleLocation,
                 widget.startTime,
                 widget.endTime,
+                context,
               )
             );
           },

@@ -50,6 +50,8 @@ class FavoriteWidget extends StatelessWidget {
       builder: (context, state) {
         if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
             return IconButton(
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               padding: EdgeInsets.all(0.0),
               alignment: Alignment.center,
               icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
@@ -59,6 +61,8 @@ class FavoriteWidget extends StatelessWidget {
             ); 
         }
         return IconButton(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           padding: EdgeInsets.all(0.0),
           alignment: Alignment.center,
           icon: Icon(Icons.favorite_border),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jackshub/src/bloc/index.dart';
 
 import 'package:jackshub/widgets/index.dart';
 import 'package:jackshub/config/theme.dart';
@@ -20,6 +22,7 @@ class DetailedEventsScreen extends StatefulWidget {
   final String littleLocation;
   final Timestamp startTime;
   final Timestamp endTime;
+  final BuildContext blocContext;
 
   const DetailedEventsScreen({
     Key key,
@@ -30,7 +33,8 @@ class DetailedEventsScreen extends StatefulWidget {
     this.bigLocation,
     this.littleLocation,
     this.startTime,
-    this.endTime
+    this.endTime,
+    this.blocContext
   });
 
   @override
@@ -72,6 +76,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
 
   @override
   Widget build(BuildContext context) {
+    final SavedEventsBloc savedEventsBloc = BlocProvider.of<SavedEventsBloc>(widget.blocContext);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     String dateString = new DateFormat.MMMd().format(widget.startTime.toDate());
@@ -252,11 +257,24 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                             ],
                           ),
                         ),
-                        Icon(
-                          Icons.favorite_border,
-                          size: 24.0,
-                          color: Colors.red
-                        ),
+                        Material(
+                          type: MaterialType.transparency,
+                          color: Colors.white,
+                          child: BlocProvider.value(
+                            value: savedEventsBloc,
+                            child: BlocBuilder(
+                              bloc: savedEventsBloc,
+                                builder: (context, state) {
+                                  if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+                                    var ultimateDocIds = state.savedEventsIdsMap;
+                                    return FavoriteWidget(docId: widget.docId, isFav: ultimateDocIds.containsKey(widget.docId));
+                                  } else {
+                                    return FavoriteWidget(docId: widget.docId, isFav: false);
+                                  }
+                                }
+                            )
+                          ),
+                        )
                       ],
                     )
                   )
