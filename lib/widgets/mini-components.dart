@@ -4,7 +4,25 @@ import 'package:auto_size_text/auto_size_text.dart';
 
 
 
-Widget locationComponent(context, bigLocation, littleLocation) {
+// List<Widget> detailedCardDivider(context, double aboveheight, double belowheight) {
+//   List<Widget> children = [
+//     SizedBox(
+//       height: aboveheight
+//     ),
+//     Container(
+//       height: 1.5,
+//       color: Theme.of(context).accentColor
+//     ),
+//     SizedBox(
+//       height: belowheight
+//     )
+//   ];
+//   return children;
+// }
+
+
+
+Widget locationComponent(context, String bigLocation, String littleLocation) {
   return Row(
     children: <Widget>[
       Icon(
@@ -61,7 +79,7 @@ Widget locationComponent(context, bigLocation, littleLocation) {
 
 
 
-Widget dateComponent(context, dateString) {
+Widget dateComponent(context, String dateString) {
   return Row(
     children: <Widget>[
       Icon(
@@ -85,7 +103,7 @@ Widget dateComponent(context, dateString) {
 
 
 
-Widget timeComponent(context, startString, endString) {
+Widget timeComponent(context, String startString, String endString) {
   return Row(
     children: <Widget>[
       Icon(

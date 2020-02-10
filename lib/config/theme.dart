@@ -116,6 +116,7 @@ class AppTheme {
   static double cardRadius = 15.0;
   static double cardSideMargin = 20.0;
   static double cardVerticalMargin = 10.0;
+  static double cardServicesHeight = 135.0;
   static double cardSmallEventsHeight = 120.0;
   static double cardLargeEventsHeight = 380.0;
   static double detailCardInnerPadding = 15.0;
