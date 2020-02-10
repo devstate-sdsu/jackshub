@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jackshub/src/bloc/index.dart';
+import 'package:jackshub/src/blocs/filter_tabs/filter_tabs_bloc.dart';
+import 'package:jackshub/src/blocs/saved_events/index.dart';
 import 'package:jackshub/screens/index.dart';
 import 'package:jackshub/src/repos/saved_events_repository.dart';
 
@@ -37,8 +38,15 @@ class HomeScreen extends StatelessWidget {
           },
           body: TabBarView(
             children: <Widget>[
-              BlocProvider(
-                create: (context) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEventsInfo()),
+              MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (_) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEventsInfo()),
+                  ),
+                  BlocProvider(
+                    create: (_) => FilterTabsBloc(),
+                  ),
+                ],
                 child: EventsToggle(),
               ),
               ServicesScreen(),
