@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jackshub/config/theme.dart';
+import 'package:jackshub/globals/globals.dart';
 import 'package:jackshub/src/blocs/events_scroll/events_scroll_bloc.dart';
 import 'package:jackshub/src/blocs/filter_tabs/filter_tabs_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/index.dart';
@@ -18,8 +19,12 @@ class EventsToggle extends StatefulWidget {
 }
 
 class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMixin {
-  int selectedTabIndex = 0;
+  AnimationController _filterTabsAppearController;
+  Animation _filterTabsAppearAnimation;
+  final double filterTabsHeight = 60.0;
+  final double filterTabsBottomPadding = 50.0;
   double filterTabsOpacity = 1;
+  int selectedTabIndex = 0;
   List filterIcons = [
     Icons.zoom_out_map,
     Icons.group,
@@ -34,12 +39,28 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
   ];
   List<String> filterTagNames = [
     'all',
-    'sporting',
-    'clubs'
+    'clubs',
+    'sporting'
   ];
 
   initState() {
     super.initState();
+    _filterTabsAppearController = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: AppTheme.detailedScreenAnimateDuration
+      )
+    );
+    _filterTabsAppearAnimation = Tween(
+      begin: -AppTheme.detailedScreenAnimateOffset,
+      end: 0.0
+    ).animate(
+      CurvedAnimation(
+        parent: _filterTabsAppearController,
+        curve: AppTheme.detailedScreenCurve
+      )
+    );
+    _filterTabsAppearController.forward();
   }
 
   @override
@@ -52,9 +73,12 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
               listener: (context, state) {
                 if (state is EventsScrollingDown) {
                   // print("listener state: SCROLLING DOWN: ");
+                  if (state.opacity == 0) {
+                    _filterTabsAppearController.reset();
+                  }
                   filterTabsOpacity = state.opacity;
                 } else if (state is EventsScrollingUp) {
-                  // print("listener state: SCROLLING UP");
+                  _filterTabsAppearController.forward();
                   filterTabsOpacity = state.opacity;
                 } else {
                   // print("listener state: ELSE");
@@ -81,13 +105,19 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
         Positioned(
           bottom: 0,
           left: 0,
-          child: BlocBuilder<EventsScrollBloc, EventsScrollState>(
-            builder: (context, state) {
-              return Opacity(
-                opacity: filterTabsOpacity,
-                child: buildFilterTabs(eventsToggleContext)
-              );
-            },
+          child: AnimatedBuilder(
+            animation: _filterTabsAppearController,
+            builder: (_, __) => BlocBuilder<EventsScrollBloc, EventsScrollState>(
+              builder: (context, state) {
+                return filterTabsOpacity > 0 ? Opacity(
+                  opacity: filterTabsOpacity,
+                  child: Transform.translate(
+                    offset: Offset(0.0, -_filterTabsAppearAnimation.value),
+                    child: buildFilterTabs(eventsToggleContext)
+                  )
+                ) : Container();
+              },
+            ),
           ),
         )
       ],
@@ -98,9 +128,9 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
     double screenWidth = MediaQuery.of(blocContext).size.width;
     FilterTabsBloc filterTabsBloc = BlocProvider.of<FilterTabsBloc>(blocContext);
     return Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 50.0),
+      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, filterTabsBottomPadding),
       child: Container(
-        height: 60.0,
+        height: filterTabsHeight,
         width: screenWidth,
         child: ListView.builder(
           shrinkWrap: true,
@@ -115,7 +145,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
                 filterTabsBloc.add(SelectFilterTab(tabIndex: index));
               },
               child: Container(
-                height: 60.0,
+                height: filterTabsHeight,
                 width: 100.0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(
@@ -241,6 +271,9 @@ class _EventsScreenState extends State<EventsScreen> {
               return Container(
                 color: Theme.of(context).backgroundColor,
                 child: ListView.builder(
+                  padding: EdgeInsets.only(
+                    bottom: AVOID_FILTER_TABS_HEIGHT
+                  ),
                   controller: _scrollController,
                   itemCount: snapshot.data.documents.length,
                   itemBuilder: (context, index) {

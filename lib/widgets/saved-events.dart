@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:jackshub/globals/globals.dart';
 import 'package:jackshub/screens/events.dart';
 import 'package:jackshub/src/blocs/saved_events/saved_events_bloc.dart';
 import 'package:jackshub/util/database_helpers.dart';
@@ -34,6 +35,9 @@ class _SavedEventsState extends State<SavedEvents> {
       builder: (context, state) {
         if(state is SavedEventsInfoLoaded) {
           return ListView.builder(
+            padding: EdgeInsets.only(
+              bottom: AVOID_FILTER_TABS_HEIGHT
+            ),
             itemCount: state.savedEventsInfo.length,
             itemBuilder: (_, index) => EventsScreen.buildEventsListItem(
               state.savedEventsInfo[index], 
