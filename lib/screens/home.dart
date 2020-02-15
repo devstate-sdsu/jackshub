@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:jackshub/src/blocs/events_scroll/events_scroll_bloc.dart';
 import 'package:jackshub/src/blocs/filter_tabs/filter_tabs_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/index.dart';
 import 'package:jackshub/screens/index.dart';
@@ -46,6 +47,9 @@ class HomeScreen extends StatelessWidget {
                   BlocProvider(
                     create: (_) => FilterTabsBloc(),
                   ),
+                  BlocProvider(
+                    create: (_) => EventsScrollBloc(),
+                  )
                 ],
                 child: EventsToggle(),
               ),
