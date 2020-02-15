@@ -120,6 +120,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
     double filterTabsSpacerWidth = screenWidth * AppTheme.filterTabsSpacerPercent;
     double filterTabsBorderRadius = screenWidth * AppTheme.filterTabsBorderRadiusPercent;
     FilterTabsBloc filterTabsBloc = BlocProvider.of<FilterTabsBloc>(blocContext);
+    EventsScrollBloc eventsScrollBloc = BlocProvider.of<EventsScrollBloc>(blocContext);
     return Padding(
       padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, screenHeight * AppTheme.filterTabsBottomPaddingPercent),
       child: Container(
@@ -137,6 +138,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
               highlightColor: Colors.transparent,
               onPressed: () {
                 filterTabsBloc.add(SelectFilterTab(tabIndex: index));
+                eventsScrollBloc.add(TabSelected());
               },
               child: Container(
                 height: screenHeight * AppTheme.filterTabsHeightPercent,

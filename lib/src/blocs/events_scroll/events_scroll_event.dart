@@ -11,3 +11,10 @@ class ScrollPositionChanged extends EventsScrollEvent {
   List<Object> get props => [];
 }
 
+class TabSelected extends EventsScrollEvent {
+  @override
+  List<Object> get props => [];
+}
+
+
+

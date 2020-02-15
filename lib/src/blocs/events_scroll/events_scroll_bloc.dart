@@ -21,7 +21,7 @@ class EventsScrollBloc extends Bloc<EventsScrollEvent, EventsScrollState> {
         if (state is EventsScrollingDown || state is EventsScrollingUp || state is EventsScrollInitial) {
           if (event.scrollPosition > state.scrollPosition) {
             var newOpacity = state.opacity * 0.90;
-            if (newOpacity < 0.005) {
+            if (newOpacity < 0.2) {
               newOpacity = 0;
             }
             yield EventsScrollingDown(scrollPosition: event.scrollPosition, opacity: newOpacity);
@@ -38,8 +38,10 @@ class EventsScrollBloc extends Bloc<EventsScrollEvent, EventsScrollState> {
           }
         }
       }
-    } else {
+    } else if (event is TabSelected) {
       yield EventsScrollInitial();
+    } else {
+    yield EventsScrollInitial();
     }
   }
 }
