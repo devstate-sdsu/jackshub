@@ -21,8 +21,6 @@ class EventsToggle extends StatefulWidget {
 class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMixin {
   AnimationController _filterTabsAppearController;
   Animation _filterTabsAppearAnimation;
-  final double filterTabsHeight = 60.0;
-  final double filterTabsBottomPadding = 50.0;
   double filterTabsOpacity = 1;
   List filterIcons = [
     Icons.zoom_out_map,
@@ -118,11 +116,14 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
 
   Widget buildFilterTabs(blocContext) {
     double screenWidth = MediaQuery.of(blocContext).size.width;
+    double screenHeight = MediaQuery.of(blocContext).size.width;
+    double filterTabsSpacerWidth = screenWidth * AppTheme.filterTabsSpacerPercent;
+    double filterTabsBorderRadius = screenWidth * AppTheme.filterTabsBorderRadiusPercent;
     FilterTabsBloc filterTabsBloc = BlocProvider.of<FilterTabsBloc>(blocContext);
     return Padding(
-      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, filterTabsBottomPadding),
+      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, screenHeight * AppTheme.filterTabsBottomPaddingPercent),
       child: Container(
-        height: filterTabsHeight,
+        height: screenHeight * AppTheme.filterTabsHeightPercent,
         width: screenWidth,
         child: ListView.builder(
           key: PageStorageKey('FilterTabs!'),
@@ -131,20 +132,20 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
           itemCount: filterIcons.length,
           itemBuilder: (context, index) {
             return FlatButton(
-              padding: EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              padding: EdgeInsets.fromLTRB(filterTabsSpacerWidth, 0.0, filterTabsSpacerWidth, 0.0),
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
               onPressed: () {
                 filterTabsBloc.add(SelectFilterTab(tabIndex: index));
               },
               child: Container(
-                height: filterTabsHeight,
-                width: 100.0,
+                height: screenHeight * AppTheme.filterTabsHeightPercent,
+                width: screenWidth * AppTheme.filterTabsWidthPercent,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.all(
-                    Radius.circular(10.0)
+                    Radius.circular(filterTabsBorderRadius)
                   ),
-                  color: Theme.of(context).accentColor,
+                  color: Theme.of(context).indicatorColor,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -156,7 +157,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
                         child: Icon(
                           filterIcons[index],
                           color: Theme.of(context).backgroundColor,
-                          size: 24.0
+                          size: screenWidth * AppTheme.filterTabsIconSizePercent
                         ),
                       ),
                       Expanded(
@@ -164,7 +165,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
                           filterDisplayNames[index],
                           style: TextStyle(
                             color: Theme.of(context).backgroundColor,
-                            fontSize: 14.0,
+                            fontSize: screenWidth * AppTheme.filterTabsTextSizePercent,
                           )
                         ),
                       )
@@ -195,6 +196,7 @@ class EventsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.width;
     EventsScrollBloc eventsScrollBloc = BlocProvider.of<EventsScrollBloc>(context);
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
       key: PageStorageKey(this.filter),
@@ -216,7 +218,7 @@ class EventsScreen extends StatelessWidget {
                 child: NotificationListener(
                   child: ListView.builder(
                     padding: EdgeInsets.only(
-                      bottom: AVOID_FILTER_TABS_HEIGHT
+                      bottom: screenHeight * (AppTheme.filterTabsBottomPaddingPercent + AppTheme.filterTabsHeightPercent),
                     ),
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {

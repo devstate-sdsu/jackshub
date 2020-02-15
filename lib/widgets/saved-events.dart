@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/globals/globals.dart';
 import 'package:jackshub/screens/events.dart';
 import 'package:jackshub/src/blocs/events_scroll/events_scroll_bloc.dart';
@@ -18,6 +19,7 @@ Widget buildLoadingSavedEvents() {
 class SavedEvents extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.width;
     EventsScrollBloc eventsScrollBloc = BlocProvider.of<EventsScrollBloc>(context);
     return NotificationListener(
       child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
@@ -26,7 +28,7 @@ class SavedEvents extends StatelessWidget {
             return ListView.builder(
               key: PageStorageKey('SavedEvents!'),
               padding: EdgeInsets.only(
-                bottom: AVOID_FILTER_TABS_HEIGHT
+                bottom: screenHeight * (AppTheme.filterTabsBottomPaddingPercent + AppTheme.filterTabsHeightPercent),
               ),
               itemCount: state.savedEventsInfo.length,
               itemBuilder: (_, index) => EventsScreen.buildEventsListItem(
