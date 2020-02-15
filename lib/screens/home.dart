@@ -37,25 +37,25 @@ class HomeScreen extends StatelessWidget {
               )
             ];
           },
-          body: TabBarView(
-            children: <Widget>[
-              MultiBlocProvider(
-                providers: [
-                  BlocProvider(
-                    create: (_) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEventsInfo()),
-                  ),
-                  BlocProvider(
-                    create: (_) => FilterTabsBloc(),
-                  ),
-                  BlocProvider(
-                    create: (_) => EventsScrollBloc(),
-                  )
-                ],
-                child: EventsToggle(),
+          body: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => SavedEventsBloc(SavedEventsRepo())..add(GetSavedEventsInfo()),
               ),
-              ServicesScreen(),
-              ServicesScreen()
+              BlocProvider(
+                create: (_) => FilterTabsBloc(),
+              ),
+              BlocProvider(
+                create: (_) => EventsScrollBloc(),
+              )
             ],
+            child: TabBarView(
+              children: <Widget>[
+                EventsToggle(),
+                ServicesScreen(),
+                ServicesScreen()
+              ],
+            ),
           ),
         )
       )

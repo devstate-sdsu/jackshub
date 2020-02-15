@@ -24,7 +24,6 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
   final double filterTabsHeight = 60.0;
   final double filterTabsBottomPadding = 50.0;
   double filterTabsOpacity = 1;
-  int selectedTabIndex = 0;
   List filterIcons = [
     Icons.zoom_out_map,
     Icons.group,
@@ -73,7 +72,6 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
             BlocListener<EventsScrollBloc, EventsScrollState>(
               listener: (context, state) {
                 if (state is EventsScrollingDown) {
-                  // print("listener state: SCROLLING DOWN: ");
                   if (state.opacity == 0) {
                     _filterTabsAppearController.reset();
                   }
@@ -82,24 +80,17 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
                   _filterTabsAppearController.forward();
                   filterTabsOpacity = state.opacity;
                 } else {
-                  // print("listener state: ELSE");
                   filterTabsOpacity = state.opacity;
-                }
-              }
-            ),
-            BlocListener<FilterTabsBloc, FilterTabsState>(
-              listener: (context, state) {
-                if (state is FilterTabsInitial) {
-                  selectedTabIndex = 0;
-                } else if (state is FilterTabSelected) {
-                  selectedTabIndex = state.selectedTabIndex;
                 }
               }
             ),
           ],
           child: BlocBuilder<FilterTabsBloc, FilterTabsState>(
             builder: (context, state) {
-              return stackOfEventsLists[this.selectedTabIndex];
+              if (state is FilterTabSelected) {
+                return stackOfEventsLists[state.selectedTabIndex];
+              }
+              return stackOfEventsLists[0];
             } 
           )
         ),
@@ -134,6 +125,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
         height: filterTabsHeight,
         width: screenWidth,
         child: ListView.builder(
+          key: PageStorageKey('FilterTabs!'),
           shrinkWrap: true,
           scrollDirection: Axis.horizontal,
           itemCount: filterIcons.length,
@@ -205,6 +197,7 @@ class EventsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     EventsScrollBloc eventsScrollBloc = BlocProvider.of<EventsScrollBloc>(context);
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+      key: PageStorageKey(this.filter),
       builder: (context, state) {
         if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
           Map ultimateDocIds = state.savedEventsIdsMap;

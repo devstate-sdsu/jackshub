@@ -114,7 +114,7 @@ class AppTheme {
 
   static int filterTabsAppearAnimateDuration = 600;
   static double filterTabsAppearAnimateOffset = 300;
-  static Curve filterTabsAppearCurve = Curves.easeInOutQuart;
+  static Curve filterTabsAppearCurve = Curves.easeIn;
 
   // Global theming of cards
   static double cardRadius = 15.0;

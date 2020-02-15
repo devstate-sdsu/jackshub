@@ -24,6 +24,7 @@ class SavedEvents extends StatelessWidget {
         builder: (context, state) {
           if(state is SavedEventsInfoLoaded) {
             return ListView.builder(
+              key: PageStorageKey('SavedEvents!'),
               padding: EdgeInsets.only(
                 bottom: AVOID_FILTER_TABS_HEIGHT
               ),
