@@ -25,7 +25,7 @@ class EventsScrollBloc extends Bloc<EventsScrollEvent, EventsScrollState> {
               newOpacity = 0;
             }
             yield EventsScrollingDown(scrollPosition: event.scrollPosition, opacity: newOpacity);
-          } else {
+          } else if (event.scrollPosition < state.scrollPosition) {
             var oldOpacity = state.opacity;
             if (state.opacity == 0) {
               oldOpacity = 0.1;
@@ -35,6 +35,14 @@ class EventsScrollBloc extends Bloc<EventsScrollEvent, EventsScrollState> {
               newOpacity = 1;
             }
             yield EventsScrollingUp(scrollPosition: event.scrollPosition, opacity: newOpacity);
+          } else {
+            if (state is EventsScrollingUp) {
+              yield EventsScrollingUp(scrollPosition: event.scrollPosition, opacity: state.opacity);
+            } else if (state is EventsScrollingDown) {
+              yield EventsScrollingDown(scrollPosition: event.scrollPosition, opacity: state.opacity);
+            } else {
+              yield EventsScrollInitial();
+            }
           }
         }
       }
