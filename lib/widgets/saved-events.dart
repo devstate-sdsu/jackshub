@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:jackshub/config/theme.dart';
-import 'package:jackshub/globals/globals.dart';
 import 'package:jackshub/screens/events.dart';
 import 'package:jackshub/src/blocs/events_scroll/events_scroll_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/saved_events_bloc.dart';
-import 'package:jackshub/util/database_helpers.dart';
 import 'package:jackshub/widgets/ColorLoader.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/saved_events_state.dart';

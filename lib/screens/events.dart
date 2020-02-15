@@ -4,7 +4,6 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jackshub/config/theme.dart';
-import 'package:jackshub/globals/globals.dart';
 import 'package:jackshub/src/blocs/events_scroll/events_scroll_bloc.dart';
 import 'package:jackshub/src/blocs/filter_tabs/filter_tabs_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/index.dart';
