@@ -190,21 +190,61 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
   List<Widget> buildStackOfEventsLists(blocContext) {
     List<Widget> masterList = <Widget>[];
     filterTagNames.forEach((filterName) {
-      masterList.add(EventsScreen(filter: filterName, scrollBlocContext: blocContext));
+      masterList.add(EventsScreen(filter: filterName));
     });
     masterList.add(SavedEvents());
     return masterList;
   }
 }
 
-class EventsScreen extends StatefulWidget {
+class EventsScreen extends StatelessWidget {
   final String filter;
-  final BuildContext scrollBlocContext;
-  EventsScreen({this.filter, this.scrollBlocContext});
+  EventsScreen({this.filter});
 
-
-  _EventsScreenState createState() => _EventsScreenState();
-
+  @override
+  Widget build(BuildContext context) {
+    EventsScrollBloc eventsScrollBloc = BlocProvider.of<EventsScrollBloc>(context);
+    return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+      builder: (context, state) {
+        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+          Map ultimateDocIds = state.savedEventsIdsMap;
+          return StreamBuilder<QuerySnapshot>(
+            stream: this.filter == 'all' ? 
+              Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots() :
+              Firestore.instance.collection('eventsCol').where('tags', arrayContains: this.filter).snapshots(),
+            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) {
+                return Center(
+                  child: ColorLoader5()
+                );
+              }
+              return Container(
+                color: Theme.of(context).backgroundColor,
+                child: NotificationListener(
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(
+                      bottom: AVOID_FILTER_TABS_HEIGHT
+                    ),
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
+                      return buildEventsListItem(snapshot.data.documents[index], favorite);
+                    }
+                  ),
+                  onNotification: (scrollNotification) {
+                    eventsScrollBloc.add(ScrollPositionChanged(scrollNotification.metrics.pixels));
+                  },
+                )
+              );
+            }
+          ); 
+        }
+        return Center(
+          child: ColorLoader5()
+        );
+      },
+    );
+  }
 
   static Widget buildEventsListItem(DocumentSnapshot doc, bool favorite) {
     final tags = doc['tags'];
@@ -234,64 +274,5 @@ class EventsScreen extends StatefulWidget {
         docId: doc.documentID
       );
     }
-  }
-}
-
-class _EventsScreenState extends State<EventsScreen> {
-  ScrollController _scrollController;
-  EventsScrollBloc eventsScrollBloc;
-
-  _scrollListener() {
-    eventsScrollBloc.add(ScrollPositionChanged(_scrollController.position.pixels));
-  }
-
-  @override
-  initState() {
-    eventsScrollBloc = BlocProvider.of<EventsScrollBloc>(widget.scrollBlocContext);
-    _scrollController = ScrollController();
-    _scrollController.addListener(_scrollListener);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SavedEventsBloc, SavedEventsState>(
-      builder: (context, state) {
-        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
-          Map ultimateDocIds = state.savedEventsIdsMap;
-          return StreamBuilder<QuerySnapshot>(
-            stream: widget.filter == 'all' ? 
-              Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots() :
-              Firestore.instance.collection('eventsCol').where('tags', arrayContains: widget.filter).snapshots(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Center(
-                  child: ColorLoader5()
-                );
-              }
-              return Container(
-                color: Theme.of(context).backgroundColor,
-                child: ListView.builder(
-                  padding: EdgeInsets.only(
-                    bottom: AVOID_FILTER_TABS_HEIGHT
-                  ),
-                  controller: _scrollController,
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, index) {
-                    bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
-                    return EventsScreen.buildEventsListItem(snapshot.data.documents[index], favorite);
-                  }
-                )
-              );
-            }
-          ); 
-        }
-        return Center(
-          child: ColorLoader5()
-        );
-      },
-    );
-    
-   
   }
 }
