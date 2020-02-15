@@ -48,16 +48,16 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
     _filterTabsAppearController = AnimationController(
       vsync: this,
       duration: Duration(
-        milliseconds: AppTheme.detailedScreenAnimateDuration
+        milliseconds: AppTheme.filterTabsAppearAnimateDuration
       )
     );
     _filterTabsAppearAnimation = Tween(
-      begin: -AppTheme.detailedScreenAnimateOffset,
+      begin: -AppTheme.filterTabsAppearAnimateOffset,
       end: 0.0
     ).animate(
       CurvedAnimation(
         parent: _filterTabsAppearController,
-        curve: AppTheme.detailedScreenCurve
+        curve: AppTheme.filterTabsAppearCurve
       )
     );
     _filterTabsAppearController.forward();
@@ -65,6 +65,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
 
   @override
   Widget build(BuildContext eventsToggleContext) {
+    List<Widget> stackOfEventsLists = buildStackOfEventsLists(eventsToggleContext);
     return Stack(
       children: <Widget>[
         MultiBlocListener(
@@ -98,7 +99,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
           ],
           child: BlocBuilder<FilterTabsBloc, FilterTabsState>(
             builder: (context, state) {
-              return buildStackOfEventsLists(eventsToggleContext)[this.selectedTabIndex];
+              return stackOfEventsLists[this.selectedTabIndex];
             } 
           )
         ),
@@ -151,7 +152,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
                   borderRadius: BorderRadius.all(
                     Radius.circular(10.0)
                   ),
-                  color: Colors.pink,
+                  color: Theme.of(context).accentColor,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
@@ -162,7 +163,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
                       Expanded(
                         child: Icon(
                           filterIcons[index],
-                          color: Colors.white,
+                          color: Theme.of(context).backgroundColor,
                           size: 24.0
                         ),
                       ),
@@ -170,7 +171,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
                         child: Text(
                           filterDisplayNames[index],
                           style: TextStyle(
-                            color: Colors.white,
+                            color: Theme.of(context).backgroundColor,
                             fontSize: 14.0,
                           )
                         ),

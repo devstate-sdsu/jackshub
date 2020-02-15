@@ -112,6 +112,10 @@ class AppTheme {
   //static double detailedScreenAnimateStartOffset = 1.1;
   //static double detailedScreenAnimateEndOffset = 0.7;
 
+  static int filterTabsAppearAnimateDuration = 600;
+  static double filterTabsAppearAnimateOffset = 300;
+  static Curve filterTabsAppearCurve = Curves.easeInOutQuart;
+
   // Global theming of cards
   static double cardRadius = 15.0;
   static double cardSideMargin = 20.0;
