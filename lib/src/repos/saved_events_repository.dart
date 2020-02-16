@@ -5,6 +5,7 @@ import 'package:jackshub/util/database_helpers.dart';
 
 abstract class SavedEventsRepository {
   Future addSavedEventToLocal(EventInfo event);
+  Future deleteSavedEventFromLocal(String documentId);
   Future<List<String>> fetchSavedEventsIds();
   Future<List<DocumentSnapshot>> fetchSavedEventsInfoFromLocal(List<String> savedEventsIds);
   Future<List<EventInfo>> fetchSavedEventsFromLocal();
@@ -36,7 +37,7 @@ class SavedEventsRepo implements SavedEventsRepository {
 
   @override
   Future deleteSavedEventFromLocal(String documentId) async {
-    int success = await db.deleteSavedEventId(documentId);
+    int success = await db.deleteSavedEventInfo(documentId);
     return success;
   }
 

@@ -18,47 +18,26 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
   Stream<SavedEventsState> mapEventToState(
     SavedEventsEvent event,
   ) async* {
-    if (event is GetSavedEventsIds) {
+    if (event is GetSavedEventsInfo) {
       try {
-        final savedEventsIds = await savedEventsRepo.fetchSavedEventsIds();
-        yield SavedEventsIdsLoaded(savedEventsIds);
-      } on Error {
-        yield SavedEventsError("Something went wrong while gettng saved events IDs");
-      }
-    } else if (event is GetSavedEventsInfo) {
-      try {
-        final savedEventsIds = await savedEventsRepo.fetchSavedEventsIds();
-        yield SavedEventsIdsLoaded(savedEventsIds);
         final savedEventsInfo = await savedEventsRepo.fetchSavedEventsFromLocal();
-        print("THIS IS SAVED EVENTS INFOOOO");
-        print(savedEventsInfo);
-        yield SavedEventsInfoLoadedFromLocal(savedEventsIds, savedEventsInfo);
+        yield SavedEventsInfoLoadedFromLocal(savedEventsInfo);
       } on Error {
         yield SavedEventsError("Something went wrong while getting saved events info");
       }
     } else if (event is AddSavedEvent) {
       try {
-        final addSuccess = await savedEventsRepo.addSavedEventToLocal(event.eventInfo);
-        if (addSuccess) {
-          print("HAHA YES");
-          print(addSuccess);
-        } else {
-          print("HAHA NO");
-          print(addSuccess);
-        }
+        await savedEventsRepo.addSavedEventToLocal(event.eventInfo);
+        final savedEventsInfo = await savedEventsRepo.fetchSavedEventsFromLocal();
+        yield SavedEventsInfoLoadedFromLocal(savedEventsInfo);
       } on Error {
         yield SavedEventsError("Something went wrong while saving an event");
       }
     } else if (event is DeleteSavedEvent) {
       try {
-        final deleteSuccess = await savedEventsRepo.deleteSavedEventFromLocal(event.documentId);
-        if (deleteSuccess) {
-          print("HAHA DELETED YES");
-          print(deleteSuccess);
-        } else {
-          print("HAHA DELETED NO");
-          print(deleteSuccess);
-        }
+        await savedEventsRepo.deleteSavedEventFromLocal(event.documentId);
+        final savedEventsInfo = await savedEventsRepo.fetchSavedEventsFromLocal();
+        yield SavedEventsInfoLoadedFromLocal(savedEventsInfo);
       } on Error {
         yield SavedEventsError("Something went wrong while saving an event");
       }

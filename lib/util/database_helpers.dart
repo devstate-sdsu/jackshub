@@ -68,8 +68,10 @@ class EventInfo {
     endTime = doc[_end_time];
     image = doc[_image];
     tags = doc[_tags];
-    startTimeUncertain = doc[_start_time_uncertain];
-    endTimeUncertain = doc[_end_time_uncertain];
+    startTimeUncertain = doc[_start_time_uncertain] == null ? true : doc[_start_time_uncertain];
+    endTimeUncertain = doc[_end_time_uncertain] == null ? true : doc[_end_time_uncertain];
+    startTimeUncertain = doc[_start_date_uncertain] == null ? true : doc[_start_date_uncertain];
+    endTimeUncertain = doc[_end_date_uncertain] == null ? true : doc[_end_date_uncertain];
     timeUpdated = doc[_time_updated];
     tinyLocation = doc[_tiny_location];
     bigLocation = doc[_big_location];

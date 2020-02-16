@@ -37,7 +37,6 @@ class FavoriteWidget extends StatelessWidget {
 
     void _favorite() {
       savedEventsBloc.add(AddSavedEvent(eventInfo: this.event));
-      savedEventsBloc.add(GetSavedEventsInfo());
       // _save(this.event.documentId).then((_) {
       //   savedEventsBloc.add(AddSavedEvent(eventInfo: this.event));
       //   savedEventsBloc.add(GetSavedEventsInfo());
@@ -46,7 +45,6 @@ class FavoriteWidget extends StatelessWidget {
 
     void _unfavorite() {
       savedEventsBloc.add(DeleteSavedEvent(documentId: this.event.documentId));
-      savedEventsBloc.add(GetSavedEventsInfo());
       // _delete(this.event.documentId).then((_) {
       //   savedEventsBloc.add(DeleteSavedEvent(documentId: this.event.documentId));
       //   savedEventsBloc.add(GetSavedEventsInfo());
@@ -54,7 +52,7 @@ class FavoriteWidget extends StatelessWidget {
     }
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
       builder: (context, state) {
-        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoadedFromLocal) {
+        if (state is SavedEventsInfoLoadedFromLocal) {
             return IconButton(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,

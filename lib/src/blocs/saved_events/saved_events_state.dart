@@ -47,25 +47,10 @@ class SavedEventsError extends SavedEventsState {
   List<Object> get props => [message];
 }
 
-class SavedEventsIdsLoaded extends SavedEventsState {
-  final List<String> savedEventsIds;
-  final Map savedEventsIdsMap;
-  SavedEventsIdsLoaded(this.savedEventsIds)
-    : savedEventsIdsMap = Map.fromIterable(
-      savedEventsIds,
-      key: (id) => id,
-      value: (_) => true,
-    );
-
-  @override
-  List<Object> get props => [savedEventsIds];
-}
-
 class SavedEventsInfoLoadedFromLocal extends SavedEventsState {
-  final List<String> savedEventsIds;
   final Map savedEventsIdsMap;
   final List<EventInfo> savedEventsInfo;
-  SavedEventsInfoLoadedFromLocal(this.savedEventsIds, this.savedEventsInfo)
+  SavedEventsInfoLoadedFromLocal(this.savedEventsInfo)
       : savedEventsIdsMap = Map.fromIterable(
       savedEventsInfo,
       key: (event) => event.documentId,

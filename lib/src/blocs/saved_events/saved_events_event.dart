@@ -7,12 +7,6 @@ abstract class SavedEventsEvent extends Equatable {
   const SavedEventsEvent();
 }
 
-class GetSavedEventsIds extends SavedEventsEvent {
-  const GetSavedEventsIds();
-  @override
-  List<Object> get props => [];
-}
-
 class GetSavedEventsInfo extends SavedEventsEvent {
   const GetSavedEventsInfo();
   @override
