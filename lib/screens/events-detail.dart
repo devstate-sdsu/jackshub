@@ -111,12 +111,14 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                   )
                 ),
                 placeholder: (context, url) => Image(
-                  image: AssetImage('assets/images/loadingPlaceHolder.png')
+                  image: AssetImage('lib/assets/images/loadingPlaceHolder.png')
                 ),
-                errorWidget: (context, url, error) => Icon(
-                  Icons.error,
-                  color: Colors.red,
-                  size: 30.0
+                errorWidget: (context, url, error) => Center(
+                  child: Icon(
+                    Icons.error,
+                    color: Colors.red,
+                    size: 40.0
+                  )
                 )
               )
             ),
@@ -226,7 +228,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                           height: 10
                         ),
                         SizedBox(
-                          height: 30,
+                          height: 34,
                           child: locationComponent(context, widget.bigLocation, widget.littleLocation)
                         ),
                         SizedBox(
@@ -252,7 +254,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                                 style: Theme.of(context).textTheme.caption
                               ),
                               SizedBox(
-                                height: 10
+                                height: 15
                               )
                             ],
                           ),

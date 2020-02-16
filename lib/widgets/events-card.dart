@@ -153,7 +153,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                             )
                           ),
                           placeholder: (context, url) => Image(
-                            image: AssetImage('assets/images/loadingPlaceHolder.png')
+                            image: AssetImage('lib/assets/images/loadingPlaceHolder.png')
                           ),
                           errorWidget: (context, url, error) => Icon(
                             Icons.error,
