@@ -22,9 +22,9 @@ class SavedEvents extends StatelessWidget {
     return NotificationListener(
       child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
         builder: (context, state) {
-          if(state is SavedEventsInfoLoaded) {
+          if (state is SavedEventsInfoLoadedFromLocal) {
             return ListView.builder(
-              key: PageStorageKey('SavedEvents!'),
+              key: PageStorageKey('SavedEvents!Initial'),
               padding: EdgeInsets.only(
                 bottom: screenHeight * (AppTheme.filterTabsBottomPaddingPercent + AppTheme.filterTabsHeightPercent),
               ),
@@ -32,6 +32,18 @@ class SavedEvents extends StatelessWidget {
               itemBuilder: (_, index) => EventsScreen.buildEventsListItem(
                 state.savedEventsInfo[index], 
                 true
+              )
+            );
+          } else if (state is InSavedEventsScreen) {
+            return ListView.builder(
+              key: PageStorageKey('SavedEvents!AddingOrDeleting'),
+              padding: EdgeInsets.only(
+                bottom: screenHeight * (AppTheme.filterTabsBottomPaddingPercent + AppTheme.filterTabsHeightPercent),
+              ),
+              itemCount: state.savedEventsInfo.length,
+              itemBuilder: (_, index) => EventsScreen.buildEventsListItem(
+                state.savedEventsInfo[index], 
+                !state.toDeleteMap.containsKey(state.savedEventsInfo[index].documentId)
               )
             );
           }

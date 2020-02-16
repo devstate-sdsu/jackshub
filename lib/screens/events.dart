@@ -7,6 +7,7 @@ import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/src/blocs/events_scroll/events_scroll_bloc.dart';
 import 'package:jackshub/src/blocs/filter_tabs/filter_tabs_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/index.dart';
+import 'package:jackshub/util/database_helpers.dart';
 import 'package:jackshub/widgets/ColorLoader.dart';
 import 'package:jackshub/widgets/index.dart';
 import 'package:jackshub/widgets/saved-events.dart';
@@ -62,6 +63,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
   @override
   Widget build(BuildContext eventsToggleContext) {
     List<Widget> stackOfEventsLists = buildStackOfEventsLists(eventsToggleContext);
+    SavedEventsBloc savedEventsBloc = BlocProvider.of<SavedEventsBloc>(eventsToggleContext);
     return Stack(
       children: <Widget>[
         MultiBlocListener(
@@ -81,6 +83,17 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
                 }
               }
             ),
+            BlocListener<FilterTabsBloc, FilterTabsState>(
+              listener: (context, state) {
+                if (state is FilterTabSelected) {
+                  if (state.selectedTabIndex == filterDisplayNames.indexOf('Favorites')) {
+                    savedEventsBloc.add(SwitchToSavedEventsScreen());
+                  } else {
+                    savedEventsBloc.add(SwitchFromSavedEventsScreen());
+                  }
+                }
+              }
+            )
           ],
           child: BlocBuilder<FilterTabsBloc, FilterTabsState>(
             builder: (context, state) {
@@ -202,7 +215,7 @@ class EventsScreen extends StatelessWidget {
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
       key: PageStorageKey(this.filter),
       builder: (context, state) {
-        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+        if (state is SavedEventsInfoLoadedFromLocal) {
           Map ultimateDocIds = state.savedEventsIdsMap;
           return StreamBuilder<QuerySnapshot>(
             stream: this.filter == 'all' ? 
@@ -224,7 +237,7 @@ class EventsScreen extends StatelessWidget {
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
                       bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
-                      return buildEventsListItem(snapshot.data.documents[index], favorite);
+                      return buildEventsListItem(EventInfo.fromFirebase(snapshot.data.documents[index]), favorite);
                     }
                   ),
                   onNotification: (scrollNotification) {
@@ -242,32 +255,19 @@ class EventsScreen extends StatelessWidget {
     );
   }
 
-  static Widget buildEventsListItem(DocumentSnapshot doc, bool favorite) {
-    final tags = doc['tags'];
+  static Widget buildEventsListItem(EventInfo event, bool favorite) {
+    final tags = event.tags;
     if (
       tags.contains('sporting')
       ) {
       return EventsSmallCard(
-        name: doc['name'],
-        image: doc['image'],
-        bigLocation: doc['big_location'],
-        littleLocation: doc['tiny_location'],
-        startTime: doc['start_time'],
-        endTime: doc['end_time'],
+        event: event,
         favorite: favorite,
-        docId: doc.documentID
       );
     } else {
       return EventsCard(
-        name: doc['name'],
-        image: doc['image'],
-        description: doc['description'],
-        bigLocation: doc['big_location'],
-        littleLocation: doc['tiny_location'],
-        startTime: doc['start_time'],
-        endTime: doc['end_time'],
+        event: event,
         favorite: favorite,
-        docId: doc.documentID
       );
     }
   }

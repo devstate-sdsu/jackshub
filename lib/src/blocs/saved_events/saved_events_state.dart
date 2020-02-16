@@ -1,43 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
-
-
+import 'package:jackshub/util/database_helpers.dart';
 
 abstract class SavedEventsState extends Equatable {
   final Map savedEventsIdsMap;
-  SavedEventsState() : savedEventsIdsMap = Map();
+  final Map toDeleteMap;
+  final List<EventInfo> savedEventsInfo;
+  SavedEventsState() : savedEventsIdsMap = Map(), toDeleteMap = Map(), savedEventsInfo = List<EventInfo>();
 }
-
-
 
 class SavedEventsInitial extends SavedEventsState {
   SavedEventsInitial();
   @override
   List<Object> get props => [];
 }
-
-
-
-class SavedEventsLoading extends SavedEventsState {
-  SavedEventsLoading();
-  @override
-  List<Object> get props => [];
-}
-
-
-class SavedEventsLoaded extends SavedEventsState {
-  final List<DocumentSnapshot> savedEvents;
-  final Map savedEventsMap;
-  SavedEventsLoaded(this.savedEvents)
-    : savedEventsMap = Map.fromIterable(
-      savedEvents, 
-      key: (savedEvent) => savedEvent.documentID, value: (savedEvent) => true
-    );
-
-  @override
-  List<Object> get props => [savedEvents];
-}
-
 
 class SavedEventsError extends SavedEventsState {
   final String message;
@@ -46,31 +21,26 @@ class SavedEventsError extends SavedEventsState {
   List<Object> get props => [message];
 }
 
-class SavedEventsIdsLoaded extends SavedEventsState {
-  final List<String> savedEventsIds;
+class SavedEventsInfoLoadedFromLocal extends SavedEventsState {
   final Map savedEventsIdsMap;
-  SavedEventsIdsLoaded(this.savedEventsIds)
-    : savedEventsIdsMap = Map.fromIterable(
-      savedEventsIds,
-      key: (id) => id,
-      value: (_) => true,
-    );
-
-  @override
-  List<Object> get props => [savedEventsIds];
-}
-
-class SavedEventsInfoLoaded extends SavedEventsState {
-  final List<String> savedEventsIds;
-  final Map savedEventsIdsMap;
-  final List<DocumentSnapshot> savedEventsInfo;
-  SavedEventsInfoLoaded(this.savedEventsIds, this.savedEventsInfo)
+  final List<EventInfo> savedEventsInfo;
+  SavedEventsInfoLoadedFromLocal(this.savedEventsInfo)
       : savedEventsIdsMap = Map.fromIterable(
-      savedEventsIds,
-      key: (id) => id,
+      savedEventsInfo,
+      key: (event) => event.documentId,
       value: (_) => true,
     );
   @override
   List<Object> get props => [savedEventsInfo];
 }
+
+class InSavedEventsScreen extends SavedEventsState {
+    final Map toDeleteMap;
+    final List<EventInfo> savedEventsInfo;
+    InSavedEventsScreen({this.savedEventsInfo, this.toDeleteMap});
+    @override
+    List<Object> get props => [toDeleteMap];
+}
+
+
 

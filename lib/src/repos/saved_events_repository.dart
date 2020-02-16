@@ -4,65 +4,50 @@ import 'package:jackshub/util/database_helpers.dart';
 
 
 abstract class SavedEventsRepository {
-  Future<List<DocumentSnapshot>> fetchSavedEvents();
-  Future<List<String>> fetchSavedEventsIds();
-  Future<List<DocumentSnapshot>> fetchSavedEventsInfo(List<String> savedEventsIds);
+  Future addSavedEventToLocal(EventInfo event);
+  Future deleteSavedEventFromLocal(String documentId);
+  Future<List<EventInfo>> fetchSavedEventsInfoFromLocal();
 }
 
-Future<List<DocumentSnapshot>> _list() async {
-  DatabaseHelper helper = DatabaseHelper.instance;
-  List<SavedEvent> savedEvents = await helper.listSavedEvents();
-  List<DocumentSnapshot> snapshotList = new List<DocumentSnapshot>();
-  List<String> docIdList = new List<String>();
-  savedEvents.forEach((event) => docIdList.add(event.documentId));
-  snapshotList = await _getSavedEventsInfo(docIdList);
-  return snapshotList;
-}
-
-Future<List<DocumentSnapshot>> _getSavedEventsInfo(List<String> docIdList) async {
-  List<DocumentSnapshot> snapshotList = new List<DocumentSnapshot>();
-  for (String docId in docIdList) {
-      await Firestore.instance
-        .collection('eventsCol')
-        .document(docId)
-        .get()
-        .then((DocumentSnapshot ds) {
-        // use ds as a snapshot
-        snapshotList.add(ds);
-      });
-  }
-  return snapshotList;
-}
-
-
+// Old function that retrieved saved events from firebase one call by one call
+// Future<List<DocumentSnapshot>> _getSavedEventsInfo(List<String> docIdList) async {
+//   List<DocumentSnapshot> snapshotList = new List<DocumentSnapshot>();
+//   for (String docId in docIdList) {
+//       await Firestore.instance
+//         .collection('eventsCol')
+//         .document(docId)
+//         .get()
+//         .then((DocumentSnapshot ds) {
+//         // use ds as a snapshot
+//         snapshotList.add(ds);
+//       });
+//   }
+//   return snapshotList;
+// }
 
 class SavedEventsRepo implements SavedEventsRepository {
+  static final DatabaseHelper db = DatabaseHelper.instance;
   @override
-  Future<List<DocumentSnapshot>> fetchSavedEvents() async {
-    return await _list();
+  Future addSavedEventToLocal(EventInfo event) async {
+    bool success = await db.insertSavedEventInfo(event);
+    if (!success) {
+      throw 'Failed database insert';
+    }
+    return success;
   }
 
   @override
-  Future<List<String>> fetchSavedEventsIds() async {
-    List<String> docIdList = new List<String>();
-    DatabaseHelper helper = DatabaseHelper.instance;
-    List<SavedEvent> savedEvents = await helper.listSavedEvents();
-    savedEvents.forEach((event) => docIdList.add(event.documentId));
-    return docIdList;
+  Future deleteSavedEventFromLocal(String documentId) async {
+    bool success = await db.deleteSavedEventInfo(documentId);
+    if (!success) {
+      throw 'Failed database delete';
+    }
+    return success;
   }
-
 
   @override
-  Future<List<DocumentSnapshot>> fetchSavedEventsInfo(List<String> savedEventsIds) async {
-    List<DocumentSnapshot> snapshotList = new List<DocumentSnapshot>();
-    await Firestore.instance
-      .collection('eventsCol')
-      .where('__name__', whereIn: savedEventsIds)
-      .getDocuments()
-      .then((ds) {
-      // use ds as a snapshot
-      snapshotList = ds.documents;
-    });
-    return snapshotList;
+  Future<List<EventInfo>> fetchSavedEventsInfoFromLocal() async {
+    return await db.listSavedEventsInfo();
   }
+
 }

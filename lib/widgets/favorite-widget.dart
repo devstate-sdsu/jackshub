@@ -6,49 +6,19 @@ import 'package:jackshub/src/blocs/saved_events/saved_events_event.dart';
 import 'package:jackshub/src/blocs/saved_events/saved_events_state.dart';
 import 'package:jackshub/util/database_helpers.dart';
 
-
-
-Future<void> _save(String documentId) async {
-  SavedEvent newSavedEvent = SavedEvent();
-  newSavedEvent.documentId = documentId;
-  DatabaseHelper helper = DatabaseHelper.instance;
-  int id = await helper.insert(newSavedEvent);
-  print('inserted row: $id');
-}
-
-
-
-Future<void> _delete(String documentId) async {
-  DatabaseHelper helper = DatabaseHelper.instance;
-  await helper.delete(documentId);
-}
-
-
-
 class FavoriteWidget extends StatelessWidget {
-  final String docId;
+  final EventInfo event;
   final bool isFav;
 
-  const FavoriteWidget({this.docId, this.isFav});
+  FavoriteWidget({this.event, this.isFav});
 
   @override
   Widget build(BuildContext context) {
     final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
 
-    void _favorite() {
-      _save(this.docId).then((_) {
-        savedEventsBloc.add(GetSavedEventsInfo());
-      });
-    }
-
-    void _unfavorite() {
-      _delete(this.docId).then((_) {
-        savedEventsBloc.add(GetSavedEventsInfo());
-      });
-    }
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
       builder: (context, state) {
-        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+        if (state is SavedEventsInfoLoadedFromLocal || state is InSavedEventsScreen) {
             return IconButton(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
@@ -57,7 +27,21 @@ class FavoriteWidget extends StatelessWidget {
               icon: this.isFav ? Icon(Icons.favorite) : Icon(Icons.favorite_border),
               iconSize: 24.0,
               color: Colors.red,
-              onPressed: this.isFav ? _unfavorite : _favorite,
+              onPressed: () {
+                if (state is InSavedEventsScreen) {
+                  if (this.isFav) {
+                    savedEventsBloc.add(DeleteSavedEventWithoutRefresh(documentId: this.event.documentId));
+                  } else {
+                    savedEventsBloc.add(AddSavedEventWithoutRefresh(eventInfo: this.event));
+                  }
+                } else if (state is SavedEventsInfoLoadedFromLocal) {
+                  if (this.isFav) {
+                    savedEventsBloc.add(DeleteSavedEvent(documentId: this.event.documentId));
+                  } else {
+                    savedEventsBloc.add(AddSavedEvent(eventInfo: this.event));
+                  }
+                }
+              }
             ); 
         }
         return IconButton(
