@@ -148,12 +148,6 @@ class DatabaseHelper {
   // SQL string to create the database 
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-          CREATE TABLE $savedEventsIdsTable (
-            $docId VARCHAR(255) PRIMARY KEY
-          )
-          ''');
-
-    await db.execute('''
           CREATE TABLE $savedEventsInfoTable (
             $_document_id VARCHAR(255) PRIMARY KEY,
             $_name VARCHAR(512),
@@ -175,44 +169,7 @@ class DatabaseHelper {
   }
 
   // Database helper methods:
-
-  // SAVED EVENT ID HELPER METHODS
-  Future<int> insertSavedEventId(SavedEventId event) async {
-    Database db = await database;
-    int id = await db.insert(savedEventsIdsTable, event.toMap());
-    return id;
-  }
-
-  Future<Null> deleteSavedEventId(String documentId) async {
-    Database db = await database;
-    await db.delete(
-      savedEventsIdsTable,
-      where: '$docId = ?',
-      whereArgs: [documentId]
-    );
-    return null;
-  }
-
-  Future<List<SavedEventId>> listSavedEventsIds() async {
-    Database db = await database;
-    List<Map> maps = await db.query(
-      savedEventsIdsTable,
-      columns: [docId]
-    );
-    if (maps.length > 0) {
-      return _toList(maps);
-    }
-    return [];
-  }
-  List<SavedEventId> _toList(List<Map> maps) {
-    List<SavedEventId> newList = new List<SavedEventId>();
-
-    maps.forEach((map) => newList.add(SavedEventId.fromMap(map)));
-
-    return newList;
-  }
-
-    // SAVED EVENT INFO HELPER METHODS
+  // SAVED EVENT INFO HELPER METHODS
   Future<bool> insertSavedEventInfo(EventInfo event) async {
     Database db = await database;
     int result = await db.insert(savedEventsInfoTable, event.toMap());
@@ -227,21 +184,6 @@ class DatabaseHelper {
       whereArgs: [documentId]
     );
     return result > 0 ? true : false;
-  }
-
-
-  Future<bool> batchDeleteSavedEventInfo(List<String> documentIds) async {
-    Database db = await database;
-    Batch batch = db.batch();
-    for (var i = 0; i < documentIds.length; i++) {
-      batch.delete(
-        savedEventsInfoTable,
-        where: '$_document_id = ?',
-        whereArgs: [documentIds[i]]
-      );
-    }
-    List result = await batch.commit();
-    return result.contains(0) ? false : true;
   }
 
   Future<List<EventInfo>> listSavedEventsInfo() async {

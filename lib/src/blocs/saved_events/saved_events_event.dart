@@ -41,13 +41,6 @@ class DeleteSavedEventWithoutRefresh extends SavedEventsEvent {
   List<Object> get props => [this.documentId];
 }
 
-class BatchDeleteSavedEvents extends SavedEventsEvent {
-  final List<String> documentIds;
-  BatchDeleteSavedEvents({this.documentIds});
-  @override
-  List<Object> get props => this.documentIds;
-}
-
 class SwitchToSavedEventsScreen extends SavedEventsEvent {
   @override
   List<Object> get props => [];

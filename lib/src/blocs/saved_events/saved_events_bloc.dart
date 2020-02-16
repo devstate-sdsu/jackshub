@@ -69,16 +69,6 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
       } on Error {
         yield SavedEventsError("Something went wrong while deleting an event");
       }
-    } else if (event is BatchDeleteSavedEvents) {
-      try {
-        List<String> toDeleteIds = <String>[];
-        state.toDeleteMap.forEach((key, _) => toDeleteIds.add(key));
-        await savedEventsRepo.batchDeleteSavedEventFromLocal(toDeleteIds);
-        final savedEventsInfo = await savedEventsRepo.fetchSavedEventsInfoFromLocal();
-        yield SavedEventsInfoLoadedFromLocal(savedEventsInfo);
-      } on Error {
-        yield SavedEventsError("Something went wrong while batch deleting events");
-      }
     } else if (event is SwitchToSavedEventsScreen) {
       try {
         yield InSavedEventsScreen(savedEventsInfo: state.savedEventsInfo, toDeleteMap: {});

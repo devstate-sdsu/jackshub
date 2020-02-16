@@ -6,9 +6,7 @@ import 'package:jackshub/util/database_helpers.dart';
 abstract class SavedEventsRepository {
   Future addSavedEventToLocal(EventInfo event);
   Future deleteSavedEventFromLocal(String documentId);
-  Future<List<String>> fetchSavedEventsIds();
   Future<List<EventInfo>> fetchSavedEventsInfoFromLocal();
-  Future batchDeleteSavedEventFromLocal(List<String> documentIds);
 }
 
 // Old function that retrieved saved events from firebase one call by one call
@@ -45,23 +43,6 @@ class SavedEventsRepo implements SavedEventsRepository {
       throw 'Failed database delete';
     }
     return success;
-  }
-
-    @override
-  Future batchDeleteSavedEventFromLocal(List<String> documentIds) async {
-    bool success = await db.batchDeleteSavedEventInfo(documentIds);
-    if (!success) {
-      throw 'Failed database delete';
-    }
-    return success;
-  }
-
-  @override
-  Future<List<String>> fetchSavedEventsIds() async {
-    List<String> docIdList = new List<String>();
-    List<SavedEventId> savedEvents = await db.listSavedEventsIds();
-    savedEvents.forEach((event) => docIdList.add(event.documentId));
-    return docIdList;
   }
 
   @override
