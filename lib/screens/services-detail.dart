@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:jackshub/util/date-time-helper.dart';
 
 import 'package:jackshub/widgets/index.dart';
 import 'package:jackshub/config/theme.dart';
@@ -20,6 +21,7 @@ class DetailedServicesScreen extends StatefulWidget {
   final String littleLocation;
   final String email;
   final String phoneNumber;
+  final ServiceHours serviceHours;
 
   const DetailedServicesScreen({
     Key key,
@@ -30,7 +32,8 @@ class DetailedServicesScreen extends StatefulWidget {
     this.bigLocation,
     this.littleLocation,
     this.email,
-    this.phoneNumber
+    this.phoneNumber,
+    this.serviceHours
   });
 
   @override
@@ -168,10 +171,11 @@ class _DetailedServicesScreen extends State<DetailedServicesScreen> with TickerP
                         SizedBox(
                           height: 15
                         ),
-                        Container(  // OpenHours / Schedule Widget
-                          height: 150,
-                          color: Colors.grey
-                        ),
+                        serviceIncomingDaysStatus(context, widget.serviceHours),
+                        // Container(  // OpenHours / Schedule Widget
+                        //   height: 150,
+                        //   color: Colors.grey
+                        // ),
                         SizedBox(
                           height: 15
                         ),

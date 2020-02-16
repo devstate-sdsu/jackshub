@@ -16,6 +16,7 @@ class Day {
   final String holidayName;   // defaults to ""
   final List<HourSlot> slots;
   //final bool closed;   // defaults to false; added because error arises when 'slots' is empty because there is no 'hours' in holidayDays
+  //final String date;    // optional parameter, used for incomingDays widget on detailed servicecard; "Monday"
   Day({this.holidayName = "", this.slots});
 }
 
@@ -73,24 +74,29 @@ Map<String, String> parseHolidayDate(String input) {
 
 Day getWeekDay(DateTime day, DocumentSnapshot doc) {
   List<HourSlot> curSlots = [];
+  curSlots.clear();
   List<dynamic> docDays = doc.data['hours']['regularHours']['days'];
   if (docDays.isNotEmpty) {
     for (var days in docDays) {     // We have to iterate through these because if the service is closed, there is no entry for it in the 'days' array
-      List<dynamic> docHours = days['hours']; // Type check... not sure if necessary but why not?
-      if (docHours.isNotEmpty) {  // If the service is not closed, then there should be at least 1 hour slot.
-        for (var hourSlots in docHours) { 
-          String dayYear = day.toString().substring(0, 4);
-          String dayMonth = day.toString().substring(5, 7);
-          String dayDay = day.toString().substring(8, 10);
-          curSlots.add(
-            HourSlot(  // We already have the desired date (ie. 05-02-2020 xx:xx:xx), we just want to make the times for that date (ie. 05-02-2020 hour:minute:second)
-              start: getDateTime(hourSlots['start'], dayYear, dayMonth, dayDay),
-              end: getDateTime(hourSlots['end'], dayYear, dayMonth, dayDay)
-            )
-          );
+      if (days['day'] == weekDays[day.weekday]) {
+        List<dynamic> docHours = days['hours'];
+        if (docHours.isNotEmpty) {
+          List<HourSlot> curSlots = [];
+          for (var hourSlots in docHours) {
+            String dayYear = day.toString().substring(0, 4);
+            String dayMonth = day.toString().substring(5, 7);
+            String dayDay = day.toString().substring(8, 10);
+            curSlots.add(
+              HourSlot(  // We already have the desired date (ie. 05-02-2020 xx:xx:xx), we just want to make the times for that date (ie. 05-02-2020 hour:minute:second)
+                start: getDateTime(hourSlots['start'], dayYear, dayMonth, dayDay),
+                end: getDateTime(hourSlots['end'], dayYear, dayMonth, dayDay)
+              )
+            );
+          }
+          return Day(slots: curSlots);
+        } else {
+          //print("Closed on ${weekDays[day.weekday]}");
         }
-      } else if (docHours.isEmpty) {
-        //print("Closed on: ${weekDays[day.weekday]}");
       }
     }
   } else {
@@ -119,6 +125,7 @@ Day checkDay(DateTime day, List<Holiday> holidaysList, DocumentSnapshot doc) {  
             // The day that is being checked is a holiday!
             return holidayDays; // return holidayDays of class 'Day'
           } else {
+            //return holidayDays;
             return getWeekDay(day, doc);  // if it's a regular day, return the correct day of week of class 'Day'
           }
         } /*else {  // the holidayDay slot list is empty, meaning that the service is closed on that particular holidayDay
@@ -134,18 +141,21 @@ Day checkDay(DateTime day, List<Holiday> holidaysList, DocumentSnapshot doc) {  
 }
 
 List<Day> getIncomingDays(DocumentSnapshot doc, List<Holiday> holidayslist) {   // Multiple holidays is possible
-  List<DateTime> projectedDays = [];
+  //List<DateTime> projectedDays = [];
   List<Day> incomingDays = [];
+  // for (int i=0; i<=6; i++) {
+  //   projectedDays.add(DateTime.now().add(Duration(days: i)));
+  // }
   for (int i=0; i<=6; i++) {
-    projectedDays.add(DateTime.now().add(Duration(days: i)));
+    incomingDays.add(checkDay(DateTime.now().add(Duration(days: i)), holidayslist, doc));
   }
   //print('completed projections: ');
   //print(projectedDays);
-  for (var datetimes in projectedDays) {
-    incomingDays.add(
-      checkDay(datetimes, holidayslist, doc)
-    ); // Will check if holiday or regular day
-  }
+  // for (var datetimes in projectedDays) {
+  //   incomingDays.add(
+  //     checkDay(datetimes, holidayslist, doc)
+  //   ); // Will check if holiday or regular day
+  // }
   //print('completed checking projected days');
   //print(incomingDays);
   return incomingDays;
@@ -425,33 +435,102 @@ DateTime converHourToDateTimeWeekDay(String hour, String weekday) {
 
 
 
-
-
-
-
-
-
-String checkTodayStatusString(ServiceHours serviceHours) {
-  if (serviceHours.incomingDays[0].slots.isNotEmpty) {
-    DateTime currentTime = DateTime.now();
-    for (var hourSlots in serviceHours.incomingDays[0].slots) {
-      if (currentTime.isAfter(hourSlots.start) && currentTime.isBefore(hourSlots.end)) {  // currently, the service is open (within a time slot)
-        String nextClosingTime = DateFormat.jm().format(hourSlots.end);
-        return "Open until $nextClosingTime";
-      } else {
-        return "Closed";
-      }
-    }
-  } else {  // If there are no HourSlots in a day, we know that the service is closed on that day.
-    if (serviceHours.incomingDays[0].holidayName=="") {
-    return "Closed";
-    } else {
-    return "Closed: ${serviceHours.incomingDays[0].holidayName}";
-    }
-  }
+Widget makeSlotText(BuildContext context, String slotText) {
+  return AutoSizeText(
+    slotText,
+    maxLines: 1,
+    textAlign: TextAlign.right,
+    maxFontSize: AppTheme.cardDescriptionTextSize.max,
+    minFontSize: AppTheme.cardDescriptionTextSize.min,
+    style: Theme.of(context).textTheme.caption
+  );
 }
 
-Widget currentServiceStatus(context, ServiceHours serviceHours) {
+Widget serviceStatusDivider() {
+  return SizedBox(
+    height: 5
+  );
+}
+
+Widget serviceDayStatus(BuildContext context, Day day, DateTime projectedDate) {
+  List<String> curSlots = [];
+  curSlots.clear();
+  List<Widget> curSlotsWidget = [];
+  String projectedDayOfWeek = weekDays[projectedDate.weekday];
+  //String projectedDayOfMonth = projectedDate.day.toString();
+  if (day.slots.isNotEmpty) {
+    for (var hourSlots in day.slots) {
+      //String slotStartmarker = DateFormat('a').format(hourSlots.start).toLowerCase();
+      String slotStart = DateFormat('h:mm').format(hourSlots.start)+DateFormat('a').format(hourSlots.start).toLowerCase();
+      String slotEnd = DateFormat('h:mm').format(hourSlots.end)+DateFormat('a').format(hourSlots.end).toLowerCase();
+      curSlots.add('$slotStart - $slotEnd');
+    }
+  } else {  // Closed
+    if (day.holidayName == "") {  // It's not a holiday but regularly, the service is closed.
+      curSlots.add("Closed");
+    } else {  // However, if it is closed because of a holiday...
+      curSlots.add("Closed, ${day.holidayName}");
+    }
+  }
+  print(curSlots.length);
+  for (var slots in curSlots) {
+    curSlotsWidget.add(
+      makeSlotText(context, slots)
+    );
+  }
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: <Widget>[
+      AutoSizeText(
+        "$projectedDayOfWeek",
+        maxLines: 1,
+        textAlign: TextAlign.left,
+        maxFontSize: AppTheme.cardDescriptionTextSize.max,
+        minFontSize: AppTheme.cardDescriptionTextSize.min,
+        style: Theme.of(context).textTheme.caption
+      ),
+      Flexible(
+        flex: 1,
+        child: Container()
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: curSlotsWidget
+      )
+    ],
+  );
+}
+
+Widget serviceIncomingDaysStatus(BuildContext context, ServiceHours serviceHours) {
+  //List<DateTime> projectedDays = [];
+  List<Widget> statusWidgets = [];
+  //print(serviceHours.incomingDays);
+  for (int i=0; i<=6; i++) {
+    //projectedDays.add(DateTime.now().add(Duration(days: i)));
+    //print(serviceHours.incomingDays[i]);
+    statusWidgets.add(serviceDayStatus(context, serviceHours.incomingDays[i], DateTime.now().add(Duration(days: i))));
+    statusWidgets.add(serviceStatusDivider());
+  }
+  // List<Widget> statusWidgets = [];
+  // for (var day in serviceHours.incomingDays) {
+  //   statusWidgets.add(serviceDayStatus(context, day));
+  // }
+  return Container(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: statusWidgets
+    )
+  );
+}
+
+
+Widget currentServiceStatus(BuildContext context, ServiceHours serviceHours) {
   bool isClosed = false;
   String statusText = "";
   if (serviceHours.incomingDays[0].slots.isNotEmpty) {
@@ -475,7 +554,7 @@ Widget currentServiceStatus(context, ServiceHours serviceHours) {
     isClosed = true;
     } else {
     //return "Closed: ${serviceHours.incomingDays[0].holidayName}";
-    statusText = "Closed";
+    statusText = "Closed: ${serviceHours.incomingDays[0].holidayName}";
     isClosed = true;
     }
   }

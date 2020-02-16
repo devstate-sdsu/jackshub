@@ -93,7 +93,8 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                 widget.bigLocation,
                 widget.littleLocation,
                 widget.email,
-                widget.phoneNumber
+                widget.phoneNumber,
+                widget.serviceHours
               ),
             );
           },

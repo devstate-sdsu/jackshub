@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../screens/index.dart';
+import 'package:jackshub/util/date-time-helper.dart';
 
 
 
@@ -23,7 +24,8 @@ class ServicesRoutingParameters {
   final String littleLocation;
   final String email;
   final String phoneNumber;
-  ServicesRoutingParameters(this.doc, this.name, this.image, this.mainInfo, this.bigLocation, this.littleLocation, this.email, this.phoneNumber);
+  final ServiceHours serviceHours;
+  ServicesRoutingParameters(this.doc, this.name, this.image, this.mainInfo, this.bigLocation, this.littleLocation, this.email, this.phoneNumber, this.serviceHours);
 }
 
 class RouteToDetailedServices extends StatelessWidget {
@@ -31,7 +33,7 @@ class RouteToDetailedServices extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ServicesRoutingParameters parameters = ModalRoute.of(context).settings.arguments;
-    return DetailedServicesScreen(doc: parameters.doc, name: parameters.name, image: parameters.image, mainInfo: parameters.mainInfo, bigLocation: parameters.bigLocation, littleLocation: parameters.littleLocation, email: parameters.email, phoneNumber: parameters.phoneNumber);
+    return DetailedServicesScreen(doc: parameters.doc, name: parameters.name, image: parameters.image, mainInfo: parameters.mainInfo, bigLocation: parameters.bigLocation, littleLocation: parameters.littleLocation, email: parameters.email, phoneNumber: parameters.phoneNumber, serviceHours: parameters.serviceHours);
   }
 
 }
