@@ -206,7 +206,8 @@ class DatabaseHelper {
         _tiny_location,
         _big_location,
         _updates,
-      ]
+      ],
+      orderBy: _start_time
     );
     if (maps.length > 0) {
       return _infoMapToList(maps);
