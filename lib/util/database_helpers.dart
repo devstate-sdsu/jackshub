@@ -48,7 +48,7 @@ class EventInfo {
   Timestamp startTime;
   Timestamp endTime;
   String image;
-  List<String> tags;
+  List<dynamic> tags;
   bool startTimeUncertain;
   bool endTimeUncertain;
   bool startDateUncertain;
@@ -145,13 +145,13 @@ class DatabaseHelper {
 
   // SQL string to create the database 
   Future _onCreate(Database db, int version) async {
-    await db.execute('
+    await db.execute('''
           CREATE TABLE $savedEventsIdsTable (
             $docId VARCHAR(255) PRIMARY KEY
           )
-          ');
+          ''');
 
-    await db.execute('
+    await db.execute('''
           CREATE TABLE $savedEventsInfoTable (
             $_document_id VARCHAR(255) PRIMARY KEY,
             $_name VARCHAR(512),
@@ -169,7 +169,7 @@ class DatabaseHelper {
             $_big_location VARCHAR(255),
             $_updates VARCHAR(255)
           )
-          ');          
+          ''');          
   }
 
   // Database helper methods:

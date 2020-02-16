@@ -25,7 +25,7 @@ abstract class SavedEventsRepository {
 //   return snapshotList;
 // }
 
-SavedEventInfo convertEventToLocalSchema(Map event) {
+EventInfo convertEventToLocalSchema(Map event) {
 
 }
 
@@ -33,9 +33,7 @@ class SavedEventsRepo implements SavedEventsRepository {
   static final DatabaseHelper db = DatabaseHelper.instance;
   @override
   Future<bool> addSavedEventToLocal(Map event) async {
-    SavedEventInfo eventInLocalSchema = convertEventToLocalSchema(event);
-    db.insertSavedEventId(event['docId']);
-    db.insertSavedEventInfo(eveevent);
+
   }
 
   @override
