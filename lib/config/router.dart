@@ -37,6 +37,7 @@ class RouteToDetailedServices extends StatelessWidget {
 }
 
 
+
 class EventsRoutingParameters {
   final String docId;
   final String name;

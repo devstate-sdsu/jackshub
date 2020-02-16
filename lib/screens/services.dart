@@ -33,7 +33,10 @@ class ServicesScreen extends StatelessWidget {
 
   Widget buildServicesListItem(BuildContext context, DocumentSnapshot doc) {
     Map<String, dynamic> docdata = doc.data;
-    currentServiceStatusText(context, doc);
+    //ServiceHours serviceHours = getHours(doc);
+    //currentServiceStatusText(context, doc);
+    //print('completed getting service hours: ');
+    //print(serviceHours);
     return ServicesCard(
         doc: doc,
         name: docdata['name'],
@@ -44,7 +47,7 @@ class ServicesScreen extends StatelessWidget {
         littleLocation: docdata['tinyLocation'],
         email: docdata['email'],
         phoneNumber: docdata['phoneNumber'],
-        //status: docdata['status'],       DEPRECATED
+        serviceHours: getHours(doc),
     );
   }
 

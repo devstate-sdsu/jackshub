@@ -17,6 +17,7 @@ class ServicesCard extends StatefulWidget {
   final String littleLocation;
   final String email;
   final String phoneNumber;
+  final ServiceHours serviceHours;
 
   const ServicesCard({
     Key key,
@@ -28,7 +29,8 @@ class ServicesCard extends StatefulWidget {
     this.bigLocation,
     this.littleLocation,
     this.email,
-    this.phoneNumber
+    this.phoneNumber,
+    this.serviceHours
   }): super(key: key);
 
   @override
@@ -195,6 +197,8 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                         SizedBox(
                           height: 10
                         ),
+                        currentServiceStatus(context, widget.serviceHours),
+                        /*
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
@@ -210,7 +214,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                             ),
                             Expanded(
                               flex: 1,
-                              child: currentServiceStatusText(context, widget.doc)
+                              child: currentServiceStatus(context, widget.serviceHours)
                               // child: AutoSizeText(
                               //   "Currently open until 4:00pm",
                               //   maxLines: 1,
@@ -226,6 +230,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                             ),
                           ],
                         ),
+                        */
                         /*Text(
                           widget.status,
                           textAlign: TextAlign.left,

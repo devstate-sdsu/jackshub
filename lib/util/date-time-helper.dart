@@ -2,41 +2,284 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:intl/intl.dart';
 import 'package:jackshub/config/theme.dart';
 
 
+class HourSlot {
+  final DateTime start;
+  final DateTime end;
+  HourSlot({this.start, this.end});
+}
 
-String convertMonthStringToNumber(String month) {
-  if (month == "Jan") {
-    return "01";
-  } else if (month == "Feb") {
-    return "02";
-  } else if (month == "Mar") {
-    return "03";
-  } else if (month == "Apr") {
-    return "04";
-  } else if (month == "May") {
-    return "05";
-  } else if (month == "Jun") {
-    return "06";
-  } else if (month == "Jul") {
-    return "07";
-  } else if (month == "Aug") {
-    return "08";
-  } else if (month == "Sep") {
-    return "09";
-  } else if (month == "Oct") {
-    return "10";
-  } else if (month == "Nov") {
-    return "11";
-  } else if (month == "Dec") {
-    return "12";
+class Day {
+  final String holidayName;   // defaults to ""
+  final List<HourSlot> slots;
+  //final bool closed;   // defaults to false; added because error arises when 'slots' is empty because there is no 'hours' in holidayDays
+  Day({this.holidayName = "", this.slots});
+}
+
+class Holiday {
+  final String name;
+  final List<Day> dates;
+  Holiday({this.name, this.dates});
+}
+
+class ServiceHours {      // This class will be created (called) every time the service card will be made
+  final List<Holiday> holidays;
+  final List<Day> incomingDays;   // Because of that, we can simply insert a list of the next 6 days here (including the current day, today), in a positioned array.
+                                  // [0] for today, [1] for tomorrow, [2] for after-tomorrow, etc... up to [6].
+  ServiceHours({this.holidays, this.incomingDays});
+}
+
+Map<int, String> weekDays = {
+  1: "Monday",
+  2: "Tuesday",
+  3: "Wednesday",
+  4: "Thursday",
+  5: "Friday",
+  6: "Saturday",
+  7: "Sunday"
+};
+
+Map<String, String> monthsOfYear = {
+  "Jan": "01",
+  "Feb": "02",
+  "Mar": "03",
+  "Apr": "04",
+  "May": "05",
+  "Jun": "06",
+  "Jul": "07",
+  "Aug": "08",
+  "Sep": "09",
+  "Oct": "10",
+  "Nov": "11",
+  "Dec": "12"
+};
+
+DateTime getDateTime(String time, String year, String month, String day) {
+  String parsedTime = DateFormat.Hms().format(DateFormat("hh:mma").parse(time));
+  return DateTime.parse('$year-$month-$day $parsedTime');
+}
+
+Map<String, String> parseHolidayDate(String input) {
+  Map<String, String> output = {
+    "year": input.substring(11),
+    "month": monthsOfYear[input.substring(4, 7)],
+    "day": input.substring(8, 10)
+  };
+  return output;
+}
+
+Day getWeekDay(DateTime day, DocumentSnapshot doc) {
+  List<HourSlot> curSlots = [];
+  List<dynamic> docDays = doc.data['hours']['regularHours']['days'];
+  if (docDays.isNotEmpty) {
+    for (var days in docDays) {     // We have to iterate through these because if the service is closed, there is no entry for it in the 'days' array
+      List<dynamic> docHours = days['hours']; // Type check... not sure if necessary but why not?
+      if (docHours.isNotEmpty) {  // If the service is not closed, then there should be at least 1 hour slot.
+        for (var hourSlots in docHours) { 
+          String dayYear = day.toString().substring(0, 4);
+          String dayMonth = day.toString().substring(5, 7);
+          String dayDay = day.toString().substring(8, 10);
+          curSlots.add(
+            HourSlot(  // We already have the desired date (ie. 05-02-2020 xx:xx:xx), we just want to make the times for that date (ie. 05-02-2020 hour:minute:second)
+              start: getDateTime(hourSlots['start'], dayYear, dayMonth, dayDay),
+              end: getDateTime(hourSlots['end'], dayYear, dayMonth, dayDay)
+            )
+          );
+        }
+      } else if (docHours.isEmpty) {
+        //print("Closed on: ${weekDays[day.weekday]}");
+      }
+    }
   } else {
-    return null;
+    //print("docDays for getWeekDay() is empty...?");
+  }
+  return Day(slots: curSlots);      // If service is closed on a regular week day, then the Day.slots list would be empty.
+}
+
+// If the holidayDays does NOT have open hours, then the holidayDays['hours'] list will be empty
+
+Day checkDay(DateTime day, List<Holiday> holidaysList, DocumentSnapshot doc) {    // The holidays list will already be populated with good data (a list of Days containing a bunch of HourSlot's)
+  if (holidaysList.isNotEmpty) {
+    for (var holidays in holidaysList) {    // Multiple holidays possible, check all the holidays (ie. Spring Break, Winter Break, etc.)
+      for (var holidayDays in holidays.dates) {   // Loop through the dates of a holiday, with each class 'Day' as 'holidayDays'
+        // print("holidayDays: ");
+        // print(holidayDays);
+        // print("holidayDay Name: ");
+        // print(holidayDays.holidayName);
+        // print("holidayDay Slots: ");
+        // print(holidayDays.slots);
+        if (holidayDays.slots.isNotEmpty) {
+          int holidayDaysYear = holidayDays.slots[0].start.year;  // Just check the first slot, because all the hourslots would be in the same day.
+          int holidayDaysMonth = holidayDays.slots[0].start.month;
+          int holidayDaysDay = holidayDays.slots[0].start.day;
+          if (day.year == holidayDaysYear && day.month == holidayDaysMonth && day.day == holidayDaysDay) {    // Check if the current target day is a holiday or not
+            // The day that is being checked is a holiday!
+            return holidayDays; // return holidayDays of class 'Day'
+          } else {
+            return getWeekDay(day, doc);  // if it's a regular day, return the correct day of week of class 'Day'
+          }
+        } /*else {  // the holidayDay slot list is empty, meaning that the service is closed on that particular holidayDay
+          return Day(
+            closed: true,
+          );
+        }*/
+      }
+    }
+  } else {
+    return getWeekDay(day, doc);
   }
 }
 
+List<Day> getIncomingDays(DocumentSnapshot doc, List<Holiday> holidayslist) {   // Multiple holidays is possible
+  List<DateTime> projectedDays = [];
+  List<Day> incomingDays = [];
+  for (int i=0; i<=6; i++) {
+    projectedDays.add(DateTime.now().add(Duration(days: i)));
+  }
+  //print('completed projections: ');
+  //print(projectedDays);
+  for (var datetimes in projectedDays) {
+    incomingDays.add(
+      checkDay(datetimes, holidayslist, doc)
+    ); // Will check if holiday or regular day
+  }
+  //print('completed checking projected days');
+  //print(incomingDays);
+  return incomingDays;
+}
 
+Day getHolidayDay(Map<String, String> parsedDate, List<dynamic> docHours, String holidayName) {
+  List<HourSlot> curSlots = [];
+  if (docHours.isNotEmpty) {
+    for (var hours in docHours) {   // each 'hours' map contains an 'end' and a 'start'
+      curSlots.add(
+        HourSlot(
+          start: getDateTime(hours['start'], parsedDate['year'], parsedDate['month'], parsedDate['day']),
+          end: getDateTime(hours['end'], parsedDate['year'], parsedDate['month'], parsedDate['day'])
+        )
+      );
+    }
+  } else {
+    //print("docHours for getHolidayDay() is empty...?");
+  }
+  return Day(holidayName: holidayName, slots: curSlots);
+}
+
+List<Day> getHolidayDaysList(List<dynamic> docDays, String holidayName) {
+  List<Day> curDays = [];
+  if (docDays.isNotEmpty) {
+    for (var days in docDays) {   // a 'days' object is a map that contains a String 'day' and an array 'hours'
+      Map<String, String> parsedDate = parseHolidayDate(days['day']);
+      //print(parsedDate);
+      curDays.add(
+        getHolidayDay(parsedDate, days['hours'], holidayName)
+      );
+      //print(curDays);
+    }
+  } else {
+    //print("docDays for getHolidayDaysList() are empty...?");
+  }
+  return curDays;
+}
+
+List<Holiday> getListOfHolidays(DocumentSnapshot doc) {
+  List<Holiday> holidaysList = [];
+  List<dynamic> docHolidays = doc.data['hours']['holidayHours'];
+  //print(docHolidays);
+  if (docHolidays.isNotEmpty) {
+    //print("docHolidays is not empty!");
+    for (var holiday in docHolidays) {  // 'holiday' var contains a String 'name', and an array 'days'
+      holidaysList.add(
+        Holiday(
+          name: holiday['name'],
+          dates: getHolidayDaysList(holiday['days'], holiday['name'])
+        )
+      );
+    }
+  } else {  // there are no holidays for this particular service
+    //print("No holidays for ${doc.data['name']}");
+  }
+  return holidaysList;
+}
+
+ServiceHours getHours(DocumentSnapshot doc) {
+  List<Holiday> currentHolidays = getListOfHolidays(doc);
+  //print("got holidays, completed task: ");
+  //print(currentHolidays);
+  List<Day> incomingDays = getIncomingDays(doc, currentHolidays);
+  return ServiceHours(holidays: currentHolidays, incomingDays: incomingDays);
+}
+
+
+
+
+/*
+ServiceHours testServiceHours = ServiceHours(
+  holidays: [
+    Holiday(
+      name: "Spring Break",
+      dates: [Day(), Day(), Day()]
+    ),
+    Holiday(
+      name: "Winter Break",
+      dates: [Day(), Day(), Day(), Day()]
+    )
+  ],
+  incomingDays: [
+    Day(),  // [0] Today
+    Day(),  // [1] +1 Tomorrow
+    Day(),  // [2] +2 After-tomorrow
+    Day(),  // [3] +3
+    Day(),  // [4] +4
+    Day(),  // [5] +5
+    Day(),  // [6] +6
+  ]
+);
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+String convertMonthStringToNumber(String month) {
+  switch (month) {
+    case "Jan":
+      return "01";
+    case "Feb":
+      return "02";
+    case "Mar":
+      return "03";
+    case "Apr":
+      return "04";
+    case "May":
+      return "05";
+    case "Jun":
+      return "06";
+    case "Jul":
+      return "07";
+    case "Aug":
+      return "08";
+    case "Sep":
+      return "09";
+    case "Oct":
+      return "10";
+    case "Nov":
+      return "11";
+    case "Dec":
+      return "12";
+  }
+}
 
 String holidayDayParser(dynamic dayString) {
   String newString = dayString.toString();
@@ -52,9 +295,10 @@ String holidayDayParser(dynamic dayString) {
 void iterateHolidayDays(List<dynamic> days) {
   days.forEach((element) => holidayDayParser(element['day']));
 }
+*/
 
 
-
+/*
 void iterateHolidays(DocumentSnapshot doc, List<dynamic> holidayHours) {
   DateTime currentDay = DateTime.now();
   String currentDate = currentDay.toString().substring(0, 10);
@@ -80,21 +324,33 @@ void iterateHolidays(DocumentSnapshot doc, List<dynamic> holidayHours) {
   // print(holidayDays);
   // print(currentDay);
 }
+*/
 
-
-
+/*
 Map<int, DateTime> convertToHourSlots(dynamic hours) {
   hours.forEach((slot) => {
     
   });
 }
+*/
 
 
 
+/*
 Map<String, dynamic> getHoursByWeekDay(int weekDay, DocumentSnapshot doc) {
-  Map<String, DateTime> hourSlots;
+  Map<String, dynamic> hourSlots = [
+    "Monday": [{DateTime start, DateTime end}, {DateTime start, DateTime end}];
+  ];
+
+
+
+  return hourSlots;
+
+  return doc.data['hours']['regularHours']['days'][weekDay];
+
+  /*
   if (weekDay == 1) {         // Monday
-    return doc.data['hours']['regularHours']['days'][1];
+    return doc.data['hours']['regularHours']['days'][];
   } else if (weekDay == 2) {  // Tuesday
     return doc.data['hours']['regularHours']['days'][2];
   } else if (weekDay == 3) {  // Wednesday
@@ -107,38 +363,166 @@ Map<String, dynamic> getHoursByWeekDay(int weekDay, DocumentSnapshot doc) {
     return doc.data['hours']['regularHours']['days'][6];
   } else if (weekDay == 7) {  // Sunday
     return doc.data['hours']['regularHours']['days'][0];
+  }*/
+}*/
+
+
+
+/*
+String checkCurrentRegular(DocumentSnapshot doc) {
+  List<dynamic> regularDays = doc.data['hours']['regularHours']['days'];
+
+  int mondayHoursIndex = regularDays.indexWhere((hourSet) {
+    return hourSet['day'] == 'Monday';
+  });
+
+  dynamic mondayHours = regularDays[mondayHoursIndex];
+
+  List<dynamic> hours = mondayHours['hours'];
+
+  List<Map<String, DateTime>> hourStrings = hours.map((hour) {
+    return {
+      "start": myFunc(hour['start']),
+      "end": myFunc(hour['end']),
+    };
+  });
+
+  DateTime currentTime = DateTime.now();
+  print(currentTime.weekday);
+  return currentTime.toString();
+}
+
+
+DateTime converHourToDateTimeWeekDay(String hour, String weekday) {
+  DateTime currentDay = DateTime.now();
+
+  for (int day = 0; day < 7; day++) {
+    if (currentDay.weekday == weekdays[weekday]) {
+      break;
+    }
+    currentDay = currentDay.add(new Duration(days: 1));
+  }
+
+  String convertedDay = '${currentDay.year}-${currentDay.month}-${currentDay.day} ${hour}:00:00';
+  print(convertedDay);
+  return DateTime.parse(convertedDay);
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+String checkTodayStatusString(ServiceHours serviceHours) {
+  if (serviceHours.incomingDays[0].slots.isNotEmpty) {
+    DateTime currentTime = DateTime.now();
+    for (var hourSlots in serviceHours.incomingDays[0].slots) {
+      if (currentTime.isAfter(hourSlots.start) && currentTime.isBefore(hourSlots.end)) {  // currently, the service is open (within a time slot)
+        String nextClosingTime = DateFormat.jm().format(hourSlots.end);
+        return "Open until $nextClosingTime";
+      } else {
+        return "Closed";
+      }
+    }
+  } else {  // If there are no HourSlots in a day, we know that the service is closed on that day.
+    if (serviceHours.incomingDays[0].holidayName=="") {
+    return "Closed";
+    } else {
+    return "Closed: ${serviceHours.incomingDays[0].holidayName}";
+    }
   }
 }
 
-
-
-void checkCurrentRegular(DocumentSnapshot doc) {
-  DateTime currentTime = DateTime.now();
-  print(currentTime.weekday);
-}
-
-
-Widget currentServiceStatusText(context, DocumentSnapshot doc) {
-  // Map<String, dynamic> docdata = doc.data;
-  // List<dynamic> regularHours = docdata['hours']['regularHours']['days']; // returns an array containing two things: a string giving the 'day' tag and an 'hours' array
-  // List<dynamic> holidayHours = docdata['hours']['holidayHours'];
-  // iterateHolidays(doc, holidayHours);
-  //print(docdata['name']);
-  //print(regularHours);
-  checkCurrentRegular(doc);
-  return AutoSizeText(
-    "Hello",
-    maxLines: 1,
-    textAlign: TextAlign.left,
-    maxFontSize: AppTheme.cardDescriptionTextSize.max,
-    minFontSize: AppTheme.cardDescriptionTextSize.min,
-    style: TextStyle(
-      color: Colors.green,
-      fontWeight: FontWeight.w700,
-      fontFamily: 'Roboto'
-    )
+Widget currentServiceStatus(context, ServiceHours serviceHours) {
+  bool isClosed = false;
+  String statusText = "";
+  if (serviceHours.incomingDays[0].slots.isNotEmpty) {
+    DateTime currentTime = DateTime.now();
+    for (var hourSlots in serviceHours.incomingDays[0].slots) {
+      if (currentTime.isAfter(hourSlots.start) && currentTime.isBefore(hourSlots.end)) {  // currently, the service is open (within a time slot)
+        String nextClosingTime = DateFormat.jm().format(hourSlots.end);
+        statusText = "Open until $nextClosingTime";
+        //return "Open until $nextClosingTime";
+        isClosed = false;
+      } else {
+        //return "Closed";
+        statusText = "Closed";
+        isClosed = true;
+      }
+    }
+  } else {  // If there are no HourSlots in a day, we know that the service is closed on that day.
+    if (serviceHours.incomingDays[0].holidayName=="") {
+    //return "Closed";
+    statusText = "Closed";
+    isClosed = true;
+    } else {
+    //return "Closed: ${serviceHours.incomingDays[0].holidayName}";
+    statusText = "Closed";
+    isClosed = true;
+    }
+  }
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.start,
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.center,
+    children: <Widget>[
+      Icon(
+        Icons.lens,
+        size: 10.0,
+        color: isClosed ? Colors.redAccent: Colors.lightGreen,
+      ),
+      SizedBox(
+        width: 1
+      ),
+      Expanded(
+        flex: 1,
+        child: AutoSizeText(
+          statusText,
+          maxLines: 1,
+          textAlign: TextAlign.left,
+          maxFontSize: AppTheme.cardDescriptionTextSize.max,
+          minFontSize: AppTheme.cardDescriptionTextSize.min,
+          style: TextStyle(
+            color: isClosed? Colors.redAccent: Colors.lightGreen,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Roboto'
+          )
+        )
+      )
+    ],
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
