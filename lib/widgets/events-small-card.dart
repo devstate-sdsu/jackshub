@@ -89,14 +89,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
               context,
               '/detailedEvents',
               arguments: EventsRoutingParameters(
-                widget.event.documentId,
-                widget.event.name,
-                widget.event.image,
-                "", // description
-                widget.event.bigLocation,
-                widget.event.tinyLocation,
-                widget.event.startTime,
-                widget.event.endTime,
+                widget.event,
                 context
               )
             );
@@ -259,7 +252,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                               Expanded(
                                 flex: 18,
                                 child: FavoriteWidget(    ////////////////////////////////// Hi Jin
-                                  docId: widget.event.documentId,
+                                  event: widget.event,
                                   isFav: widget.favorite,
                                 )
                               ),

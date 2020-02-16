@@ -225,7 +225,7 @@ class EventsScreen extends StatelessWidget {
                     itemCount: snapshot.data.documents.length,
                     itemBuilder: (context, index) {
                       bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
-                      return buildEventsListItem(snapshot.data.documents[index], favorite);
+                      return buildEventsListItem(EventInfo.fromFirebase(snapshot.data.documents[index]), favorite);
                     }
                   ),
                   onNotification: (scrollNotification) {
@@ -243,18 +243,18 @@ class EventsScreen extends StatelessWidget {
     );
   }
 
-  static Widget buildEventsListItem(DocumentSnapshot doc, bool favorite) {
-    final tags = doc['tags'];
+  static Widget buildEventsListItem(EventInfo event, bool favorite) {
+    final tags = event.tags;
     if (
       tags.contains('sporting')
       ) {
       return EventsSmallCard(
-        event: EventInfo.fromFirebase(doc),
+        event: event,
         favorite: favorite,
       );
     } else {
       return EventsCard(
-        event: EventInfo.fromFirebase(doc),
+        event: event,
         favorite: favorite,
       );
     }

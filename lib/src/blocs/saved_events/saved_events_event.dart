@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:jackshub/util/database_helpers.dart';
 
 
 
@@ -19,8 +20,15 @@ class GetSavedEventsInfo extends SavedEventsEvent {
 }
 
 class AddSavedEvent extends SavedEventsEvent {
-  final Map event;
-  AddSavedEvent({this.event});
+  final EventInfo eventInfo;
+  AddSavedEvent({this.eventInfo});
   @override
-  List<Object> get props => [this.event['docId']];
+  List<Object> get props => [this.eventInfo.documentId];
+}
+
+class DeleteSavedEvent extends SavedEventsEvent {
+  final String documentId;
+  DeleteSavedEvent({this.documentId});
+  @override
+  List<Object> get props => [this.documentId];
 }

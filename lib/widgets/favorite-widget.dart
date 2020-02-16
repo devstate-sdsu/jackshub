@@ -26,25 +26,31 @@ Future<void> _delete(String documentId) async {
 
 
 class FavoriteWidget extends StatelessWidget {
-  final String docId;
+  final EventInfo event;
   final bool isFav;
 
-  const FavoriteWidget({this.docId, this.isFav});
+  const FavoriteWidget({this.event, this.isFav});
 
   @override
   Widget build(BuildContext context) {
     final savedEventsBloc = BlocProvider.of<SavedEventsBloc>(context);
 
     void _favorite() {
-      _save(this.docId).then((_) {
-        savedEventsBloc.add(GetSavedEventsInfo());
-      });
+      savedEventsBloc.add(AddSavedEvent(eventInfo: this.event));
+      savedEventsBloc.add(GetSavedEventsInfo());
+      // _save(this.event.documentId).then((_) {
+      //   savedEventsBloc.add(AddSavedEvent(eventInfo: this.event));
+      //   savedEventsBloc.add(GetSavedEventsInfo());
+      // });
     }
 
     void _unfavorite() {
-      _delete(this.docId).then((_) {
-        savedEventsBloc.add(GetSavedEventsInfo());
-      });
+      savedEventsBloc.add(DeleteSavedEvent(documentId: this.event.documentId));
+      savedEventsBloc.add(GetSavedEventsInfo());
+      // _delete(this.event.documentId).then((_) {
+      //   savedEventsBloc.add(DeleteSavedEvent(documentId: this.event.documentId));
+      //   savedEventsBloc.add(GetSavedEventsInfo());
+      // });
     }
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
       builder: (context, state) {

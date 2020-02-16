@@ -103,10 +103,10 @@ class EventInfo {
     _end_time: endTime.millisecondsSinceEpoch,
     _image: image,
     _tags: jsonEncode(tags),
-    _start_time_uncertain: startTimeUncertain ? 1 : 0,
-    _end_time_uncertain: endTimeUncertain ? 1 : 0,
-    _start_date_uncertain: startDateUncertain ? 1 : 0,
-    _end_date_uncertain: endDateUncertain ? 1 : 0,
+    _start_time_uncertain: startTimeUncertain,
+    _end_time_uncertain: endTimeUncertain,
+    _start_date_uncertain: startDateUncertain,
+    _end_date_uncertain: endDateUncertain,
     _time_updated: timeUpdated.millisecondsSinceEpoch,
     _tiny_location: tinyLocation,
     _big_location: bigLocation,
@@ -160,10 +160,10 @@ class DatabaseHelper {
             $_end_time INT8,
             $_image VARCHAR(2048),
             $_tags VARCHAR(2048),
-            $_start_time_uncertain INT1,
-            $_end_time_uncertain INT1,
-            $_start_date_uncertain INT1,
-            $_end_date_uncertain INT1,
+            $_start_time_uncertain TINYINT,
+            $_end_time_uncertain TINYINT,
+            $_start_date_uncertain TINYINT,
+            $_end_date_uncertain TINYINT,
             $_time_updated INT8,
             $_tiny_location VARCHAR(255),
             $_big_location VARCHAR(255),
@@ -213,14 +213,14 @@ class DatabaseHelper {
     // SAVED EVENT INFO HELPER METHODS
   Future<int> insertSavedEventInfo(EventInfo event) async {
     Database db = await database;
-    int id = await db.insert(savedEventsIdsTable, event.toMap());
+    int id = await db.insert(savedEventsInfoTable, event.toMap());
     return id;
   }
 
   Future<Null> deleteSavedEventInfo(String documentId) async {
     Database db = await database;
     await db.delete(
-      savedEventsIdsTable,
+      savedEventsInfoTable,
       where: '$_document_id = ?',
       whereArgs: [documentId]
     );
@@ -228,14 +228,36 @@ class DatabaseHelper {
   }
 
   Future<List<EventInfo>> listSavedEventsInfo() async {
+    print("ARE WE LISTING? ");
     Database db = await database;
+    print("GOT OUR DB? ");
     List<Map> maps = await db.query(
-      savedEventsIdsTable,
-      columns: [docId]
+      savedEventsInfoTable,
+      columns: [  
+        _document_id,
+        _name,
+        _description,
+        _start_time,
+        _end_time,
+        _image,
+        _tags,
+        _start_time_uncertain,
+        _end_time_uncertain,
+        _start_date_uncertain,
+        _end_date_uncertain,
+        _time_updated,
+        _tiny_location,
+        _big_location,
+        _updates,
+      ]
     );
     if (maps.length > 0) {
+      print("MAPS HAS LENGHT: ");
+      print(maps);
       return _infoMapToList(maps);
     }
+    print("MAP NO LENGTH");
+    print(maps);
     return [];
   }
   List<EventInfo> _infoMapToList(List<Map> maps) {

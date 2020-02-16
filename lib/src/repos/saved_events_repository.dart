@@ -4,9 +4,10 @@ import 'package:jackshub/util/database_helpers.dart';
 
 
 abstract class SavedEventsRepository {
-  Future<bool> addSavedEventToLocal(Map event);
+  Future addSavedEventToLocal(EventInfo event);
   Future<List<String>> fetchSavedEventsIds();
   Future<List<DocumentSnapshot>> fetchSavedEventsInfoFromLocal(List<String> savedEventsIds);
+  Future<List<EventInfo>> fetchSavedEventsFromLocal();
 }
 
 // Old function that retrieved saved events from firebase one call by one call
@@ -25,15 +26,18 @@ abstract class SavedEventsRepository {
 //   return snapshotList;
 // }
 
-EventInfo convertEventToLocalSchema(Map event) {
-
-}
-
 class SavedEventsRepo implements SavedEventsRepository {
   static final DatabaseHelper db = DatabaseHelper.instance;
   @override
-  Future<bool> addSavedEventToLocal(Map event) async {
+  Future addSavedEventToLocal(EventInfo event) async {
+    int success = await db.insertSavedEventInfo(event);
+    return success;
+  }
 
+  @override
+  Future deleteSavedEventFromLocal(String documentId) async {
+    int success = await db.deleteSavedEventId(documentId);
+    return success;
   }
 
   @override
@@ -43,7 +47,6 @@ class SavedEventsRepo implements SavedEventsRepository {
     savedEvents.forEach((event) => docIdList.add(event.documentId));
     return docIdList;
   }
-
 
   @override
   Future<List<DocumentSnapshot>> fetchSavedEventsInfoFromLocal(List<String> savedEventsIds) async {
@@ -58,4 +61,10 @@ class SavedEventsRepo implements SavedEventsRepository {
     });
     return snapshotList;
   }
+
+  @override
+  Future<List<EventInfo>> fetchSavedEventsFromLocal() async {
+    return await db.listSavedEventsInfo();
+  }
+
 }

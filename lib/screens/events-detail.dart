@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/index.dart';
+import 'package:jackshub/util/database_helpers.dart';
 
 import 'package:jackshub/widgets/index.dart';
 import 'package:jackshub/config/theme.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
@@ -14,26 +14,12 @@ import 'package:intl/intl.dart';
 
 
 class DetailedEventsScreen extends StatefulWidget {
-  final String docId;
-  final String name;
-  final String image;
-  final String description;
-  final String bigLocation;
-  final String littleLocation;
-  final Timestamp startTime;
-  final Timestamp endTime;
+  final EventInfo event;
   final BuildContext blocContext;
 
   const DetailedEventsScreen({
     Key key,
-    this.docId,
-    this.name,
-    this.image,
-    this.description,
-    this.bigLocation,
-    this.littleLocation,
-    this.startTime,
-    this.endTime,
+    this.event,
     this.blocContext
   });
 
@@ -79,9 +65,9 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
     final SavedEventsBloc savedEventsBloc = BlocProvider.of<SavedEventsBloc>(widget.blocContext);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    String dateString = new DateFormat.MMMd().format(widget.startTime.toDate());
-    String startString = new DateFormat.jm().format(widget.startTime.toDate());
-    String endString = new DateFormat.jm().format(widget.endTime.toDate());
+    String dateString = new DateFormat.MMMd().format(widget.event.startTime.toDate());
+    String startString = new DateFormat.jm().format(widget.event.startTime.toDate());
+    String endString = new DateFormat.jm().format(widget.event.endTime.toDate());
     _controller.forward();
 
     return AnimatedBuilder(
@@ -97,9 +83,9 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
               )
             ),
             Hero(
-              tag: 'eventsCardImg'+widget.docId,
+              tag: 'eventsCardImg'+widget.event.documentId,
               child: CachedNetworkImage(
-                imageUrl: widget.image,
+                imageUrl: widget.event.image,
                 imageBuilder: (context, imageProvider) => Container(
                   height: screenWidth,
                   width: screenWidth,
@@ -182,9 +168,9 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Hero(
-                          tag: 'eventsCardTitleTEST'+widget.docId,
+                          tag: 'eventsCardTitleTEST'+widget.event.documentId,
                           child: AutoSizeText(
-                            widget.name,
+                            widget.event.name,
                             textAlign: TextAlign.left,
                             maxFontSize: Theme.of(context).textTheme.headline.fontSize,
                             minFontSize: Theme.of(context).textTheme.headline.fontSize,
@@ -227,7 +213,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                         ),
                         SizedBox(
                           height: 30,
-                          child: locationComponent(context, widget.bigLocation, widget.littleLocation)
+                          child: locationComponent(context, widget.event.bigLocation, widget.event.tinyLocation)
                         ),
                         SizedBox(
                           height: 15
@@ -240,14 +226,14 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                           height: 10
                         ),
                         Visibility(
-                          visible: widget.description != "",
+                          visible: widget.event.description != "",
                           child: Column(
                             children: <Widget>[
                               SizedBox(
                                 height: 10
                               ),
                               Text(
-                                widget.description,
+                                widget.event.description,
                                 textAlign: TextAlign.left,
                                 style: Theme.of(context).textTheme.caption
                               ),
@@ -267,9 +253,9 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                                 builder: (context, state) {
                                   if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoadedFromLocal) {
                                     var ultimateDocIds = state.savedEventsIdsMap;
-                                    return FavoriteWidget(docId: widget.docId, isFav: ultimateDocIds.containsKey(widget.docId));
+                                    return FavoriteWidget(event: widget.event, isFav: ultimateDocIds.containsKey(widget.event.documentId));
                                   } else {
-                                    return FavoriteWidget(docId: widget.docId, isFav: false);
+                                    return FavoriteWidget(event: widget.event, isFav: false);
                                   }
                                 }
                             )
@@ -342,9 +328,9 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Hero(
-                        tag: 'eventsCardTitle'+widget.docId,
+                        tag: 'eventsCardTitle'+widget.event.documentId,
                         child: AutoSizeText(
-                          widget.name,
+                          widget.event.name,
                           textAlign: TextAlign.left,
                           maxFontSize: Theme.of(context).textTheme.headline.fontSize,
                           minFontSize: Theme.of(context).textTheme.headline.fontSize,
@@ -387,7 +373,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                       ),
                       SizedBox(
                         height: 30,
-                        child: locationComponent(context, widget.bigLocation, widget.littleLocation)
+                        child: locationComponent(context, widget.event.bigLocation, widget.event.tinyLocation)
                       ),
                       SizedBox(
                         height: 15
@@ -400,14 +386,14 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                         height: 10
                       ),
                       Visibility(
-                        visible: widget.description != "",
+                        visible: widget.event.description != "",
                         child: Column(
                           children: <Widget>[
                             SizedBox(
                               height: 10
                             ),
                             Text(
-                              widget.description,
+                              widget.event.description,
                               textAlign: TextAlign.left,
                               style: Theme.of(context).textTheme.caption
                             ),
@@ -445,9 +431,9 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
           )
         ),
         Hero(
-          tag: 'eventsCardImg'+widget.docId,
+          tag: 'eventsCardImg'+widget.event.documentId,
           child: CachedNetworkImage(
-            imageUrl: widget.image,
+            imageUrl: widget.event.image,
             imageBuilder: (context, imageProvider) => Container(
               height: screenWidth,
               width: screenWidth,
@@ -530,9 +516,9 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Hero(
-                      tag: 'eventsCardTitle'+widget.docId,
+                      tag: 'eventsCardTitle'+widget.event.documentId,
                       child: AutoSizeText(
-                        widget.name,
+                        widget.event.name,
                         textAlign: TextAlign.left,
                         maxFontSize: Theme.of(context).textTheme.headline.fontSize,
                         minFontSize: Theme.of(context).textTheme.headline.fontSize,
@@ -575,7 +561,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                     ),
                     SizedBox(
                       height: 30,
-                      child: locationComponent(context, widget.bigLocation, widget.littleLocation)
+                      child: locationComponent(context, widget.event.bigLocation, widget.event.tinyLocation)
                     ),
                     SizedBox(
                       height: 15
@@ -588,14 +574,14 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                       height: 10
                     ),
                     Visibility(
-                      visible: widget.description != "",
+                      visible: widget.event.description != "",
                       child: Column(
                         children: <Widget>[
                           SizedBox(
                             height: 10
                           ),
                           Text(
-                            widget.description,
+                            widget.event.description,
                             textAlign: TextAlign.left,
                             style: Theme.of(context).textTheme.caption
                           ),
@@ -677,9 +663,9 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Hero(
-                    tag: 'eventsCardTitle'+widget.docId,
+                    tag: 'eventsCardTitle'+widget.event.documentId,
                     child: AutoSizeText(
-                      widget.name,
+                      widget.event.name,
                       textAlign: TextAlign.left,
                       maxFontSize: Theme.of(context).textTheme.headline.fontSize,
                       minFontSize: Theme.of(context).textTheme.headline.fontSize,
@@ -722,7 +708,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                   ),
                   SizedBox(
                     height: 30,
-                    child: locationComponent(context, widget.bigLocation, widget.littleLocation)
+                    child: locationComponent(context, widget.event.bigLocation, widget.event.tinyLocation)
                   ),
                   SizedBox(
                     height: 15
@@ -735,14 +721,14 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                     height: 10
                   ),
                   Visibility(
-                    visible: widget.description != "",
+                    visible: widget.event.description != "",
                     child: Column(
                       children: <Widget>[
                         SizedBox(
                           height: 10
                         ),
                         Text(
-                          widget.description,
+                          widget.event.description,
                           textAlign: TextAlign.left,
                           style: Theme.of(context).textTheme.caption
                         ),
@@ -780,7 +766,7 @@ class DetailedEventsScreen extends StatelessWidget{
     this.image,
     this.description,
     this.bigLocation,
-    this.littleLocation,
+    this.tinyLocation,
     this.startTime,
     this.endTime,
   });
@@ -790,7 +776,7 @@ class DetailedEventsScreen extends StatelessWidget{
   final String image;
   final String description;
   final String bigLocation;
-  final String littleLocation;
+  final String tinyLocation;
   final Timestamp startTime;
   final Timestamp endTime;
 
@@ -940,7 +926,7 @@ class DetailedEventsScreen extends StatelessWidget{
                   ),
                   SizedBox(
                     height: 30,
-                    child: locationComponent(context, bigLocation, littleLocation)
+                    child: locationComponent(context, bigLocation, tinyLocation)
                   ),
                   SizedBox(
                     height: 15

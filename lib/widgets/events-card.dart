@@ -79,14 +79,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
               context,
               '/detailedEvents',
               arguments: EventsRoutingParameters(
-                widget.event.documentId,
-                widget.event.name,
-                widget.event.image,
-                widget.event.description, // description
-                widget.event.bigLocation,
-                widget.event.tinyLocation,
-                widget.event.startTime,
-                widget.event.endTime,
+                widget.event,
                 context,
               )
             );
@@ -247,7 +240,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                                     Flexible(
                                       flex: 3,
                                       child: FavoriteWidget(
-                                        docId: widget.event.documentId,
+                                        event: widget.event,
                                         isFav: widget.favorite
                                       )
                                     )

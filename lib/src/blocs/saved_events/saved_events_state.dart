@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:jackshub/util/database_helpers.dart';
 
 
 
@@ -63,11 +64,11 @@ class SavedEventsIdsLoaded extends SavedEventsState {
 class SavedEventsInfoLoadedFromLocal extends SavedEventsState {
   final List<String> savedEventsIds;
   final Map savedEventsIdsMap;
-  final List<DocumentSnapshot> savedEventsInfo;
+  final List<EventInfo> savedEventsInfo;
   SavedEventsInfoLoadedFromLocal(this.savedEventsIds, this.savedEventsInfo)
       : savedEventsIdsMap = Map.fromIterable(
-      savedEventsIds,
-      key: (id) => id,
+      savedEventsInfo,
+      key: (event) => event.documentId,
       value: (_) => true,
     );
   @override
