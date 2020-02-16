@@ -442,7 +442,7 @@ Widget makeSlotText(BuildContext context, String slotText) {
     textAlign: TextAlign.right,
     maxFontSize: AppTheme.cardDescriptionTextSize.max,
     minFontSize: AppTheme.cardDescriptionTextSize.min,
-    style: Theme.of(context).textTheme.caption
+    style: Theme.of(context).textTheme.display1
   );
 }
 
@@ -457,6 +457,12 @@ Widget serviceDayStatus(BuildContext context, Day day, DateTime projectedDate) {
   curSlots.clear();
   List<Widget> curSlotsWidget = [];
   String projectedDayOfWeek = weekDays[projectedDate.weekday];
+  String holidayMarker;
+  if (day.holidayName!="") {
+    holidayMarker = ", (${day.holidayName})";
+  } else {
+    holidayMarker = "";
+  }
   //String projectedDayOfMonth = projectedDate.day.toString();
   if (day.slots.isNotEmpty) {
     for (var hourSlots in day.slots) {
@@ -480,24 +486,40 @@ Widget serviceDayStatus(BuildContext context, Day day, DateTime projectedDate) {
   }
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    mainAxisSize: MainAxisSize.min,
+    //mainAxisSize: MainAxisSize.max,
     crossAxisAlignment: CrossAxisAlignment.start,
     children: <Widget>[
       AutoSizeText(
-        "$projectedDayOfWeek",
+        "$projectedDayOfWeek$holidayMarker",
         maxLines: 1,
         textAlign: TextAlign.left,
         maxFontSize: AppTheme.cardDescriptionTextSize.max,
         minFontSize: AppTheme.cardDescriptionTextSize.min,
-        style: Theme.of(context).textTheme.caption
+        style: Theme.of(context).textTheme.display1
+      ),
+      Spacer(
+        flex: 1
       ),
       Flexible(
-        flex: 1,
-        child: Container()
+        flex: 6,
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 8
+            ),
+            Container(
+              height: 1,
+              color: Theme.of(context).accentColor
+            )
+          ],
+        )
+      ),
+      Spacer(
+        flex: 1
       ),
       Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+        //mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: curSlotsWidget
       )

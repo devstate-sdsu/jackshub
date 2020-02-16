@@ -342,8 +342,8 @@ SPEC CHECKSUMS:
   gRPC-Core: c9aef9a261a1247e881b18059b84d597293c9947
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
-  path_provider: f96fff6166a8867510d2c25fdcc346327cc4b259
-  sqflite: ff1d9da63c06588cc8d1faf7256d741f16989d5a
+  path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
+  sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
 
 PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
 

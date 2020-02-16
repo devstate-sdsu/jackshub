@@ -33,6 +33,11 @@ var lightTheme = new ThemeData(
       fontWeight: FontWeight.w400,
       color: Colors.black,
     ),
+    display1: TextStyle(    // Used as service Hours schedule widget
+      fontWeight: FontWeight.w400,
+      fontFamily: 'Roboto',
+      color: Colors.black,
+    ),
     display2: TextStyle(    // Used as 'DateString' date component and 'TimeString' time component text
       fontWeight: FontWeight.w700,
       fontFamily: 'Roboto',
@@ -80,6 +85,11 @@ var darkTheme = new ThemeData(
       fontWeight: FontWeight.w400,
       color: Colors.white,
     ),
+    display1: TextStyle(    // Used as service Hours schedule widget
+      fontWeight: FontWeight.w400,
+      fontFamily: 'Roboto',
+      color: Colors.white,
+    ),
     display2: TextStyle(    // Used as 'DateString' date component and 'TimeString' time component text
       fontWeight: FontWeight.w700,
       fontFamily: 'Roboto',
@@ -94,7 +104,7 @@ var darkTheme = new ThemeData(
       fontWeight: FontWeight.w500,
       fontFamily: 'Roboto',
       color: Colors.white70,
-    )
+    ),
   )
 );
 
@@ -135,7 +145,7 @@ class AppTheme {
   // Global theming of auto-sized texts (used in location, date, time texts)
   static TextSize cardLargeEventsTitleTextSize = TextSize(20.0, 17.0);
   static TextSize cardSmallEventsTitleTextSize = TextSize(20.0, 10.0);
-  static TextSize cardDescriptionTextSize = TextSize(14.0, 12.0);
+  static TextSize cardDescriptionTextSize = TextSize(15.0, 12.0);
   static TextSize bigLocationTextSize = TextSize(14.0, 12.0);
   static TextSize littleLocationTextSize = TextSize(12.0, 12.0);
   static TextSize dateStringTextSize = TextSize(13.0, 10.0);
