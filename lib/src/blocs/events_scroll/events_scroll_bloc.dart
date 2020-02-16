@@ -36,6 +36,9 @@ class EventsScrollBloc extends Bloc<EventsScrollEvent, EventsScrollState> {
             }
             yield EventsScrollingUp(scrollPosition: event.scrollPosition, opacity: newOpacity);
           } else {
+            // When new scroll position = old scroll position. Need to handle this case exclusively because 
+            // at the end of a scroll up/down, sometimes a notification will be triggered twice for the 
+            // same scroll position. 
             if (state is EventsScrollingUp) {
               yield EventsScrollingUp(scrollPosition: event.scrollPosition, opacity: state.opacity);
             } else if (state is EventsScrollingDown) {
