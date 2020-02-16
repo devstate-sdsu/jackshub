@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:jackshub/config/router.dart';
 import 'package:jackshub/config/theme.dart';
+import 'package:jackshub/util/database_helpers.dart';
 import 'package:jackshub/widgets/index.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,25 +11,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 
 class EventsSmallCard extends StatefulWidget {
-  final String name;
-  final String image;
-  final String bigLocation;
-  final String littleLocation;
-  final Timestamp startTime;
-  final Timestamp endTime;
+  final EventInfo event;
   final bool favorite;
-  final String docId;
 
   const EventsSmallCard({
     Key key,
-    this.name,
-    this.image,
-    this.bigLocation,
-    this.littleLocation,
-    this.startTime,
-    this.endTime,
-    this.favorite,
-    this.docId,
+    this.event,
+    this.favorite
   });
 
   @override
@@ -38,6 +27,14 @@ class EventsSmallCard extends StatefulWidget {
 
 
 class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMixin {
+  String name;
+  String image;
+  String bigLocation;
+  String littleLocation;
+  Timestamp startTime;
+  Timestamp endTime;
+  bool favorite;
+  
   AnimationController _controller;
   Animation _animation;
   double cardVerticalSize = AppTheme.cardSmallEventsHeight;
@@ -73,9 +70,9 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    String dateString = new DateFormat.MMMd().format(widget.startTime.toDate());
-    String startString = new DateFormat.jm().format(widget.startTime.toDate());
-    String endString = new DateFormat.jm().format(widget.endTime.toDate());
+    String dateString = new DateFormat.MMMd().format(widget.event.startTime.toDate());
+    String startString = new DateFormat.jm().format(widget.event.startTime.toDate());
+    String endString = new DateFormat.jm().format(widget.event.endTime.toDate());
 
     return AnimatedBuilder(
       animation: _controller,
@@ -92,14 +89,14 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
               context,
               '/detailedEvents',
               arguments: EventsRoutingParameters(
-                widget.docId,
-                widget.name,
-                widget.image,
+                widget.event.documentId,
+                widget.event.name,
+                widget.event.image,
                 "", // description
-                widget.bigLocation,
-                widget.littleLocation,
-                widget.startTime,
-                widget.endTime,
+                widget.event.bigLocation,
+                widget.event.tinyLocation,
+                widget.event.startTime,
+                widget.event.endTime,
                 context
               )
             );
@@ -135,14 +132,14 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                   Expanded(
                     flex: 350,
                     child: Hero(
-                      tag: 'eventsCardImg'+widget.docId,
+                      tag: 'eventsCardImg'+widget.event.documentId,
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(AppTheme.cardRadius),
                           bottomLeft: Radius.circular(AppTheme.cardRadius),
                         ),
                         child: CachedNetworkImage(
-                          imageUrl: widget.image,
+                          imageUrl: widget.event.image,
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               image: DecorationImage(
@@ -168,7 +165,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                             image: DecorationImage(
                               fit: BoxFit.cover,
                               image: CachedNetw(
-                                widget.image
+                                widget.event.image
                               )
                             )
                           )
@@ -203,9 +200,9 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                               Expanded(
                                 flex: 150,
                                 child: Hero(
-                                  tag: 'eventsCardTitle'+widget.docId,
+                                  tag: 'eventsCardTitle'+widget.event.documentId,
                                     child: AutoSizeText(    // Card title
-                                      widget.name,
+                                      widget.event.name,
                                       maxLines: 2,
                                       textAlign: TextAlign.left,
                                       maxFontSize: AppTheme.cardSmallEventsTitleTextSize.max,
@@ -222,7 +219,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                         ),
                         Expanded(
                           flex: 30,
-                          child: locationComponent(context, widget.bigLocation, widget.littleLocation),
+                          child: locationComponent(context, widget.event.bigLocation, widget.event.tinyLocation),
                         ),
                         Spacer(
                           flex: 10
@@ -262,7 +259,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                               Expanded(
                                 flex: 18,
                                 child: FavoriteWidget(    ////////////////////////////////// Hi Jin
-                                  docId: widget.docId,
+                                  docId: widget.event.documentId,
                                   isFav: widget.favorite,
                                 )
                               ),

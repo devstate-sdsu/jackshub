@@ -23,16 +23,19 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
         final savedEventsIds = await savedEventsRepo.fetchSavedEventsIds();
         yield SavedEventsIdsLoaded(savedEventsIds);
       } on Error {
-        yield SavedEventsError("Something went wrong");
+        yield SavedEventsError("Something went wrong while gettng saved events IDs");
       }
     } else if (event is GetSavedEventsInfo) {
       try {
         final savedEventsIds = await savedEventsRepo.fetchSavedEventsIds();
         yield SavedEventsIdsLoaded(savedEventsIds);
-        final savedEventsInfo = await savedEventsRepo.fetchSavedEventsInfo(savedEventsIds);
-        print("SAVED EVENTS INFO: ");
-        print(savedEventsInfo);
+        final savedEventsInfo = await savedEventsRepo.fetchSavedEventsInfoFromLocal(savedEventsIds);
         yield SavedEventsInfoLoadedFromLocal(savedEventsIds, savedEventsInfo);
+      } on Error {
+        yield SavedEventsError("Something went wrong while getting saved events info");
+      }
+    } else if (event is AddSavedEvent) {
+      try {
       } on Error {
         yield SavedEventsError("Something went wrong");
       }

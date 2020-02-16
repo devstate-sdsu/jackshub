@@ -7,6 +7,7 @@ import 'package:jackshub/config/theme.dart';
 import 'package:jackshub/src/blocs/events_scroll/events_scroll_bloc.dart';
 import 'package:jackshub/src/blocs/filter_tabs/filter_tabs_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/index.dart';
+import 'package:jackshub/util/database_helpers.dart';
 import 'package:jackshub/widgets/ColorLoader.dart';
 import 'package:jackshub/widgets/index.dart';
 import 'package:jackshub/widgets/saved-events.dart';
@@ -248,26 +249,13 @@ class EventsScreen extends StatelessWidget {
       tags.contains('sporting')
       ) {
       return EventsSmallCard(
-        name: doc['name'],
-        image: doc['image'],
-        bigLocation: doc['big_location'],
-        littleLocation: doc['tiny_location'],
-        startTime: doc['start_time'],
-        endTime: doc['end_time'],
+        event: EventInfo.fromFirebase(doc),
         favorite: favorite,
-        docId: doc.documentID
       );
     } else {
       return EventsCard(
-        name: doc['name'],
-        image: doc['image'],
-        description: doc['description'],
-        bigLocation: doc['big_location'],
-        littleLocation: doc['tiny_location'],
-        startTime: doc['start_time'],
-        endTime: doc['end_time'],
+        event: EventInfo.fromFirebase(doc),
         favorite: favorite,
-        docId: doc.documentID
       );
     }
   }

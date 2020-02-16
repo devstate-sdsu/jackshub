@@ -2,37 +2,23 @@ import 'package:flutter/material.dart';
 
 import 'package:jackshub/config/router.dart';
 import 'package:jackshub/config/theme.dart';
+import 'package:jackshub/util/database_helpers.dart';
 import 'package:jackshub/widgets/index.dart';
 
 import 'package:intl/intl.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 
 
 class EventsCard extends StatefulWidget {
-  final String name;
-  final String image;
-  final String description;
-  final String bigLocation;
-  final String littleLocation;
-  final Timestamp startTime;
-  final Timestamp endTime;
+  final EventInfo event;
   final bool favorite;
-  final String docId;
 
   const EventsCard({
     Key key,
-    this.name,
-    this.image,
-    this.description,
-    this.bigLocation,
-    this.littleLocation,
-    this.startTime,
-    this.endTime,
+    this.event,
     this.favorite,
-    this.docId,
   });
 
   @override
@@ -75,9 +61,9 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    String dateString = new DateFormat.MMMd().format(widget.startTime.toDate());
-    String startString = new DateFormat.jm().format(widget.startTime.toDate());
-    String endString = new DateFormat.jm().format(widget.endTime.toDate());
+    String dateString = new DateFormat.MMMd().format(widget.event.startTime.toDate());
+    String startString = new DateFormat.jm().format(widget.event.startTime.toDate());
+    String endString = new DateFormat.jm().format(widget.event.endTime.toDate());
     double cardVerticalSize = AppTheme.cardLargeEventsHeight;
 
     return AnimatedBuilder(
@@ -93,14 +79,14 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
               context,
               '/detailedEvents',
               arguments: EventsRoutingParameters(
-                widget.docId,
-                widget.name,
-                widget.image,
-                widget.description, // description
-                widget.bigLocation,
-                widget.littleLocation,
-                widget.startTime,
-                widget.endTime,
+                widget.event.documentId,
+                widget.event.name,
+                widget.event.image,
+                widget.event.description, // description
+                widget.event.bigLocation,
+                widget.event.tinyLocation,
+                widget.event.startTime,
+                widget.event.endTime,
                 context,
               )
             );
@@ -135,14 +121,14 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                   Expanded(
                     flex: 600,
                     child: Hero(
-                      tag: 'eventsCardImg'+widget.docId,
+                      tag: 'eventsCardImg'+widget.event.documentId,
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(AppTheme.cardRadius),
                           topRight: Radius.circular(AppTheme.cardRadius),
                         ),
                         child: CachedNetworkImage(
-                          imageUrl: widget.image,
+                          imageUrl: widget.event.image,
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               image: DecorationImage(
@@ -169,7 +155,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                               alignment: Alignment.topCenter,
                               fit: BoxFit.cover,
                               image: NetworkImage(
-                                widget.image
+                                widget.event.image
                               )
                             )
                           )
@@ -195,9 +181,9 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Hero(
-                                tag: 'eventsCardTitle'+widget.docId,
+                                tag: 'eventsCardTitle'+widget.event.documentId,
                                 child: AutoSizeText(
-                                  widget.name,
+                                  widget.event.name,
                                   maxLines: 2,
                                   textAlign: TextAlign.left,
                                   maxFontSize: AppTheme.cardLargeEventsTitleTextSize.max,
@@ -210,7 +196,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                                 flex: 10
                               ),
                               AutoSizeText(
-                                widget.description,
+                                widget.event.description,
                                 maxLines: 2,
                                 textAlign: TextAlign.left,
                                 maxFontSize: AppTheme.cardDescriptionTextSize.max,
@@ -253,7 +239,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                                   children: <Widget>[
                                     Flexible(
                                       flex: 20,
-                                      child: locationComponent(context, widget.bigLocation, widget.littleLocation)
+                                      child: locationComponent(context, widget.event.bigLocation, widget.event.tinyLocation)
                                     ),
                                     Spacer(
                                       flex: 1
@@ -261,7 +247,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                                     Flexible(
                                       flex: 3,
                                       child: FavoriteWidget(
-                                        docId: widget.docId,
+                                        docId: widget.event.documentId,
                                         isFav: widget.favorite
                                       )
                                     )

@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
@@ -39,34 +41,54 @@ class SavedEventId {
   }
 }
 
-class SavedEventInfo {
+class EventInfo {
   String documentId;
   String name;
   String description;
-  int startTime;
-  int endTime;
+  Timestamp startTime;
+  Timestamp endTime;
   String image;
   List<String> tags;
   bool startTimeUncertain;
   bool endTimeUncertain;
-  DateTime timeUpdated;
+  bool startDateUncertain;
+  bool endDateUncertain;
+  Timestamp timeUpdated;
   String tinyLocation;
   String bigLocation;
   String updates;
 
-  SavedEventInfo();
+  EventInfo();
 
-  SavedEventInfo.fromMap(Map<String, dynamic> map) {
+  EventInfo.fromFirebase(DocumentSnapshot doc) {
+    documentId = doc.documentID;
+    name = doc[_name];
+    description = doc[_description];
+    startTime = doc[_start_time];
+    endTime = doc[_end_time];
+    image = doc[_image];
+    tags = doc[_tags];
+    startTimeUncertain = doc[_start_time_uncertain];
+    endTimeUncertain = doc[_end_time_uncertain];
+    timeUpdated = doc[_time_updated];
+    tinyLocation = doc[_tiny_location];
+    bigLocation = doc[_big_location];
+    updates = doc[_updates];
+  } 
+
+  EventInfo.fromMap(Map<String, dynamic> map) {
     documentId = map[_document_id];
     name = map[_name];
     description = map[_description];
-    startTime = map[_start_time];
-    endTime = map[_end_time];
+    startTime = Timestamp.fromMillisecondsSinceEpoch(map[_start_time]);
+    endTime = Timestamp.fromMillisecondsSinceEpoch(map[_end_time]);
     image = map[_image];
-    tags = map[_tags];
-    startTimeUncertain = map[_start_time_uncertain];
-    endTimeUncertain = map[_end_time_uncertain];
-    timeUpdated = map[_time_updated];
+    tags = jsonDecode(map[_tags]);
+    startTimeUncertain = map[_start_time_uncertain] == 1 ? true : false;
+    endTimeUncertain = map[_end_time_uncertain] == 1 ? true : false;
+    startDateUncertain = map[_start_date_uncertain] == 1 ? true : false;
+    endDateUncertain = map[_end_date_uncertain] == 1 ? true : false;
+    timeUpdated = Timestamp.fromMillisecondsSinceEpoch(map[_time_updated]);
     tinyLocation = map[_tiny_location];
     bigLocation = map[_big_location];
     updates = map[_updates];
@@ -74,7 +96,21 @@ class SavedEventInfo {
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
-      docId: documentId
+    _document_id: documentId,
+    _name: name,
+    _description: description,
+    _start_time: startTime.millisecondsSinceEpoch,
+    _end_time: endTime.millisecondsSinceEpoch,
+    _image: image,
+    _tags: jsonEncode(tags),
+    _start_time_uncertain: startTimeUncertain ? 1 : 0,
+    _end_time_uncertain: endTimeUncertain ? 1 : 0,
+    _start_date_uncertain: startDateUncertain ? 1 : 0,
+    _end_date_uncertain: endDateUncertain ? 1 : 0,
+    _time_updated: timeUpdated.millisecondsSinceEpoch,
+    _tiny_location: tinyLocation,
+    _big_location: bigLocation,
+    _updates: updates,
     };
     return map;
   }
@@ -109,13 +145,13 @@ class DatabaseHelper {
 
   // SQL string to create the database 
   Future _onCreate(Database db, int version) async {
-    await db.execute('''
+    await db.execute('
           CREATE TABLE $savedEventsIdsTable (
             $docId VARCHAR(255) PRIMARY KEY
           )
-          ''');
+          ');
 
-    await db.execute('''
+    await db.execute('
           CREATE TABLE $savedEventsInfoTable (
             $_document_id VARCHAR(255) PRIMARY KEY,
             $_name VARCHAR(512),
@@ -133,7 +169,7 @@ class DatabaseHelper {
             $_big_location VARCHAR(255),
             $_updates VARCHAR(255)
           )
-          ''');          
+          ');          
   }
 
   // Database helper methods:
@@ -175,7 +211,7 @@ class DatabaseHelper {
   }
 
     // SAVED EVENT INFO HELPER METHODS
-  Future<int> insertSavedEventInfo(SavedEventInfo event) async {
+  Future<int> insertSavedEventInfo(EventInfo event) async {
     Database db = await database;
     int id = await db.insert(savedEventsIdsTable, event.toMap());
     return id;
@@ -191,7 +227,7 @@ class DatabaseHelper {
     return null;
   }
 
-  Future<List<SavedEventInfo>> listSavedEventsInfo() async {
+  Future<List<EventInfo>> listSavedEventsInfo() async {
     Database db = await database;
     List<Map> maps = await db.query(
       savedEventsIdsTable,
@@ -202,10 +238,10 @@ class DatabaseHelper {
     }
     return [];
   }
-  List<SavedEventInfo> _infoMapToList(List<Map> maps) {
-    List<SavedEventInfo> newList = new List<SavedEventInfo>();
+  List<EventInfo> _infoMapToList(List<Map> maps) {
+    List<EventInfo> newList = new List<EventInfo>();
 
-    maps.forEach((map) => newList.add(SavedEventInfo.fromMap(map)));
+    maps.forEach((map) => newList.add(EventInfo.fromMap(map)));
 
     return newList;
   }
