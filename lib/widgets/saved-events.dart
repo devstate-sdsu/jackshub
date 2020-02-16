@@ -24,7 +24,7 @@ class SavedEvents extends StatelessWidget {
         builder: (context, state) {
           if (state is SavedEventsInfoLoadedFromLocal) {
             return ListView.builder(
-              key: PageStorageKey('SavedEvents!'),
+              key: PageStorageKey('SavedEvents!Initial'),
               padding: EdgeInsets.only(
                 bottom: screenHeight * (AppTheme.filterTabsBottomPaddingPercent + AppTheme.filterTabsHeightPercent),
               ),
@@ -36,7 +36,7 @@ class SavedEvents extends StatelessWidget {
             );
           } else if (state is InSavedEventsScreen) {
             return ListView.builder(
-              key: PageStorageKey('SavedEvents!'),
+              key: PageStorageKey('SavedEvents!AddingOrDeleting'),
               padding: EdgeInsets.only(
                 bottom: screenHeight * (AppTheme.filterTabsBottomPaddingPercent + AppTheme.filterTabsHeightPercent),
               ),

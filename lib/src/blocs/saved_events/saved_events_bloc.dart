@@ -18,8 +18,6 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
   Stream<SavedEventsState> mapEventToState(
     SavedEventsEvent event,
   ) async* {
-    print("EVENT: ");
-    print(event);
     if (event is GetSavedEventsInfo) {
       try {
         final savedEventsInfo = await savedEventsRepo.fetchSavedEventsInfoFromLocal();
