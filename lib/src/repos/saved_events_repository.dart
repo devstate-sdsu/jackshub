@@ -7,8 +7,8 @@ abstract class SavedEventsRepository {
   Future addSavedEventToLocal(EventInfo event);
   Future deleteSavedEventFromLocal(String documentId);
   Future<List<String>> fetchSavedEventsIds();
-  Future<List<DocumentSnapshot>> fetchSavedEventsInfoFromLocal(List<String> savedEventsIds);
-  Future<List<EventInfo>> fetchSavedEventsFromLocal();
+  Future<List<EventInfo>> fetchSavedEventsInfoFromLocal();
+  Future batchDeleteSavedEventFromLocal(List<String> documentIds);
 }
 
 // Old function that retrieved saved events from firebase one call by one call
@@ -31,13 +31,28 @@ class SavedEventsRepo implements SavedEventsRepository {
   static final DatabaseHelper db = DatabaseHelper.instance;
   @override
   Future addSavedEventToLocal(EventInfo event) async {
-    int success = await db.insertSavedEventInfo(event);
+    bool success = await db.insertSavedEventInfo(event);
+    if (!success) {
+      throw 'Failed database insert';
+    }
     return success;
   }
 
   @override
   Future deleteSavedEventFromLocal(String documentId) async {
-    int success = await db.deleteSavedEventInfo(documentId);
+    bool success = await db.deleteSavedEventInfo(documentId);
+    if (!success) {
+      throw 'Failed database delete';
+    }
+    return success;
+  }
+
+    @override
+  Future batchDeleteSavedEventFromLocal(List<String> documentIds) async {
+    bool success = await db.batchDeleteSavedEventInfo(documentIds);
+    if (!success) {
+      throw 'Failed database delete';
+    }
     return success;
   }
 
@@ -50,21 +65,7 @@ class SavedEventsRepo implements SavedEventsRepository {
   }
 
   @override
-  Future<List<DocumentSnapshot>> fetchSavedEventsInfoFromLocal(List<String> savedEventsIds) async {
-    List<DocumentSnapshot> snapshotList = new List<DocumentSnapshot>();
-    await Firestore.instance
-      .collection('eventsCol')
-      .where('__name__', whereIn: savedEventsIds)
-      .getDocuments()
-      .then((ds) {
-      // use ds as a snapshot
-      snapshotList = ds.documents;
-    });
-    return snapshotList;
-  }
-
-  @override
-  Future<List<EventInfo>> fetchSavedEventsFromLocal() async {
+  Future<List<EventInfo>> fetchSavedEventsInfoFromLocal() async {
     return await db.listSavedEventsInfo();
   }
 

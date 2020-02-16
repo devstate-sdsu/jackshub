@@ -213,26 +213,39 @@ class DatabaseHelper {
   }
 
     // SAVED EVENT INFO HELPER METHODS
-  Future<int> insertSavedEventInfo(EventInfo event) async {
+  Future<bool> insertSavedEventInfo(EventInfo event) async {
     Database db = await database;
-    int id = await db.insert(savedEventsInfoTable, event.toMap());
-    return id;
+    int result = await db.insert(savedEventsInfoTable, event.toMap());
+    return result > 0 ? true : false;
   }
 
-  Future<Null> deleteSavedEventInfo(String documentId) async {
+  Future<bool> deleteSavedEventInfo(String documentId) async {
     Database db = await database;
-    await db.delete(
+    int result = await db.delete(
       savedEventsInfoTable,
       where: '$_document_id = ?',
       whereArgs: [documentId]
     );
-    return null;
+    return result > 0 ? true : false;
+  }
+
+
+  Future<bool> batchDeleteSavedEventInfo(List<String> documentIds) async {
+    Database db = await database;
+    Batch batch = db.batch();
+    for (var i = 0; i < documentIds.length; i++) {
+      batch.delete(
+        savedEventsInfoTable,
+        where: '$_document_id = ?',
+        whereArgs: [documentIds[i]]
+      );
+    }
+    List result = await batch.commit();
+    return result.contains(0) ? false : true;
   }
 
   Future<List<EventInfo>> listSavedEventsInfo() async {
-    print("ARE WE LISTING? ");
     Database db = await database;
-    print("GOT OUR DB? ");
     List<Map> maps = await db.query(
       savedEventsInfoTable,
       columns: [  
@@ -254,12 +267,8 @@ class DatabaseHelper {
       ]
     );
     if (maps.length > 0) {
-      print("MAPS HAS LENGHT: ");
-      print(maps);
       return _infoMapToList(maps);
     }
-    print("MAP NO LENGTH");
-    print(maps);
     return [];
   }
   List<EventInfo> _infoMapToList(List<Map> maps) {

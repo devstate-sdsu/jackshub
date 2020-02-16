@@ -18,7 +18,7 @@ class EventsCard extends StatefulWidget {
   const EventsCard({
     Key key,
     this.event,
-    this.favorite,
+    this.favorite
   });
 
   @override
@@ -79,8 +79,8 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
               context,
               '/detailedEvents',
               arguments: EventsRoutingParameters(
-                widget.event,
-                context,
+                event: widget.event,
+                blocContext: context
               )
             );
           },

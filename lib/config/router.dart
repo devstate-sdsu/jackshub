@@ -36,7 +36,7 @@ class RouteToDetailedServices extends StatelessWidget {
 class EventsRoutingParameters {
   final EventInfo event;
   final BuildContext blocContext;
-  EventsRoutingParameters(this.event, this.blocContext);
+  EventsRoutingParameters({this.event, this.blocContext});
 }
 
 class RouteToDetailedEvents extends StatelessWidget {

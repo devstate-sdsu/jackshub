@@ -63,6 +63,7 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
   @override
   Widget build(BuildContext eventsToggleContext) {
     List<Widget> stackOfEventsLists = buildStackOfEventsLists(eventsToggleContext);
+    SavedEventsBloc savedEventsBloc = BlocProvider.of<SavedEventsBloc>(eventsToggleContext);
     return Stack(
       children: <Widget>[
         MultiBlocListener(
@@ -82,6 +83,17 @@ class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMix
                 }
               }
             ),
+            BlocListener<FilterTabsBloc, FilterTabsState>(
+              listener: (context, state) {
+                if (state is FilterTabSelected) {
+                  if (state.selectedTabIndex == filterDisplayNames.indexOf('Favorites')) {
+                    savedEventsBloc.add(SwitchToSavedEventsScreen());
+                  } else {
+                    savedEventsBloc.add(SwitchFromSavedEventsScreen());
+                  }
+                }
+              }
+            )
           ],
           child: BlocBuilder<FilterTabsBloc, FilterTabsState>(
             builder: (context, state) {

@@ -254,6 +254,8 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                                   if (state is SavedEventsInfoLoadedFromLocal) {
                                     var ultimateDocIds = state.savedEventsIdsMap;
                                     return FavoriteWidget(event: widget.event, isFav: ultimateDocIds.containsKey(widget.event.documentId));
+                                  } else if (state is InSavedEventsScreen) {
+                                    return FavoriteWidget(event: widget.event, isFav: !state.toDeleteMap.containsKey(widget.event.documentId));
                                   } else {
                                     return FavoriteWidget(event: widget.event, isFav: false);
                                   }

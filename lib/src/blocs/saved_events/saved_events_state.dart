@@ -1,44 +1,18 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:jackshub/util/database_helpers.dart';
 
-
-
 abstract class SavedEventsState extends Equatable {
   final Map savedEventsIdsMap;
-  SavedEventsState() : savedEventsIdsMap = Map();
+  final Map toDeleteMap;
+  final List<EventInfo> savedEventsInfo;
+  SavedEventsState() : savedEventsIdsMap = Map(), toDeleteMap = Map(), savedEventsInfo = List<EventInfo>();
 }
-
-
 
 class SavedEventsInitial extends SavedEventsState {
   SavedEventsInitial();
   @override
   List<Object> get props => [];
 }
-
-
-
-class SavedEventsLoading extends SavedEventsState {
-  SavedEventsLoading();
-  @override
-  List<Object> get props => [];
-}
-
-
-class SavedEventsLoaded extends SavedEventsState {
-  final List<DocumentSnapshot> savedEvents;
-  final Map savedEventsMap;
-  SavedEventsLoaded(this.savedEvents)
-    : savedEventsMap = Map.fromIterable(
-      savedEvents, 
-      key: (savedEvent) => savedEvent.documentID, value: (savedEvent) => true
-    );
-
-  @override
-  List<Object> get props => [savedEvents];
-}
-
 
 class SavedEventsError extends SavedEventsState {
   final String message;
@@ -59,4 +33,14 @@ class SavedEventsInfoLoadedFromLocal extends SavedEventsState {
   @override
   List<Object> get props => [savedEventsInfo];
 }
+
+class InSavedEventsScreen extends SavedEventsState {
+    final Map toDeleteMap;
+    final List<EventInfo> savedEventsInfo;
+    InSavedEventsScreen({this.savedEventsInfo, this.toDeleteMap});
+    @override
+    List<Object> get props => [toDeleteMap];
+}
+
+
 
