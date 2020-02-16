@@ -141,8 +141,8 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                               ),
                             )
                           ),
-                          placeholder: (context, url) => Image(
-                            image: AssetImage('assets/images/loadingPlaceHolder.png')
+                          placeholder: (context, url) => Container(
+                            color: Colors.grey
                           ),
                           errorWidget: (context, url, error) => Icon(
                             Icons.error,

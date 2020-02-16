@@ -1,24 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jackshub/config/router.dart';
 import 'package:jackshub/config/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:jackshub/util/date-time-helper.dart';
 
 
 class ServicesCard extends StatefulWidget {
+  final DocumentSnapshot doc;
   final String name;
-  final String summary;
   final String image;
-  //final String status;
-  final String docId;
+  final String summary;
+  final String mainInfo;
+  final String bigLocation;
+  final String littleLocation;
+  final String email;
+  final String phoneNumber;
+  final ServiceHours serviceHours;
 
   const ServicesCard({
     Key key,
+    this.doc,
     this.name,
-    this.summary,
     this.image,
-    //this.status,
-    this.docId
+    this.summary,
+    this.mainInfo,
+    this.bigLocation,
+    this.littleLocation,
+    this.email,
+    this.phoneNumber,
+    this.serviceHours
   }): super(key: key);
 
   @override
@@ -28,18 +40,9 @@ class ServicesCard extends StatefulWidget {
 
 
 class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
-
   AnimationController _controller;
   Animation _animation;
-
-  int transitionDuration = 1000;  // in milliseconds
-
-  double cardTouchedScale = 0.94;
-  double cardRegularScale = 1.0;
-  int cardAnimateDuration = 250;  // in milliseconds
   var cardScale = 1.0;
-
-  double cardVerticalSize = 135.0;
 
   @override
   void initState() {
@@ -47,17 +50,17 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
     _controller = AnimationController(
       vsync: this,
       duration: Duration(
-        milliseconds: cardAnimateDuration,
+        milliseconds: AppTheme.cardAnimateDuration
       )
     );
     _animation = Tween(
-      begin: cardRegularScale,
-      end: cardTouchedScale
+      begin: 1.0,
+      end: AppTheme.cardTouchedScale
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: Curves.fastOutSlowIn,
-        reverseCurve: Curves.easeInQuad
+        curve: AppTheme.cardForwardCurve,
+        reverseCurve: AppTheme.cardReverseCurve
       )
     );
   }
@@ -74,32 +77,34 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
       animation: _controller,
       builder: (BuildContext context, Widget child) {
         return GestureDetector(
-
           onTapDown: (TapDownDetails details) {
             _controller.forward();
           },
-
           onTapUp: (TapUpDetails details) {
             _controller.reverse();
             Navigator.pushNamed(
               context,
               '/detailedServices',
               arguments: ServicesRoutingParameters(
+                widget.doc,
                 widget.name,
                 widget.image,
-                widget.docId,
+                widget.mainInfo,
+                widget.bigLocation,
+                widget.littleLocation,
+                widget.email,
+                widget.phoneNumber,
+                widget.serviceHours
               ),
             );
           },
-
           onTapCancel: () {
             _controller.reverse();
           },
-
           child: Transform.scale(
             scale: _animation.value,
             child: Container(
-              height: cardVerticalSize,
+              height: AppTheme.cardServicesHeight,
               alignment: Alignment.center,
               margin: EdgeInsets.symmetric(
                 horizontal: AppTheme.cardSideMargin,
@@ -122,7 +127,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                   Expanded(
                     flex: 350,
                     child: Hero(
-                      tag: 'servicesCardImg'+widget.docId,
+                      tag: 'servicesCardImg'+widget.doc.documentID,
                       child: ClipRRect(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(AppTheme.cardRadius),
@@ -138,8 +143,8 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                               )
                             )
                           ),
-                          placeholder: (context, url) => Image(
-                            image: AssetImage('assets/images/loadingPlaceHolder.png')
+                          placeholder: (context, url) => Container(
+                            color: Colors.grey
                           ),
                           errorWidget: (context, url, error) => Icon(
                             Icons.error,
@@ -165,16 +170,13 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                         ),
                         Flexible(
                           flex: 20,
-                          child: Hero(
-                            tag: 'servicesCardTitle'+widget.docId,
-                            child: AutoSizeText(
-                              widget.name,
-                              maxLines: 2,
-                              textAlign: TextAlign.left,
-                              maxFontSize: AppTheme.cardSmallEventsTitleTextSize.max,
-                              minFontSize: AppTheme.cardSmallEventsTitleTextSize.min,
-                              style: Theme.of(context).textTheme.title
-                            )
+                          child: AutoSizeText(
+                            widget.name,
+                            maxLines: 2,
+                            textAlign: TextAlign.left,
+                            maxFontSize: AppTheme.cardSmallEventsTitleTextSize.max,
+                            minFontSize: AppTheme.cardSmallEventsTitleTextSize.min,
+                            style: Theme.of(context).textTheme.title
                           )
                         ),
                         Spacer(
@@ -195,6 +197,8 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                         SizedBox(
                           height: 10
                         ),
+                        currentServiceStatus(context, widget.serviceHours),
+                        /*
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
@@ -210,21 +214,23 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                             ),
                             Expanded(
                               flex: 1,
-                              child: AutoSizeText(
-                                "Currently open until 4:00pm",
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                maxFontSize: AppTheme.cardDescriptionTextSize.max,
-                                minFontSize: AppTheme.cardDescriptionTextSize.min,
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: 'Roboto'
-                                )
-                              )
+                              child: currentServiceStatus(context, widget.serviceHours)
+                              // child: AutoSizeText(
+                              //   "Currently open until 4:00pm",
+                              //   maxLines: 1,
+                              //   textAlign: TextAlign.left,
+                              //   maxFontSize: AppTheme.cardDescriptionTextSize.max,
+                              //   minFontSize: AppTheme.cardDescriptionTextSize.min,
+                              //   style: TextStyle(
+                              //     color: Colors.green,
+                              //     fontWeight: FontWeight.w700,
+                              //     fontFamily: 'Roboto'
+                              //   )
+                              // )
                             ),
                           ],
                         ),
+                        */
                         /*Text(
                           widget.status,
                           textAlign: TextAlign.left,
