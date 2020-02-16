@@ -202,7 +202,7 @@ class EventsScreen extends StatelessWidget {
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
       key: PageStorageKey(this.filter),
       builder: (context, state) {
-        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoadedFromLocal) {
           Map ultimateDocIds = state.savedEventsIdsMap;
           return StreamBuilder<QuerySnapshot>(
             stream: this.filter == 'all' ? 

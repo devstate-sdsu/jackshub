@@ -60,11 +60,11 @@ class SavedEventsIdsLoaded extends SavedEventsState {
   List<Object> get props => [savedEventsIds];
 }
 
-class SavedEventsInfoLoaded extends SavedEventsState {
+class SavedEventsInfoLoadedFromLocal extends SavedEventsState {
   final List<String> savedEventsIds;
   final Map savedEventsIdsMap;
   final List<DocumentSnapshot> savedEventsInfo;
-  SavedEventsInfoLoaded(this.savedEventsIds, this.savedEventsInfo)
+  SavedEventsInfoLoadedFromLocal(this.savedEventsIds, this.savedEventsInfo)
       : savedEventsIdsMap = Map.fromIterable(
       savedEventsIds,
       key: (id) => id,

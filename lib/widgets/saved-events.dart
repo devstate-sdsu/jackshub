@@ -22,7 +22,7 @@ class SavedEvents extends StatelessWidget {
     return NotificationListener(
       child: BlocBuilder<SavedEventsBloc, SavedEventsState>(
         builder: (context, state) {
-          if(state is SavedEventsInfoLoaded) {
+          if(state is SavedEventsInfoLoadedFromLocal) {
             return ListView.builder(
               key: PageStorageKey('SavedEvents!'),
               padding: EdgeInsets.only(

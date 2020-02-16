@@ -265,7 +265,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                             child: BlocBuilder(
                               bloc: savedEventsBloc,
                                 builder: (context, state) {
-                                  if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+                                  if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoadedFromLocal) {
                                     var ultimateDocIds = state.savedEventsIdsMap;
                                     return FavoriteWidget(docId: widget.docId, isFav: ultimateDocIds.containsKey(widget.docId));
                                   } else {

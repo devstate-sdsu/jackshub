@@ -6,23 +6,6 @@ abstract class SavedEventsEvent extends Equatable {
   const SavedEventsEvent();
 }
 
-
-
-class GetSavedEvents extends SavedEventsEvent {
-  const GetSavedEvents();
-  @override
-  List<Object> get props => [];
-}
-
-
-
-class LoadEvents extends SavedEventsEvent {
-  const LoadEvents();
-  @override
-  List<Object> get props => [];
-}
-
-
 class GetSavedEventsIds extends SavedEventsEvent {
   const GetSavedEventsIds();
   @override
@@ -35,8 +18,9 @@ class GetSavedEventsInfo extends SavedEventsEvent {
   List<Object> get props => [];
 }
 
-class LoadSavedEventsInfo extends SavedEventsEvent {
-  const LoadSavedEventsInfo();
+class AddSavedEvent extends SavedEventsEvent {
+  final Map event;
+  AddSavedEvent({this.event});
   @override
-  List<Object> get props => [];
+  List<Object> get props => [this.event['docId']];
 }

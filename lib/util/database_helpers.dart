@@ -173,4 +173,40 @@ class DatabaseHelper {
 
     return newList;
   }
+
+    // SAVED EVENT INFO HELPER METHODS
+  Future<int> insertSavedEventInfo(SavedEventInfo event) async {
+    Database db = await database;
+    int id = await db.insert(savedEventsIdsTable, event.toMap());
+    return id;
+  }
+
+  Future<Null> deleteSavedEventInfo(String documentId) async {
+    Database db = await database;
+    await db.delete(
+      savedEventsIdsTable,
+      where: '$_document_id = ?',
+      whereArgs: [documentId]
+    );
+    return null;
+  }
+
+  Future<List<SavedEventInfo>> listSavedEventsInfo() async {
+    Database db = await database;
+    List<Map> maps = await db.query(
+      savedEventsIdsTable,
+      columns: [docId]
+    );
+    if (maps.length > 0) {
+      return _infoMapToList(maps);
+    }
+    return [];
+  }
+  List<SavedEventInfo> _infoMapToList(List<Map> maps) {
+    List<SavedEventInfo> newList = new List<SavedEventInfo>();
+
+    maps.forEach((map) => newList.add(SavedEventInfo.fromMap(map)));
+
+    return newList;
+  }
 }

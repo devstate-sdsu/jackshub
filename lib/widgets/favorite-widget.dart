@@ -48,7 +48,7 @@ class FavoriteWidget extends StatelessWidget {
     }
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
       builder: (context, state) {
-        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
+        if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoadedFromLocal) {
             return IconButton(
               splashColor: Colors.transparent,
               highlightColor: Colors.transparent,
