@@ -9,10 +9,10 @@ import 'package:jackshub/util/database_helpers.dart';
 
 
 Future<void> _save(String documentId) async {
-  SavedEvent newSavedEvent = SavedEvent();
+  SavedEventId newSavedEvent = SavedEventId();
   newSavedEvent.documentId = documentId;
   DatabaseHelper helper = DatabaseHelper.instance;
-  int id = await helper.insert(newSavedEvent);
+  int id = await helper.insertSavedEventId(newSavedEvent);
   print('inserted row: $id');
 }
 
@@ -20,7 +20,7 @@ Future<void> _save(String documentId) async {
 
 Future<void> _delete(String documentId) async {
   DatabaseHelper helper = DatabaseHelper.instance;
-  await helper.delete(documentId);
+  await helper.deleteSavedEventId(documentId);
 }
 
 

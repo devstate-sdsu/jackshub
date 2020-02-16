@@ -11,7 +11,7 @@ abstract class SavedEventsRepository {
 
 Future<List<DocumentSnapshot>> _list() async {
   DatabaseHelper helper = DatabaseHelper.instance;
-  List<SavedEvent> savedEvents = await helper.listSavedEvents();
+  List<SavedEventId> savedEvents = await helper.listSavedEventsIds();
   List<DocumentSnapshot> snapshotList = new List<DocumentSnapshot>();
   List<String> docIdList = new List<String>();
   savedEvents.forEach((event) => docIdList.add(event.documentId));
@@ -46,7 +46,7 @@ class SavedEventsRepo implements SavedEventsRepository {
   Future<List<String>> fetchSavedEventsIds() async {
     List<String> docIdList = new List<String>();
     DatabaseHelper helper = DatabaseHelper.instance;
-    List<SavedEvent> savedEvents = await helper.listSavedEvents();
+    List<SavedEventId> savedEvents = await helper.listSavedEventsIds();
     savedEvents.forEach((event) => docIdList.add(event.documentId));
     return docIdList;
   }

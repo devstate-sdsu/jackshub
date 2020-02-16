@@ -18,6 +18,7 @@ class SavedEventsBloc extends Bloc<SavedEventsEvent, SavedEventsState> {
   Stream<SavedEventsState> mapEventToState(
     SavedEventsEvent event,
   ) async* {
+    print(event);
     if (event is GetSavedEvents) {
       yield* _mapSavedEventsToState();
     } else if (event is LoadEvents) {
