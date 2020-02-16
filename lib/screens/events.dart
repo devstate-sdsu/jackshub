@@ -4,7 +4,9 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jackshub/config/theme.dart';
-import 'package:jackshub/src/bloc/index.dart';
+import 'package:jackshub/src/blocs/events_scroll/events_scroll_bloc.dart';
+import 'package:jackshub/src/blocs/filter_tabs/filter_tabs_bloc.dart';
+import 'package:jackshub/src/blocs/saved_events/index.dart';
 import 'package:jackshub/widgets/ColorLoader.dart';
 import 'package:jackshub/widgets/index.dart';
 import 'package:jackshub/widgets/saved-events.dart';
@@ -16,236 +18,189 @@ class EventsToggle extends StatefulWidget {
 }
 
 class _EventsToggleState extends State<EventsToggle> with TickerProviderStateMixin {
-  TabController _controller;
-  AnimationController _animationControllerOn;
-  AnimationController _animationControllerOff;
-  Animation _colorTweenBackgroundOn;
-  Animation _colorTweenBackgroundOff;
-  Animation _colorTweenForegroundOn;
-  Animation _colorTweenForegroundOff;
-  int _currentIndex = 0;
-  int _prevControllerIndex = 0;
-  double _aniValue = 0.0;
-  double _prevAniValue = 0.0;
-  List _icons = [
+  AnimationController _filterTabsAppearController;
+  Animation _filterTabsAppearAnimation;
+  double filterTabsOpacity = 1;
+  List filterIcons = [
     Icons.zoom_out_map,
     Icons.group,
     Icons.directions_run,
     Icons.favorite,
   ];
-  List<Widget> _screens = 
-  [
-    EventsScreen(filter: 'all'),
-    EventsScreen(filter: 'clubs'),
-    EventsScreen(filter: 'sporting'),
-    SavedEvents(),
+  List filterDisplayNames = [
+    'All',
+    'Clubs',
+    'Sporting',
+    'Favorites'
   ];
-  Color _foregroundOn = Colors.white;
-  Color _foregroundOff = Colors.black;
-  Color _backgroundOn = Colors.black;
-  Color _backgroundOff = Colors.grey[300];
-  ScrollController _scrollController = new ScrollController();
-  ScrollController _verticalScrollController = new ScrollController();
-  bool upDirection = true, flag = true;
-  double fabOpacity = 1.0;
+  List<String> filterTagNames = [
+    'all',
+    'clubs',
+    'sporting'
+  ];
 
-  List _keys = [];
-  bool _buttonTap = false;
-  int selectedScreenIdx = 0;
-  final Map<int, Widget> selectionTexts = const<int, Widget> {
-    0: Padding(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: Text("All"),
-        ), 
-    1: Padding(
-        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
-          child: Text("Saved"),
-        ), 
-  };
-
-  @override
-  void initState() {
+  initState() {
     super.initState();
-
-    for (int index = 0; index < _icons.length; index++) {
-      _keys.add(new GlobalKey());
-    }
-
-    _controller = TabController(vsync: this, length: _icons.length);
-    _controller.animation.addListener(_handleTabAnimation);
-    _controller.addListener(_handleTabChange);
-
-    _animationControllerOff =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 75));
-    _animationControllerOff.value = 1.0;
-    _colorTweenBackgroundOff =
-        ColorTween(begin: _backgroundOn, end: _backgroundOff)
-            .animate(_animationControllerOff);
-    _colorTweenForegroundOff =
-        ColorTween(begin: _foregroundOn, end: _foregroundOff)
-            .animate(_animationControllerOff);
-
-    _animationControllerOn =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 150));
-    _animationControllerOn.value = 1.0;
-    _colorTweenBackgroundOn =
-        ColorTween(begin: _backgroundOff, end: _backgroundOn)
-            .animate(_animationControllerOn);
-    _colorTweenForegroundOn =
-        ColorTween(begin: _foregroundOff, end: _foregroundOn)
-            .animate(_animationControllerOn);
-
-    _verticalScrollController..addListener(() {
-      upDirection = _verticalScrollController.position.userScrollDirection == ScrollDirection.forward;
-      if (upDirection != flag) {
-        setState(() {});
-      }
-      flag = upDirection;
-    });
+    _filterTabsAppearController = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: AppTheme.filterTabsAppearAnimateDuration
+      )
+    );
+    _filterTabsAppearAnimation = Tween(
+      begin: -AppTheme.filterTabsAppearAnimateOffset,
+      end: 0.0
+    ).animate(
+      CurvedAnimation(
+        parent: _filterTabsAppearController,
+        curve: AppTheme.filterTabsAppearCurve
+      )
+    );
+    _filterTabsAppearController.forward();
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext eventsToggleContext) {
+    List<Widget> stackOfEventsLists = buildStackOfEventsLists(eventsToggleContext);
     return Stack(
-        children: <Widget>[          
-          TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            controller: _controller,
-            children: _screens,
+      children: <Widget>[
+        MultiBlocListener(
+          listeners: [
+            BlocListener<EventsScrollBloc, EventsScrollState>(
+              listener: (context, state) {
+                if (state is EventsScrollingDown) {
+                  if (state.opacity == 0) {
+                    _filterTabsAppearController.reset();
+                  }
+                  filterTabsOpacity = state.opacity;
+                } else if (state is EventsScrollingUp) {
+                  _filterTabsAppearController.forward();
+                  filterTabsOpacity = state.opacity;
+                } else {
+                  filterTabsOpacity = state.opacity;
+                }
+              }
+            ),
+          ],
+          child: BlocBuilder<FilterTabsBloc, FilterTabsState>(
+            builder: (context, state) {
+              if (state is FilterTabSelected) {
+                return stackOfEventsLists[state.selectedTabIndex];
+              }
+              return stackOfEventsLists[0];
+            } 
+          )
+        ),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          child: AnimatedBuilder(
+            animation: _filterTabsAppearController,
+            builder: (_, __) => BlocBuilder<EventsScrollBloc, EventsScrollState>(
+              builder: (context, state) {
+                return filterTabsOpacity > 0 ? Opacity(
+                  opacity: filterTabsOpacity,
+                  child: Transform.translate(
+                    offset: Offset(0.0, -_filterTabsAppearAnimation.value),
+                    child: buildFilterTabs(eventsToggleContext)
+                  )
+                ) : Container();
+              },
+            ),
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            child: Container(
-                color: Colors.transparent.withOpacity(0),
-                height: 70.0,
+        )
+      ],
+    );
+  }
+
+  Widget buildFilterTabs(blocContext) {
+    double screenWidth = MediaQuery.of(blocContext).size.width;
+    double screenHeight = MediaQuery.of(blocContext).size.width;
+    double filterTabsSpacerWidth = screenWidth * AppTheme.filterTabsSpacerPercent;
+    double filterTabsBorderRadius = screenWidth * AppTheme.filterTabsBorderRadiusPercent;
+    FilterTabsBloc filterTabsBloc = BlocProvider.of<FilterTabsBloc>(blocContext);
+    EventsScrollBloc eventsScrollBloc = BlocProvider.of<EventsScrollBloc>(blocContext);
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, screenHeight * AppTheme.filterTabsBottomPaddingPercent),
+      child: Container(
+        height: screenHeight * AppTheme.filterTabsHeightPercent,
+        width: screenWidth,
+        child: ListView.builder(
+          key: PageStorageKey('FilterTabs!'),
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          itemCount: filterIcons.length,
+          itemBuilder: (context, index) {
+            return FlatButton(
+              padding: EdgeInsets.fromLTRB(filterTabsSpacerWidth, 0.0, filterTabsSpacerWidth, 0.0),
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
+              onPressed: () {
+                filterTabsBloc.add(SelectFilterTab(tabIndex: index));
+                eventsScrollBloc.add(TabSelected());
+              },
+              child: Container(
+                height: screenHeight * AppTheme.filterTabsHeightPercent,
+                width: screenWidth * AppTheme.filterTabsWidthPercent,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(filterTabsBorderRadius)
+                  ),
+                  color: Theme.of(context).indicatorColor,
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 25.0),
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      physics: BouncingScrollPhysics(),
-                      controller: _scrollController,
-                      scrollDirection: Axis.horizontal,
-                      itemCount: _icons.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                            key: _keys[index],
-                            padding: EdgeInsets.all(6.0),
-                            child: ButtonTheme(
-                                child: AnimatedBuilder(
-                              animation: _colorTweenBackgroundOn,
-                              builder: (context, child) => FlatButton(
-                                  color: _getBackgroundColor(index),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: new BorderRadius.circular(7.0)),
-                                  onPressed: () {
-                                    setState(() {
-                                      _buttonTap = true;
-                                      _controller.animateTo(index);
-                                      _setCurrentIndex(index);
-                                      _scrollTo(index);
-                                    });
-                                  },
-                                  child: Icon(
-                                    _icons[index],
-                                    color: _getForegroundColor(index),
-                                  ),
-                                ),
-                            )));
-                      }),
-                )),
-          ),
-        ]);
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: Icon(
+                          filterIcons[index],
+                          color: Theme.of(context).backgroundColor,
+                          size: screenWidth * AppTheme.filterTabsIconSizePercent
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          filterDisplayNames[index],
+                          style: TextStyle(
+                            color: Theme.of(context).backgroundColor,
+                            fontSize: screenWidth * AppTheme.filterTabsTextSizePercent,
+                          )
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ),
+            );
+          }
+        ),
+      ),
+    );
   }
 
-  _handleTabAnimation() {
-    _aniValue = _controller.animation.value;
-    if (!_buttonTap && ((_aniValue - _prevAniValue).abs() < 1)) {
-      _setCurrentIndex(_aniValue.round());
-    }
-    _prevAniValue = _aniValue;
-  }
-  _handleTabChange() {
-    if (_buttonTap) _setCurrentIndex(_controller.index);
-    if ((_controller.index == _prevControllerIndex) ||
-        (_controller.index == _aniValue.round())) _buttonTap = false;
-    _prevControllerIndex = _controller.index;
-  }
-
-  _setCurrentIndex(int index) {
-    if (index != _currentIndex) {
-      setState(() {
-        _currentIndex = index;
-      });
-      _triggerAnimation();
-      _scrollTo(index);
-    }
-  }
-
-  _triggerAnimation() {
-    _animationControllerOn.reset();
-    _animationControllerOff.reset();
-    _animationControllerOn.forward();
-    _animationControllerOff.forward();
-  }
-
-  _scrollTo(int index) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    RenderBox renderBox = _keys[index].currentContext.findRenderObject();
-    double size = renderBox.size.width;
-    double position = renderBox.localToGlobal(Offset.zero).dx;
-    double offset = (position + size / 2) - screenWidth / 2;
-    if (offset < 0) {
-      renderBox = _keys[0].currentContext.findRenderObject();
-      position = renderBox.localToGlobal(Offset.zero).dx;
-      if (position > offset) offset = position;
-    } else {
-      renderBox = _keys[_icons.length - 1].currentContext.findRenderObject();
-      position = renderBox.localToGlobal(Offset.zero).dx;
-      size = renderBox.size.width;
-      if (position + size < screenWidth) screenWidth = position + size;
-      if (position + size - offset < screenWidth) {
-        offset = position + size - screenWidth;
-      }
-    }
-    _scrollController.animateTo(offset + _scrollController.offset,
-        duration: new Duration(milliseconds: 150), curve: Curves.easeInOut);
-  }
-
-  _getBackgroundColor(int index) {
-    if (index == _currentIndex) {
-      return _colorTweenBackgroundOn.value;
-    } else if (index == _prevControllerIndex) {
-      return _colorTweenBackgroundOff.value;
-    } else {
-      return _backgroundOff;
-    }
-  }
-
-  _getForegroundColor(int index) {
-    if (index == _currentIndex) {
-      return _colorTweenForegroundOn.value;
-    } else if (index == _prevControllerIndex) {
-      return _colorTweenForegroundOff.value;
-    } else {
-      return _foregroundOff;
-    }
+  List<Widget> buildStackOfEventsLists(blocContext) {
+    List<Widget> masterList = <Widget>[];
+    filterTagNames.forEach((filterName) {
+      masterList.add(EventsScreen(filter: filterName));
+    });
+    masterList.add(SavedEvents());
+    return masterList;
   }
 }
 
 class EventsScreen extends StatelessWidget {
   final String filter;
   EventsScreen({this.filter});
+
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.width;
+    EventsScrollBloc eventsScrollBloc = BlocProvider.of<EventsScrollBloc>(context);
     return BlocBuilder<SavedEventsBloc, SavedEventsState>(
+      key: PageStorageKey(this.filter),
       builder: (context, state) {
         if (state is SavedEventsIdsLoaded || state is SavedEventsInfoLoaded) {
           Map ultimateDocIds = state.savedEventsIdsMap;
@@ -261,23 +216,22 @@ class EventsScreen extends StatelessWidget {
               }
               return Container(
                 color: Theme.of(context).backgroundColor,
-                child: ListView.builder(
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, index) {
-                    bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
-                    return buildEventsListItem(snapshot.data.documents[index], favorite);
-                  }
+                child: NotificationListener(
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(
+                      bottom: screenHeight * (AppTheme.filterTabsBottomPaddingPercent + AppTheme.filterTabsHeightPercent),
+                    ),
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
+                      return buildEventsListItem(snapshot.data.documents[index], favorite);
+                    }
+                  ),
+                  onNotification: (scrollNotification) {
+                    eventsScrollBloc.add(ScrollPositionChanged(scrollNotification.metrics.pixels));
+                  },
                 )
               );
-              /*
-              ListView.builder(
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  bool favorite = ultimateDocIds.containsKey(snapshot.data.documents[index].documentID);
-                  return buildEventsListItem(snapshot.data.documents[index], favorite);
-                }
-              );
-              */
             }
           ); 
         }
@@ -286,12 +240,9 @@ class EventsScreen extends StatelessWidget {
         );
       },
     );
-    
-   
   }
 
   static Widget buildEventsListItem(DocumentSnapshot doc, bool favorite) {
-    //String imageurl = doc['image'];   DEPRECATED
     final tags = doc['tags'];
     if (
       tags.contains('sporting')
@@ -311,7 +262,6 @@ class EventsScreen extends StatelessWidget {
         name: doc['name'],
         image: doc['image'],
         description: doc['description'],
-        //summary: doc['summary'],   DEPRECATED
         bigLocation: doc['big_location'],
         littleLocation: doc['tiny_location'],
         startTime: doc['start_time'],

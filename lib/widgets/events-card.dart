@@ -146,6 +146,7 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
                           imageBuilder: (context, imageProvider) => Container(
                             decoration: BoxDecoration(
                               image: DecorationImage(
+                                alignment: Alignment.topCenter,
                                 image: imageProvider, 
                                 fit: BoxFit.cover
                               ),

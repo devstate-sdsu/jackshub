@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:jackshub/src/bloc/index.dart';
+import 'package:jackshub/src/blocs/saved_events/index.dart';
 
 import 'package:jackshub/widgets/index.dart';
 import 'package:jackshub/config/theme.dart';

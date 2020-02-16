@@ -112,6 +112,18 @@ class AppTheme {
   //static double detailedScreenAnimateStartOffset = 1.1;
   //static double detailedScreenAnimateEndOffset = 0.7;
 
+  static int filterTabsAppearAnimateDuration = 600;
+  static double filterTabsAppearAnimateOffset = 300;
+  static Curve filterTabsAppearCurve = Curves.easeIn;
+  static double filterTabsBottomPaddingPercent = 0.07;
+  static double filterTabsHeightPercent = 0.15;
+  static double filterTabsWidthPercent = filterTabsHeightPercent * 1.7;
+  static double filterTabsIconSizePercent = 0.06;
+  static double filterTabsTextSizePercent = 0.035;
+  static double filterTabsBorderRadiusPercent = 0.03;
+  static double filterTabsSpacerPercent = 0.015;
+
+
   // Global theming of cards
   static double cardRadius = 15.0;
   static double cardSideMargin = 20.0;

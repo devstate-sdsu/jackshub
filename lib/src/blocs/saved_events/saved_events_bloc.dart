@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:jackshub/src/bloc/saved_events_event.dart';
-import 'package:jackshub/src/bloc/saved_events_state.dart';
+import 'package:jackshub/src/blocs/saved_events/saved_events_event.dart';
+import 'package:jackshub/src/blocs/saved_events/saved_events_state.dart';
 import 'package:jackshub/src/repos/saved_events_repository.dart';
 
 
