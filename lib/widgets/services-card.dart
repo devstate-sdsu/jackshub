@@ -143,9 +143,8 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
                               )
                             )
                           ),
-                          placeholder: (context, url) => Image(
-                            image: AssetImage('lib/assets/images/loadingPlaceHolder.png'),
-                            fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            color: Colors.grey
                           ),
                           errorWidget: (context, url, error) => Icon(
                             Icons.error,
