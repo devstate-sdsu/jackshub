@@ -65,7 +65,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
     final SavedEventsBloc savedEventsBloc = BlocProvider.of<SavedEventsBloc>(widget.blocContext);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    String dateString = new DateFormat.MMMd().format(widget.event.startTime.toDate());
+    String dateString = new DateFormat.MMMEd().format(widget.event.startTime.toDate());
     String startString = new DateFormat.jm().format(widget.event.startTime.toDate());
     String endString = new DateFormat.jm().format(widget.event.endTime.toDate());
     _controller.forward();
@@ -197,15 +197,15 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                             SizedBox(
                               width: 2
                             ),
-                            Expanded(
+                            Flexible(
                               flex: 10,
                               child: timeComponent(context, startString, endString)
                             ),
                             Spacer(
                               flex: 1,
                             ),
-                            Expanded(
-                              flex: 5,
+                            Flexible(
+                              flex: 7,
                               child: dateComponent(context, dateString)
                             )
                           ],

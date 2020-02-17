@@ -70,7 +70,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
 
   @override
   Widget build(BuildContext context) {
-    String dateString = new DateFormat.MMMd().format(widget.event.startTime.toDate());
+    String dateString = new DateFormat.MMMEd().format(widget.event.startTime.toDate());
     String startString = new DateFormat.jm().format(widget.event.startTime.toDate());
     String endString = new DateFormat.jm().format(widget.event.endTime.toDate());
 

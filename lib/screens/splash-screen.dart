@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:jackshub/screens/home.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -26,9 +27,12 @@ class _SplashScreen extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.asset('lib/assets/images/devstatelogo.png',
-            width: 150.0,
-            height: 150.0),
+            SvgPicture.asset(
+              'lib/assets/icons/devstate-logo.svg',
+              color: Theme.of(context).accentColor,
+              width: 100.0,
+              height: 100.0,
+            ),
             SizedBox(
               height: 20.0
             ),

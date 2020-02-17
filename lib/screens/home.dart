@@ -19,7 +19,7 @@ class HomeScreen extends StatelessWidget {
             return <Widget>[
               SliverAppBar(
                 title: Text(
-                  "hoboHUB",
+                  "jacksHUB",
                   style: TextStyle(
                     fontFamily: 'Hobo',
                   )

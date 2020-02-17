@@ -570,7 +570,7 @@ Widget currentServiceStatus(BuildContext context, ServiceHours serviceHours) {
       }
     }
   } else {  // If there are no HourSlots in a day, we know that the service is closed on that day.
-    if (serviceHours.incomingDays[0].holidayName=="") {
+    if (serviceHours.incomingDays[0].holidayName=="") { 
     //return "Closed";
     statusText = "Closed";
     isClosed = true;

@@ -11,7 +11,6 @@ dependencies:
     sdk: flutter
   cloud_firestore: ^0.13.2+1
   cupertino_icons: ^0.1.2
-  fluro: "^1.4.0"
   auto_size_text: ^2.1.0
   cached_network_image: ^2.0.0
   intl: ^0.16.0
@@ -20,12 +19,13 @@ dependencies:
   flutter_bloc: ^3.2.0
   equatable: ^1.0.3
   page_transition: ^1.1.5
+  flutter_launcher_icons: ^0.7.3
+  flutter_svg: ^0.17.1
  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_launcher_icons: "^0.7.0"
 
 flutter:
   uses-material-design: true
@@ -51,3 +51,13 @@ flutter:
     - lib/assets/images/
     - lib/assets/images/loadingPlaceHolder.png
     - lib/assets/images/devstatelogo.png
+    - lib/assets/icons/
+    - lib/assets/icons/devstate-logo.svg
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path_android: "lib/assets/icons/icon-android.png"
+  image_path_ios: "lib/assets/icons/icon-ios.png"
+  adaptive_icon_background: "lib/assets/icons/icon-background.png"
+  adaptive_icon_foreground: "lib/assets/icons/icon-foreground.png"
