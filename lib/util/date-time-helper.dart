@@ -15,9 +15,12 @@ class HourSlot {
 class Day {
   final String holidayName;   // defaults to ""
   final List<HourSlot> slots;
-  //final bool closed;   // defaults to false; added because error arises when 'slots' is empty because there is no 'hours' in holidayDays
-  //final String date;    // optional parameter, used for incomingDays widget on detailed servicecard; "Monday"
-  Day({this.holidayName = "", this.slots});
+  final DateTime date;  // we need a separate date to check for days as usually if the service is closed, the 'slots' would be empty.
+  //final bool closed;    // defaults to false; added because error arises when 'slots' is empty because there is no 'hours' in holidayDays
+                        // now this is used to symbolize a 'closed' holiday Day, because the dayChecker for holidayDays require a valid 'slot' but
+                        // for a closed holiday Day, there should be no slots.
+  //final String date;    // optional parameter, used for incomingDays widget on detailed servicecard; "Monday"     DEPRECATED
+  Day({this.holidayName = "", this.slots, this.date});
 }
 
 class Holiday {
@@ -74,18 +77,17 @@ Map<String, String> parseHolidayDate(String input) {
 
 Day getWeekDay(DateTime day, DocumentSnapshot doc) {
   List<HourSlot> curSlots = [];
-  curSlots.clear();
+  //curSlots.clear();
+  String dayYear = day.toString().substring(0, 4);
+  String dayMonth = day.toString().substring(5, 7);
+  String dayDay = day.toString().substring(8, 10);
   List<dynamic> docDays = doc.data['hours']['regularHours']['days'];
-  if (docDays.isNotEmpty) {
+  if (docDays.isNotEmpty) {   // Checker to avoid error
     for (var days in docDays) {     // We have to iterate through these because if the service is closed, there is no entry for it in the 'days' array
       if (days['day'] == weekDays[day.weekday]) {
         List<dynamic> docHours = days['hours'];
         if (docHours.isNotEmpty) {
-          List<HourSlot> curSlots = [];
           for (var hourSlots in docHours) {
-            String dayYear = day.toString().substring(0, 4);
-            String dayMonth = day.toString().substring(5, 7);
-            String dayDay = day.toString().substring(8, 10);
             curSlots.add(
               HourSlot(  // We already have the desired date (ie. 05-02-2020 xx:xx:xx), we just want to make the times for that date (ie. 05-02-2020 hour:minute:second)
                 start: getDateTime(hourSlots['start'], dayYear, dayMonth, dayDay),
@@ -93,16 +95,17 @@ Day getWeekDay(DateTime day, DocumentSnapshot doc) {
               )
             );
           }
-          return Day(slots: curSlots);
+          //return Day(slots: curSlots, date: getDateTime('12:00AM', dayYear, dayMonth, dayDay));
         } else {
           //print("Closed on ${weekDays[day.weekday]}");
+          //return Day(slots: curSlots, date: getDateTime('12:00AM', dayYear, dayMonth, dayDay));
         }
       }
     }
   } else {
     //print("docDays for getWeekDay() is empty...?");
   }
-  return Day(slots: curSlots);      // If service is closed on a regular week day, then the Day.slots list would be empty.
+  return Day(slots: curSlots, date: getDateTime('12:00AM', dayYear, dayMonth, dayDay));      // If service is closed on a regular week day, then the Day.slots list would be empty.
 }
 
 // If the holidayDays does NOT have open hours, then the holidayDays['hours'] list will be empty
@@ -111,28 +114,17 @@ Day checkDay(DateTime day, List<Holiday> holidaysList, DocumentSnapshot doc) {  
   if (holidaysList.isNotEmpty) {
     for (var holidays in holidaysList) {    // Multiple holidays possible, check all the holidays (ie. Spring Break, Winter Break, etc.)
       for (var holidayDays in holidays.dates) {   // Loop through the dates of a holiday, with each class 'Day' as 'holidayDays'
-        // print("holidayDays: ");
-        // print(holidayDays);
-        // print("holidayDay Name: ");
-        // print(holidayDays.holidayName);
-        // print("holidayDay Slots: ");
-        // print(holidayDays.slots);
-        if (holidayDays.slots.isNotEmpty) {
-          int holidayDaysYear = holidayDays.slots[0].start.year;  // Just check the first slot, because all the hourslots would be in the same day.
-          int holidayDaysMonth = holidayDays.slots[0].start.month;
-          int holidayDaysDay = holidayDays.slots[0].start.day;
-          if (day.year == holidayDaysYear && day.month == holidayDaysMonth && day.day == holidayDaysDay) {    // Check if the current target day is a holiday or not
-            // The day that is being checked is a holiday!
-            return holidayDays; // return holidayDays of class 'Day'
+        //if (holidayDays.slots.isEmpty) {
+          int holidayDaysYear = holidayDays.date.year;
+          int holidayDaysMonth = holidayDays.date.month;
+          int holidayDaysDay = holidayDays.date.day;
+          if (day.year == holidayDaysYear && day.month == holidayDaysMonth && day.day == holidayDaysDay) {
+            // The day being checked is a holiday!
+            return holidayDays;
           } else {
-            //return holidayDays;
-            return getWeekDay(day, doc);  // if it's a regular day, return the correct day of week of class 'Day'
+            return getWeekDay(day, doc);
           }
-        } /*else {  // the holidayDay slot list is empty, meaning that the service is closed on that particular holidayDay
-          return Day(
-            closed: true,
-          );
-        }*/
+        //}
       }
     }
   } else {
@@ -172,10 +164,10 @@ Day getHolidayDay(Map<String, String> parsedDate, List<dynamic> docHours, String
         )
       );
     }
-  } else {
-    //print("docHours for getHolidayDay() is empty...?");
+  } else {  // the service is closed for this particular holidayDay, so we make 
+    //return Day(holidayName: holidayName, slots: curSlots, date: getDateTime('00:00:00', parsedDate['year'], parsedDate['month'], parsedDate['day']));
   }
-  return Day(holidayName: holidayName, slots: curSlots);
+  return Day(holidayName: holidayName, slots: curSlots, date: getDateTime('12:00AM', parsedDate['year'], parsedDate['month'], parsedDate['day']));
 }
 
 List<Day> getHolidayDaysList(List<dynamic> docDays, String holidayName) {
@@ -454,7 +446,7 @@ Widget serviceStatusDivider() {
 
 Widget serviceDayStatus(BuildContext context, Day day, DateTime projectedDate) {
   List<String> curSlots = [];
-  curSlots.clear();
+  //curSlots.clear();
   List<Widget> curSlotsWidget = [];
   String projectedDayOfWeek = weekDays[projectedDate.weekday];
   String holidayMarker;
