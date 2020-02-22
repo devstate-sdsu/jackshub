@@ -7,3 +7,4 @@ export 'saved-events.dart';
 export 'services-card.dart';
 export 'services-info-card.dart';
 export 'mini-components.dart';
+export 'filter-tab-button.dart';
