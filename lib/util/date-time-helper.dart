@@ -111,6 +111,8 @@ Day getWeekDay(DateTime day, DocumentSnapshot doc) {
 // If the holidayDays does NOT have open hours, then the holidayDays['hours'] list will be empty
 
 Day checkDay(DateTime day, List<Holiday> holidaysList, DocumentSnapshot doc) {    // The holidays list will already be populated with good data (a list of Days containing a bunch of HourSlot's)
+  // bool isHoliday = false;                   // We use a bool here because if we return the 'Day' object in the loop, then it does not give them a chance to go through the ENTIRE list. Only once.
+  Day curDay = getWeekDay(day, doc);
   if (holidaysList.isNotEmpty) {
     for (var holidays in holidaysList) {    // Multiple holidays possible, check all the holidays (ie. Spring Break, Winter Break, etc.)
       for (var holidayDays in holidays.dates) {   // Loop through the dates of a holiday, with each class 'Day' as 'holidayDays'
@@ -120,16 +122,21 @@ Day checkDay(DateTime day, List<Holiday> holidaysList, DocumentSnapshot doc) {  
           int holidayDaysDay = holidayDays.date.day;
           if (day.year == holidayDaysYear && day.month == holidayDaysMonth && day.day == holidayDaysDay) {
             // The day being checked is a holiday!
-            return holidayDays;
+            // isHoliday = true;
+            // return holidayDays;
+            curDay = holidayDays;
           } else {
-            return getWeekDay(day, doc);
+            // isHoliday = false;
+            // return getWeekDay(day, doc);
           }
         //}
       }
     }
   } else {
-    return getWeekDay(day, doc);
+    // isHoliday = false;
+    // return getWeekDay(day, doc);
   }
+  return curDay;
 }
 
 List<Day> getIncomingDays(DocumentSnapshot doc, List<Holiday> holidayslist) {   // Multiple holidays is possible
@@ -551,12 +558,47 @@ Widget currentServiceStatus(BuildContext context, ServiceHours serviceHours) {
     DateTime currentTime = DateTime.now();
     for (var hourSlots in serviceHours.incomingDays[0].slots) {
       if (currentTime.isAfter(hourSlots.start) && currentTime.isBefore(hourSlots.end)) {  // currently, the service is open (within a time slot)
-        String nextClosingTime = DateFormat.jm().format(hourSlots.end);
+        String nextClosingTime = DateFormat('h:mm').format(hourSlots.end)+DateFormat('a').format(hourSlots.end).toLowerCase();
+        if (nextClosingTime=="11:59pm") {
+          // The service closes at midnight OR it is tomorrow morning (in the day tomorrow)
+          if (serviceHours.incomingDays[1].slots.isNotEmpty) {  // check if it's not closed tomorrow but to also avoid errors on calling for() on empty
+            for (var tomorrowHourSlots in serviceHours.incomingDays[1].slots) {
+              int tomorrowStartHour = tomorrowHourSlots.start.hour;
+              int tomorrowStartMinute = tomorrowHourSlots.start.minute;
+              int tomorrowEndHour = tomorrowHourSlots.end.hour;
+              int tomorrowEndMinute = tomorrowHourSlots.end.minute;
+              if (tomorrowStartHour == 0 && tomorrowStartMinute == 0) {   // If we have an hour slot tomorrow that starts at 12:00am then SOMETHING MUST BE WRONG! >:O
+                // We know that if the current anticipated closing time is 11:59, but the next day the service starts at 12:00am
+                // then we can assume it's actually open until the next day at like 1:00am or something...
+                // FIRSTLY We check if tomorrow the service will clost at 11:59pm AGAIN -- this actually represents a service that never closes... *AHEM* UPD
+                if (tomorrowEndHour == 23 && tomorrowEndMinute == 59) {
+                  statusText = "Always Open, Always There for You :)";
+                } else {
+                nextClosingTime = DateFormat('h:mm').format(tomorrowHourSlots.end)+DateFormat('a').format(tomorrowHourSlots.end).toLowerCase(); // we reassign the variable                
+                statusText = "Open until $nextClosingTime";   // this will simply say "2:00am" but college student should be able to recognize that this is the NEXT DAY duh...
+                isClosed = false;
+                //print("TOMORROW MORNING OPEN");
+                //print(nextClosingTime);
+                }
+              } else {
+                // If there are no hour slots tomorrow that start at 12:00am, then we can assume that the service will close at midnight.
+                statusText = "Open until midnight";
+                isClosed = false;
+                //print("TOMORROW NOT IN MORNING");
+              }
+            }
+          } else {
+          statusText = "Open until midnight";
+          isClosed = false;
+          }
+        } else {
         statusText = "Open until $nextClosingTime";
         //return "Open until $nextClosingTime";
         isClosed = false;
+        }
       } else {
         //return "Closed";
+        // Currently, we are not in a 'slot', but what we can do is loop through the hourSlots again to 
         statusText = "Closed";
         isClosed = true;
       }
