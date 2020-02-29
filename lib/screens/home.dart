@@ -58,7 +58,7 @@ class HomeScreen extends StatelessWidget {
               children: <Widget>[
                 EventsToggle(),
                 ServicesScreen(),
-                ServicesScreen()
+                FoodScreen()
               ],
             ),
           ),
