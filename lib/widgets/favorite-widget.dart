@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:vibrate/vibrate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/saved_events_bloc.dart';
 import 'package:jackshub/src/blocs/saved_events/saved_events_event.dart';
@@ -11,6 +12,8 @@ class FavoriteWidget extends StatelessWidget {
   final bool isFav;
 
   FavoriteWidget({this.event, this.isFav});
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +33,18 @@ class FavoriteWidget extends StatelessWidget {
               onPressed: () {
                 if (state is InSavedEventsScreen) {
                   if (this.isFav) {
+                    Vibrate.feedback(FeedbackType.medium);
                     savedEventsBloc.add(DeleteSavedEventWithoutRefresh(documentId: this.event.documentId));
                   } else {
+                    Vibrate.feedback(FeedbackType.success);
                     savedEventsBloc.add(AddSavedEventWithoutRefresh(eventInfo: this.event));
                   }
                 } else if (state is SavedEventsInfoLoadedFromLocal) {
                   if (this.isFav) {
+                    Vibrate.feedback(FeedbackType.medium);
                     savedEventsBloc.add(DeleteSavedEvent(documentId: this.event.documentId));
                   } else {
+                    Vibrate.feedback(FeedbackType.success);
                     savedEventsBloc.add(AddSavedEvent(eventInfo: this.event));
                   }
                 }
