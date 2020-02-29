@@ -158,7 +158,7 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
                       borderRadius: BorderRadius.all(Radius.circular(AppTheme.cardRadius)),
                       boxShadow: [
                         BoxShadow(
-                          color: (Theme.of(context).brightness == Brightness.light) ? AppTheme.lightShadowColor: AppTheme.darkShadowColor,
+                          color: AppTheme.shadowColor,
                           blurRadius: AppTheme.shadowBlurRadius,
                           offset: AppTheme.shadowOffset
                         )
