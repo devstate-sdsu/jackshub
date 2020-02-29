@@ -65,9 +65,9 @@ class _DetailedEventsScreen extends State<DetailedEventsScreen> with TickerProvi
     final SavedEventsBloc savedEventsBloc = BlocProvider.of<SavedEventsBloc>(widget.blocContext);
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    String dateString = new DateFormat.MMMEd().format(widget.event.startTime.toDate());
-    String startString = new DateFormat.jm().format(widget.event.startTime.toDate());
-    String endString = new DateFormat.jm().format(widget.event.endTime.toDate());
+    String dateString = new DateFormat.MMMEd().format(widget.event.startTime.toDate().toUtc());
+    String startString = new DateFormat.jm().format(widget.event.startTime.toDate().toUtc());
+    String endString = new DateFormat.jm().format(widget.event.endTime.toDate().toUtc());
     _controller.forward();
 
     return AnimatedBuilder(
