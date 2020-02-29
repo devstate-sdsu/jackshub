@@ -61,9 +61,9 @@ class _EventsCard extends State<EventsCard> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    String dateString = new DateFormat.MMMEd().format(widget.event.startTime.toDate());
-    String startString = new DateFormat.jm().format(widget.event.startTime.toDate());
-    String endString = new DateFormat.jm().format(widget.event.endTime.toDate());
+    String dateString = new DateFormat.MMMEd().format(widget.event.startTime.toDate().toUtc());
+    String startString = new DateFormat.jm().format(widget.event.startTime.toDate().toUtc());
+    String endString = new DateFormat.jm().format(widget.event.endTime.toDate().toUtc());
     double cardVerticalSize = AppTheme.cardLargeEventsHeight;
 
     return AnimatedBuilder(
