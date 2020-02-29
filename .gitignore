@@ -76,3 +76,6 @@ ios/Flutter/flutter_export_environment.sh
 ios/Podfile.lock
 
 ios/build/XCBuildData/*
+
+
+ios/Runner.xcodeproj/project.pbxproj
