@@ -113,7 +113,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                 borderRadius: BorderRadius.circular(AppTheme.cardRadius),
                 boxShadow: [
                   BoxShadow(
-                    color: AppTheme.shadowColor,
+                    color: (Theme.of(context).brightness == Brightness.light) ? AppTheme.lightShadowColor: AppTheme.darkShadowColor,
                     blurRadius: AppTheme.shadowBlurRadius,
                     offset: AppTheme.shadowOffset
                   )
