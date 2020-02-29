@@ -144,7 +144,7 @@ class _DetailedServicesScreen extends State<DetailedServicesScreen> with TickerP
                       borderRadius: BorderRadius.all(Radius.circular(AppTheme.cardRadius)),
                       boxShadow: [
                         BoxShadow(
-                          color: (Theme.of(context).brightness == Brightness.light) ? AppTheme.lightShadowColor: AppTheme.darkShadowColor,
+                          color: AppTheme.shadowColor,
                           blurRadius: AppTheme.shadowBlurRadius,
                           offset: AppTheme.shadowOffset
                         )
