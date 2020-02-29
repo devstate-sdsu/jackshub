@@ -150,7 +150,8 @@ class AppTheme {
   static Curve cardReverseCurve = Curves.easeInQuad;
 
   // Global theming of the shadows underneath the cards
-  static Color shadowColor = Color.fromRGBO(0, 0, 0, 0.25);
+  static Color lightShadowColor = Color.fromRGBO(0, 0, 0, 0.25);
+  static Color darkShadowColor = Color.fromRGBO(0, 0, 0, 0.25);   // Placeholder for future dark-theme 'shadows'... currently they look bad.
   static double shadowBlurRadius = 20.0;
   static Offset shadowOffset = Offset(0, 5);
 

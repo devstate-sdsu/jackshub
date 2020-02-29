@@ -145,47 +145,39 @@ class DatabaseHelper {
         onCreate: _onCreate);
   }
 
-
-  Future _createTable(Database db, bool mightAlreadyExist) async {
-    String optionalStr = mightAlreadyExist ? 'IF NOT EXISTS' : '';
-    await db.execute('''
-      CREATE TABLE $optionalStr $savedEventsInfoTable (
-        $_document_id VARCHAR(255) PRIMARY KEY,
-        $_name VARCHAR(512),
-        $_description VARCHAR(2000),
-        $_start_time INT8,
-        $_end_time INT8,
-        $_image VARCHAR(2048),
-        $_tags VARCHAR(2048),
-        $_start_time_uncertain TINYINT,
-        $_end_time_uncertain TINYINT,
-        $_start_date_uncertain TINYINT,
-        $_end_date_uncertain TINYINT,
-        $_time_updated INT8,
-        $_tiny_location VARCHAR(255),
-        $_big_location VARCHAR(255),
-        $_updates VARCHAR(255)
-      )
-      ''');       
-  }
-
   // SQL string to create the database 
   Future _onCreate(Database db, int version) async {
-    await _createTable(db, false);
+    await db.execute('''
+          CREATE TABLE $savedEventsInfoTable (
+            $_document_id VARCHAR(255) PRIMARY KEY,
+            $_name VARCHAR(512),
+            $_description VARCHAR(2000),
+            $_start_time INT8,
+            $_end_time INT8,
+            $_image VARCHAR(2048),
+            $_tags VARCHAR(2048),
+            $_start_time_uncertain TINYINT,
+            $_end_time_uncertain TINYINT,
+            $_start_date_uncertain TINYINT,
+            $_end_date_uncertain TINYINT,
+            $_time_updated INT8,
+            $_tiny_location VARCHAR(255),
+            $_big_location VARCHAR(255),
+            $_updates VARCHAR(255)
+          )
+          ''');          
   }
 
   // Database helper methods:
   // SAVED EVENT INFO HELPER METHODS
   Future<bool> insertSavedEventInfo(EventInfo event) async {
     Database db = await database;
-    _createTable(db, true);
     int result = await db.insert(savedEventsInfoTable, event.toMap());
     return result > 0 ? true : false;
   }
 
   Future<bool> deleteSavedEventInfo(String documentId) async {
     Database db = await database;
-    _createTable(db, true);
     int result = await db.delete(
       savedEventsInfoTable,
       where: '$_document_id = ?',
@@ -196,7 +188,6 @@ class DatabaseHelper {
 
   Future<List<EventInfo>> listSavedEventsInfo() async {
     Database db = await database;
-    _createTable(db, true);
     List<Map> maps = await db.query(
       savedEventsInfoTable,
       columns: [  
