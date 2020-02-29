@@ -76,17 +76,3 @@ ios/Flutter/flutter_export_environment.sh
 ios/Podfile.lock
 
 ios/build/XCBuildData/*
-
-.flutter-plugins-dependencies
-
-#THese appeared after we are done with adding haptic feedback
-android/.project
-android/.settings/org.eclipse.buildship.core.prefs
-android/app/.classpath
-android/app/.project
-android/app/.settings/org.eclipse.buildship.core.prefs
-
-#These get changed every time we install the app on phone
-ios/Runner.xcodeproj/project.pbxproj
-ios/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme
-
