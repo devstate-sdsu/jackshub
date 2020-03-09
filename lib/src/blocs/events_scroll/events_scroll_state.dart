@@ -3,13 +3,13 @@ part of 'events_scroll_bloc.dart';
 abstract class EventsScrollState extends Equatable {
   final double scrollPosition;
   final double slide;
-  const EventsScrollState() : scrollPosition = 0, slide = 10;
+  const EventsScrollState() : scrollPosition = 0, slide = 0;
 }
 
 class EventsScrollInitial extends EventsScrollState {
   final double scrollPosition;
   final double slide;
-  EventsScrollInitial() : scrollPosition = 0, slide = 10;
+  EventsScrollInitial() : scrollPosition = 0, slide = 0;
   @override
   List<Object> get props => [];
 }
