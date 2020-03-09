@@ -220,7 +220,7 @@ class EventsScreen extends StatelessWidget {
           return StreamBuilder<QuerySnapshot>(
             stream: this.filter == 'all' ? 
               Firestore.instance.collection('eventsCol').orderBy('start_time').snapshots() :
-              Firestore.instance.collection('eventsCol').where('tags', arrayContains: this.filter).orderBy('start_time').snapshots().snapshots(),
+              Firestore.instance.collection('eventsCol').where('tags', arrayContains: this.filter).orderBy('start_time').snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
                 return Center(
