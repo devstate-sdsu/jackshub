@@ -39,6 +39,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
   Animation _animation;
   double cardVerticalSize = AppTheme.cardSmallEventsHeight;
   double locationIconOffset = 2.0;
+  int tinyLocationOffset = 40;
   var cardScale = 1.0;
 
   @override
@@ -182,7 +183,7 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                           height: 8
                         ),
                         Expanded(
-                          flex: 100,
+                          flex: widget.event.tinyLocation.isEmpty ? 100 : 100 - tinyLocationOffset,
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -207,11 +208,14 @@ class _EventsSmallCard extends State<EventsSmallCard> with TickerProviderStateMi
                             ],
                           )
                         ),
-                        Spacer(
-                          flex: 10
+                        Visibility(
+                          visible: widget.event.tinyLocation.isEmpty,
+                          child: Spacer(
+                            flex: 10
+                          ),
                         ),
                         Expanded(
-                          flex: 30,
+                          flex: widget.event.tinyLocation.isEmpty ? 30 : 30 + tinyLocationOffset,
                           child: locationComponent(context, widget.event.bigLocation, widget.event.tinyLocation),
                         ),
                         Spacer(
