@@ -17,6 +17,7 @@ class Routes {
 
 
 class ServicesRoutingParameters {
+  final Key key;
   final DocumentSnapshot doc;
   final String name;
   final String image;
@@ -26,7 +27,7 @@ class ServicesRoutingParameters {
   final String email;
   final String phoneNumber;
   final ServiceHours serviceHours;
-  ServicesRoutingParameters(this.doc, this.name, this.image, this.mainInfo, this.bigLocation, this.littleLocation, this.email, this.phoneNumber, this.serviceHours);
+  ServicesRoutingParameters(this.key, this.doc, this.name, this.image, this.mainInfo, this.bigLocation, this.littleLocation, this.email, this.phoneNumber, this.serviceHours);
 }
 
 class RouteToDetailedServices extends StatelessWidget {

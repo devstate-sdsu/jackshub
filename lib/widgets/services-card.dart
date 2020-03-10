@@ -8,6 +8,7 @@ import 'package:jackshub/util/date-time-helper.dart';
 
 
 class ServicesCard extends StatefulWidget {
+  final Key key;
   final DocumentSnapshot doc;
   final String name;
   final String image;
@@ -20,7 +21,7 @@ class ServicesCard extends StatefulWidget {
   final ServiceHours serviceHours;
 
   const ServicesCard({
-    Key key,
+    this.key,
     this.doc,
     this.name,
     this.image,
@@ -31,7 +32,7 @@ class ServicesCard extends StatefulWidget {
     this.email,
     this.phoneNumber,
     this.serviceHours
-  }): super(key: key);
+  });
 
   @override
   _ServicesCard createState() => _ServicesCard();
@@ -86,6 +87,7 @@ class _ServicesCard extends State<ServicesCard> with TickerProviderStateMixin {
               context,
               '/detailedServices',
               arguments: ServicesRoutingParameters(
+                widget.key,
                 widget.doc,
                 widget.name,
                 widget.image,

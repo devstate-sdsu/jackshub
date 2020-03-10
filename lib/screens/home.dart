@@ -11,11 +11,6 @@ import 'package:jackshub/src/repos/saved_events_repository.dart';
 class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // if (Theme.of(context).brightness == Brightness.dark) {
-    //   print("DARK MODE!");
-    // } else {
-    //   print("LIGHT MODE!");
-    // }
     return new DefaultTabController(
       length: 3,
       child: Scaffold(
